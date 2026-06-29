@@ -32,6 +32,7 @@ The assistant helps manage:
 4. Read `DEVICES.md` before making device, room, or entity assumptions.
 5. Read `OPERATIONS.md` before designing household routines.
 6. Read `HOUSE_LOG.md` for recent decisions and historical context.
+7. Read `DASHBOARDS.md` before inspecting or changing Home Assistant dashboards.
 
 ## Editing Rules
 
@@ -40,4 +41,4 @@ The assistant helps manage:
 - Do not edit secrets directly into tracked files.
 - Record meaningful operating decisions in `HOUSE_LOG.md`.
 - If a new PC setup step is discovered, update `SETUP_NEW_PC.md`.
-
+- Do not commit every small change. Accumulate routine documentation and housekeeping changes locally, then make a weekly summary commit unless the user explicitly asks for an immediate commit.
