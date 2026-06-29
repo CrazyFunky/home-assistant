@@ -1,0 +1,36 @@
+# Home Assistant local state and secrets
+secrets.yaml
+*.db
+*.db-*
+home-assistant.log*
+OZW_Log.txt
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.crt
+*.p12
+*.token
+
+# Home Assistant generated directories
+.storage/
+deps/
+tts/
+www/community/
+
+# Python and tooling caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
