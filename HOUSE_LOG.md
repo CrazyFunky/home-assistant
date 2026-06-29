@@ -16,3 +16,4 @@ This file records important decisions, setup history, and operating context.
 - For HTTPS Git access, GitHub requires a Personal Access Token instead of the website password.
 - On a new computer, install Codex and Git, clone this repository, configure local credentials and MCP access, then ask Codex to read `AGENTS.md` and the supporting house documents.
 - Current continuity prompt: `AGENTS.md를 먼저 읽고, HOUSE.md, MCP.md, DEVICES.md, OPERATIONS.md, HOUSE_LOG.md를 읽은 다음 우리집 운영 비서 역할을 이어가.`
+- `SETUP_NEW_PC.md` should treat macOS and Windows as full working environments, and smartphones as light access terminals for review, urgent operation, and continuity prompts.
