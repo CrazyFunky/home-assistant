@@ -21,3 +21,4 @@ This file records important decisions, setup history, and operating context.
 - Windows Codex setup was completed on this machine: Git for Windows was installed, the repository was cloned from `https://github.com/CrazyFunky/home-assistant.git`, and `main` is tracking `origin/main`.
 - Replaced the corrupted Korean continuity prompt in `SETUP_NEW_PC.md` with readable Korean text for future Windows/macOS/smartphone sessions.
 - Home Assistant MCP connectivity was verified from this Windows machine. The local project MCP configuration is stored in ignored `.codex/config.toml`, and local environment hints are stored in ignored `.env`.
+- Local and remote Home Assistant access profiles were configured for this Windows project. The current PC uses the local LAN profile by default; remote HTTPS HA/MCP URLs are stored only in ignored local configuration files, with the MCP secret path kept out of tracked documentation.
