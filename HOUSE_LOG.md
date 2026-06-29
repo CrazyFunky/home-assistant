@@ -15,6 +15,8 @@ This file records important decisions, setup history, and operating context.
 - GitHub access should use per-computer local credentials. Codex should not store or receive GitHub Personal Access Tokens.
 - For HTTPS Git access, GitHub requires a Personal Access Token instead of the website password.
 - On a new computer, install Codex and Git, clone this repository, configure local credentials and MCP access, then ask Codex to read `AGENTS.md` and the supporting house documents.
-- Current continuity prompt: `AGENTS.md를 먼저 읽고, HOUSE.md, MCP.md, DEVICES.md, OPERATIONS.md, HOUSE_LOG.md를 읽은 다음 우리집 운영 비서 역할을 이어가.`
+- Current continuity prompt: `AGENTS.md를 먼저 읽고, HOUSE.md, MCP.md, DEVICES.md, OPERATIONS.md, HOUSE_LOG.md를 읽은 다음 우리 집 운영 비서 역할을 이어가.`
 - `SETUP_NEW_PC.md` should treat macOS and Windows as full working environments, and smartphones as light access terminals for review, urgent operation, and continuity prompts.
 - Removed stale Home Assistant automation entity `automation.decode_base64_sensor_value_2` (`Decode Base64 Sensor Value`) after confirming Node-RED directly receives and transforms the value. The automation config delete API reported the resource was not found, so the stale entity registry entry was removed instead. Automation count changed from 25 to 24.
+- Windows Codex setup was completed on this machine: Git for Windows was installed, the repository was cloned from `https://github.com/CrazyFunky/home-assistant.git`, and `main` is tracking `origin/main`.
+- Replaced the corrupted Korean continuity prompt in `SETUP_NEW_PC.md` with readable Korean text for future Windows/macOS/smartphone sessions.

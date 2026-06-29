@@ -87,6 +87,13 @@ cd home-assistant
 11. Ask Codex to read `AGENTS.md`.
 12. Ask Codex to summarize current status from `HOUSE_LOG.md`.
 
+### Windows Notes
+
+- If Git was installed while Codex or PowerShell was already open, restart the terminal or Codex so the updated `PATH` is loaded.
+- If `git` is not found in the current session immediately after installation, Git can usually still be verified at `C:\Program Files\Git\cmd\git.exe`.
+- Keep GitHub credentials in Git Credential Manager or Windows Credential Manager. Do not paste tokens into Codex chat or commit them to the repository.
+- Use this repository as the durable context store, and use the mini PC for live Home Assistant and MCP state.
+
 ## Smartphone Setup
 
 Smartphones should be treated as light access terminals, not the primary working environment for large Home Assistant or repository edits.
@@ -132,7 +139,7 @@ Use a smartphone for:
 Use this prompt when opening the repository from a new device:
 
 ```text
-AGENTS.md를 먼저 읽고, HOUSE.md, MCP.md, DEVICES.md, OPERATIONS.md, HOUSE_LOG.md를 읽은 다음 우리집 운영 비서 역할을 이어가.
+AGENTS.md를 먼저 읽고, HOUSE.md, MCP.md, DEVICES.md, OPERATIONS.md, HOUSE_LOG.md를 읽은 다음 우리 집 운영 비서 역할을 이어가.
 ```
 
 If the new session needs to continue from the latest documented context, add:
