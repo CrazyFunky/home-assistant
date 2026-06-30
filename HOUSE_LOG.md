@@ -15,9 +15,17 @@ This file records important decisions, setup history, and operating context.
 - GitHub access should use per-computer local credentials. Codex should not store or receive GitHub Personal Access Tokens.
 - For HTTPS Git access, GitHub requires a Personal Access Token instead of the website password.
 - On a new computer, install Codex and Git, clone this repository, configure local credentials and MCP access, then ask Codex to read `AGENTS.md` and the supporting house documents.
-- Current continuity prompt: `AGENTS.md를 먼저 읽고, HOUSE.md, MCP.md, DEVICES.md, OPERATIONS.md, HOUSE_LOG.md를 읽은 다음 우리집 운영 비서 역할을 이어가.`
+- Current continuity prompt: `AGENTS.md를 먼저 읽고, HOUSE.md, MCP.md, DEVICES.md, OPERATIONS.md, HOUSE_LOG.md를 읽은 다음 우리 집 운영 비서 역할을 이어가.`
 - `SETUP_NEW_PC.md` should treat macOS and Windows as full working environments, and smartphones as light access terminals for review, urgent operation, and continuity prompts.
 - Removed stale Home Assistant automation entity `automation.decode_base64_sensor_value_2` (`Decode Base64 Sensor Value`) after confirming Node-RED directly receives and transforms the value. The automation config delete API reported the resource was not found, so the stale entity registry entry was removed instead. Automation count changed from 25 to 24.
 - Git workflow preference changed: do not commit every small update. Accumulate routine changes and make one weekly summary commit unless an immediate commit is explicitly requested.
 - Updated the old `Home Assistant 장비.xlsx` inventory into a new HA-current workbook at `outputs/ha_device_inventory_2026-06-29/Home Assistant 장비_HA기준_2026-06-29.xlsx`. The update keeps the original A:J column structure, clears sensitive `Local Key` values, and uses the current Home Assistant device registry as the baseline.
 - Added Binance USDT price display for BTC, ETH, ONDO, and TRUMP to the `SweetHome` storage dashboard (`lovelace-sweetkitchen`) using `input_number` helpers and a read-only markdown card. The card now also shows Binance 24-hour percentage change for each symbol. This is a dashboard display layer only; automatic market-data refresh still needs a durable updater such as `cryptoinfo_advanced`, REST YAML sensors, or a Node-RED flow.
+- Windows Codex setup was completed on this machine: Git for Windows was installed, the repository was cloned from `https://github.com/CrazyFunky/home-assistant.git`, and `main` is tracking `origin/main`.
+- Replaced the corrupted Korean continuity prompt in `SETUP_NEW_PC.md` with readable Korean text for future Windows/macOS/smartphone sessions.
+- Home Assistant MCP connectivity was verified from this Windows machine. The local project MCP configuration is stored in ignored `.codex/config.toml`, and local environment hints are stored in ignored `.env`.
+- Local and remote Home Assistant access profiles were configured for this Windows project. The current PC uses the local LAN profile by default; remote HTTPS HA/MCP URLs are stored only in ignored local configuration files, with the MCP secret path kept out of tracked documentation.
+
+## 2026-06-30
+
+- The macOS repository was reconciled with the GitHub `main` branch after Windows Codex setup. The merge preserves both the Mac dashboard/device-inventory commit and the Windows local/remote access profile documentation.

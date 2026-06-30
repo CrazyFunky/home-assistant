@@ -68,10 +68,31 @@ When setting up a new computer:
 6. Start Codex from this repository.
 7. Ask Codex to read `AGENTS.md`.
 
+## Local Codex MCP Configuration
+
+This repository may use a local project-scoped Codex MCP configuration at `.codex/config.toml`.
+
+That file can contain private Home Assistant MCP endpoint details and must stay local-only. It is ignored by Git and should not be committed.
+
+Local environment hints may also be stored in `.env`, which is also ignored by Git.
+
+## Access Profiles
+
+Each computer should choose the access profile that matches its network location.
+
+- `local`: Use the private LAN Home Assistant address and private LAN MCP endpoint. This is the default profile for the current Windows PC.
+- `remote`: Use the public HTTPS Home Assistant and MCP DDNS endpoints when away from the home network.
+
+The exact URLs, bearer tokens, and MCP secret path belong in ignored local files only:
+
+- `.env` for local environment hints such as `HOME_ASSISTANT_URL`, `HOME_ASSISTANT_LOCAL_URL`, `HOME_ASSISTANT_REMOTE_URL`, `MCP_HOME_SERVER_URL`, `MCP_HOME_LOCAL_SERVER_URL`, and `MCP_HOME_REMOTE_SERVER_URL`.
+- `.codex/config.toml` for project-scoped Codex MCP servers.
+
+When configuring remote MCP access, include the required MCP secret path in the ignored local URL. Do not commit that path.
+
 ## Open Items
 
 - Document the mini PC hostname or private VPN name.
 - Document MCP server names and purposes.
 - Document local setup commands once confirmed.
 - Document health-check commands once confirmed.
-

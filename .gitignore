@@ -9,6 +9,7 @@ OZW_Log.txt
 .env
 .env.*
 !.env.example
+.codex/
 *.key
 *.pem
 *.crt
