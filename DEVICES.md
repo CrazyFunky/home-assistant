@@ -16,9 +16,17 @@ Add rooms and areas here.
 
 | System | Location | Notes |
 | --- | --- | --- |
+| Wired/wireless router | Network edge | Connects the public internet to the home LAN and Wi-Fi |
 | Mini PC | TBD | Runs Home Assistant and MCP services |
 | Home Assistant | Mini PC | Main IoT state and automation engine |
 | MCP server | Mini PC | Live access layer for Codex |
+| Zigbee antenna | Home Assistant server | Provides the physical Zigbee radio path |
+| Zigbee2MQTT | Home Assistant server | Bridges Zigbee devices into MQTT/Home Assistant |
+| Nginx Proxy Manager | Home Assistant environment | Routes external DNS-based HTTPS access to configured internal services |
+| NAS server | Home LAN | Storage/server device connected behind the router |
+| Matterbridge | Mini PC / Home Assistant environment | Bridges selected Home Assistant devices into Google Home |
+| Google Home | Cloud / Google Home app | Voice-control surface for household members |
+| Google speakers | Rooms | Spoken command entry points for Google Home controlled devices |
 
 ## Device Inventory
 
@@ -36,4 +44,3 @@ Add rooms and areas here.
 ## Device Notes
 
 Use this section for device-specific quirks, battery behavior, calibration notes, or known problems.
-

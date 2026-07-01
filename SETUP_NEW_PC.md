@@ -155,7 +155,8 @@ Confirm:
 - `AGENTS.md` is readable.
 - `HOUSE.md` is readable.
 - The mini PC is reachable.
-- Home Assistant is reachable.
+- Home Assistant is reachable by private IP when inside the home network.
+- Home Assistant is reachable by external DNS when outside the home network.
 - MCP tools are available.
 - No secrets were committed into Git.
 - `git pull` works.

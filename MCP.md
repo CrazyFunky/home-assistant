@@ -11,7 +11,74 @@ Expected services on or near the mini PC:
 - Home Assistant
 - MCP server or servers for Home Assistant and household tools
 - IoT bridges and integrations
+- Matterbridge for exposing selected Home Assistant devices to Google Home
 - Any supporting services needed for home operations
+
+## Home Network Topology
+
+The current home network is organized as:
+
+```text
+Public internet
+-> wired/wireless router
+-> wired and wireless home devices
+   -> Home Assistant server
+      -> Zigbee antenna
+      -> Zigbee2MQTT server
+      -> Nginx Proxy Manager
+      -> Matterbridge
+      -> MCP access layer
+   -> NAS server
+   -> other wired/wireless devices
+```
+
+The router is the boundary between the public internet and the home LAN. Home Assistant, NAS, and other household devices are connected behind the router by wired or wireless networking.
+
+Home Assistant has the Zigbee antenna attached and runs Zigbee2MQTT. Zigbee devices should be treated as part of the Home Assistant-controlled device layer, even when the physical radio path is through Zigbee2MQTT.
+
+Nginx Proxy Manager is installed in the Home Assistant environment. External DNS-based access reaches Nginx Proxy Manager first, and Nginx Proxy Manager routes the request to the configured internal service.
+
+## Current Remote MCP Access
+
+The current Codex-to-Home-Assistant MCP access path is:
+
+```text
+Codex on an external computer
+-> external DNS name
+-> Nginx Proxy Manager reverse proxy
+-> Home Assistant MCP server
+-> Home Assistant
+```
+
+This is the live remote access model in use today. Treat it as an intentionally exposed HTTPS reverse-proxy path for MCP, not as a general-purpose LAN access method.
+
+Security rules for this path:
+
+- Do not expose Samba, SSH, NAS, router admin, or arbitrary LAN services through this same path.
+- Keep the exact DNS name, MCP secret path, bearer tokens, and Home Assistant tokens in local-only ignored files.
+- Prefer narrow MCP endpoints and least-privilege Home Assistant tokens where possible.
+- If a future VPN or AI gateway is added, document whether it replaces or supplements this NPM reverse-proxy path.
+
+## Voice Control Path
+
+The current voice-control path is:
+
+```text
+Home Assistant devices
+-> Matterbridge
+-> Google Home
+-> Google speakers
+-> spoken household commands
+```
+
+Home Assistant remains the source of truth for device state and automation behavior. Matterbridge is the bridge that makes selected Home Assistant devices available in Google Home so household members can control them by voice through Google speakers.
+
+When troubleshooting voice control, check the path in this order:
+
+1. Confirm the device works directly in Home Assistant.
+2. Confirm the device is exposed through Matterbridge.
+3. Confirm the device appears correctly in Google Home.
+4. Confirm the target Google speaker or voice command path is working.
 
 ## Access Model
 
@@ -80,8 +147,15 @@ Local environment hints may also be stored in `.env`, which is also ignored by G
 
 Each computer should choose the access profile that matches its network location.
 
-- `local`: Use the private LAN Home Assistant address and private LAN MCP endpoint. This is the default profile for the current Windows PC.
-- `remote`: Use the public HTTPS Home Assistant and MCP DDNS endpoints when away from the home network.
+- `local`: Use the private LAN Home Assistant IP address and private LAN MCP endpoint when inside the home network.
+- `remote`: Use the external DNS/HTTPS Home Assistant address and remote MCP endpoint when away from the home network.
+
+Home Assistant is currently reachable in two ways:
+
+- Inside the home network: by private IP address.
+- Outside the home network: by external DNS name.
+
+Prefer the local IP path when physically at home because it avoids unnecessary external routing. Use the DNS path when away from home or on a network that cannot reach the private LAN address.
 
 The exact URLs, bearer tokens, and MCP secret path belong in ignored local files only:
 

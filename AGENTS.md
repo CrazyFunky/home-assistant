@@ -33,6 +33,7 @@ The assistant helps manage:
 5. Read `OPERATIONS.md` before designing household routines.
 6. Read `HOUSE_LOG.md` for recent decisions and historical context.
 7. Read `DASHBOARDS.md` before inspecting or changing Home Assistant dashboards.
+8. Read `GITOPS.md` before planning file-based Home Assistant configuration sync or YAML edits.
 
 ## Editing Rules
 
