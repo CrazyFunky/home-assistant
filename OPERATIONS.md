@@ -33,6 +33,12 @@ The assistant should consider:
 - Energy use.
 - Whether an alert is useful now or can wait.
 
+## Presence Operations
+
+Family presence is based on phones connected to the home Wi-Fi through the ipTIME router. The Home Assistant Companion app can be used as an optional personal supplement, but family routines should not depend on every family member installing it.
+
+Use `person.*` entities for automations and dashboards, not raw `device_tracker.*` entities. When a phone is replaced, update the MAC address in the existing ipTIME tracker slot instead of renaming entities.
+
 ## Alerts
 
 Alerts should be useful, timely, and not excessive.

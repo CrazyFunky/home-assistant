@@ -163,6 +163,8 @@ Never commit:
 
 ```text
 secrets.yaml
+service_account.json
+secrets/
 .storage/
 home-assistant_v2.db*
 *.log
