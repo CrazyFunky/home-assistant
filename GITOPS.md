@@ -118,12 +118,13 @@ Confirmed reachable or editable through the guarded file path:
 | File or directory | Why it matters |
 | --- | --- |
 | `/config/ui-lovelace.yaml` | Main YAML-mode dashboard body |
-| `/config/button_card_templates.yaml` | Shared button-card design templates |
+| `/config/dashboards/button_card_templates.yaml` | Shared button-card design templates |
 | `/config/configuration.yaml` | Core YAML configuration; top-level edits should use `ha_config_set_yaml` so validation and backups run |
 | `/config/automations.yaml` | YAML automation file if used |
 | `/config/scripts.yaml` | YAML script file if used |
 | `/config/scenes.yaml` | YAML scene file if used |
 | `/config/include/` | Package files loaded through `homeassistant.packages: !include_dir_named include`, including recorder configuration |
+| `/config/dashboards/` | YAML dashboard files and dashboard-specific includes |
 | `/config/www/` | Local dashboard assets and custom frontend files |
 | `/config/themes/` | Theme YAML files |
 
@@ -143,13 +144,12 @@ Start with a conservative GitOps set:
 
 ```text
 /config/ui-lovelace.yaml
-/config/button_card_templates.yaml
+/config/dashboards/
 /config/configuration.yaml
 /config/automations.yaml
 /config/scripts.yaml
 /config/scenes.yaml
 /config/include/
-/config/lovelace/
 /config/www/lovelace/
 /config/themes/
 /config/esphome/

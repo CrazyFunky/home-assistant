@@ -49,3 +49,8 @@ This file records important decisions, setup history, and operating context.
 - The default YAML Lovelace Binance card was compacted from eight separate entity rows into one markdown table with one row per symbol. Each row shows symbol, current USDT price, and 24-hour percentage change.
 - `lovelace-multiple-entity-row` was installed through HACS and registered as a YAML-mode Lovelace resource in `configuration.yaml`. The default YAML Lovelace Binance card now uses four `custom:multiple-entity-row` rows so each symbol shows current price and 24-hour percentage change on one row.
 - The Binance rows in the default YAML Lovelace dashboard were adjusted so the 24-hour percentage change appears before the current price on each row.
+
+## 2026-07-03
+
+- Dashboard file organization policy clarified: keep Home Assistant's default root-level files such as `configuration.yaml`, `automations.yaml`, `scripts.yaml`, `scenes.yaml`, `secrets.yaml`, and `ui-lovelace.yaml` under `/config`, while placing user-created supporting files in purpose-specific folders such as `dashboards/`, `include/`, `www/`, and `themes/`.
+- The shared `button_card_templates.yaml` file was moved from `/config/button_card_templates.yaml` to `/config/dashboards/button_card_templates.yaml`. The root `ui-lovelace.yaml` now references it with `button_card_templates: !include dashboards/button_card_templates.yaml`; future YAML dashboard files inside `/config/dashboards/` can reference the same file with `button_card_templates: !include button_card_templates.yaml`.

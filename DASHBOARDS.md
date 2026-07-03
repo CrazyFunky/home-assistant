@@ -32,6 +32,20 @@ Known differences:
 
 The dashboards are based on `custom:button-card`.
 
+Shared button-card templates are kept under the dashboard folder:
+
+```yaml
+# /config/ui-lovelace.yaml
+button_card_templates: !include dashboards/button_card_templates.yaml
+```
+
+For YAML dashboard files stored inside `/config/dashboards/`, use the dashboard file's own directory as the include base:
+
+```yaml
+# /config/dashboards/sweethome.yaml
+button_card_templates: !include button_card_templates.yaml
+```
+
 Important template groups:
 
 - `custom_base_card`: base layout, card height, grid areas, common animation hooks.
@@ -45,7 +59,33 @@ Important template groups:
 - Display templates for temperature, humidity, power, signal, sliders, and option fields.
 - `custom_action`: tap, double-tap, hold, haptic, and button animation behavior.
 
-Because `SweetHome` is storage-mode, it cannot conveniently share YAML `!include` files such as `button_card_templates.yaml`. For now, keep the current dashboard modes and document differences here instead of converting dashboards immediately.
+Because `SweetHome` is storage-mode, it cannot conveniently share YAML `!include` files such as `dashboards/button_card_templates.yaml`. For now, keep the current dashboard modes and document differences here instead of converting dashboards immediately.
+
+## File Organization Principle
+
+Keep Home Assistant's default root-level files at `/config`, and place user-created supporting files in purpose-specific folders.
+
+Root-level files that should normally stay in `/config`:
+
+```text
+configuration.yaml
+automations.yaml
+scripts.yaml
+scenes.yaml
+secrets.yaml
+ui-lovelace.yaml
+```
+
+User-created supporting files should be grouped by purpose:
+
+```text
+dashboards/   # YAML dashboard files and dashboard-specific includes
+include/      # package files loaded through homeassistant.packages
+www/          # local frontend assets
+themes/       # theme YAML files
+```
+
+This keeps a fresh Home Assistant install's expected files recognizable while making custom household configuration easier to review, sync, and restore.
 
 ## Maintenance Rules
 
@@ -67,7 +107,7 @@ The most maintainable long-term structure would be to convert derivative dashboa
 
 ```yaml
 button_card_templates: !include button_card_templates.yaml
-views: !include lovelace/sweethome/views.yaml
+views: !include sweethome/views.yaml
 ```
 
 Then small-screen differences could be handled through explicit override templates, such as:
