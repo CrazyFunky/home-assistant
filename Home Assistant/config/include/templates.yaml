@@ -1,0 +1,154 @@
+# templates.yaml
+- sensor:
+  - device_class: energy
+    unit_of_measurement: kWh
+    default_entity_id: sensor.energy_meter_total
+    icon: mdi:counter
+    name: 총사용전력
+    state: >-
+      {% if states('sensor.energy_smart_meter_1') != 'unavailable'
+         and states('sensor.energy_smart_meter_1') != 'unknown'
+         and states('sensor.energy_smart_meter_1') | float != 0
+         and states('sensor.energy_smart_meter_2') != 'unavailable'
+         and states('sensor.energy_smart_meter_2') != 'unknown'
+         and states('sensor.energy_smart_meter_2') | float != 0
+         and states('sensor.energy_smart_meter_3') != 'unavailable'
+         and states('sensor.energy_smart_meter_3') != 'unknown'
+         and states('sensor.energy_smart_meter_3') | float != 0
+         and states('sensor.energy_smart_meter_4') != 'unavailable'
+         and states('sensor.energy_smart_meter_4') != 'unknown'
+         and states('sensor.energy_smart_meter_4') | float != 0 %}
+        {{ (
+          states('sensor.energy_smart_meter_1') | float +
+          states('sensor.energy_smart_meter_2') | float +
+          states('sensor.energy_smart_meter_3') | float +
+          states('sensor.energy_smart_meter_4') | float
+        ) | round(2) }}
+      {% else %}
+        {{ 'unavailable' }}
+      {% endif %}
+
+- sensor:
+  - unit_of_measurement: "µg/m³"
+    default_entity_id: sensor.livingroom_iaq_10_0_m_value
+    state: "{{ states('sensor.home_livingroom_iaq_10_0_m_value') | float | round(1) }}"
+    name: livingroom_iaq_10_0_m_value
+
+- sensor:
+  - unit_of_measurement: "µg/m³"
+    default_entity_id: sensor.livingroom_iaq_2_5_m_value
+    state: "{{ states('sensor.home_livingroom_iaq_2_5_m_value') | float | round(1) }}"
+    name: livingroom_iaq_2_5_m_value
+
+- sensor:
+  - unit_of_measurement: "°C"
+    default_entity_id: sensor.livingroom_iaq_temperature
+    state: "{{ states('sensor.home_livingroom_iaq_temperature') | float | round(1) }}"
+    name: livingroom_iaq_temperature
+
+- sensor:
+  - unit_of_measurement: "%"
+    default_entity_id: sensor.livingroom_iaq_humidity
+    state: "{{ states('sensor.home_livingroom_iaq_humidity') | float | round(0) }}"
+    name: livingroom_iaq_humidity
+
+- light:
+  - turn_on:
+      - action: script.kitchen_table_light_on
+    turn_off:
+      - action: script.kitchen_table_light_off
+    set_level:
+      - action: switch.turn_on
+        data:
+          entity_id: switch.0x28dba7fffea60da9_center
+      - action: light.turn_on
+        data:
+          entity_id:
+            - light.0x0017880108a897d5
+            - light.0x0017880108ada0e9
+            - light.0x0017880108a89a69
+          brightness: "{{ brightness }}"
+    set_temperature:
+      - action: switch.turn_on
+        data:
+          entity_id: switch.0x28dba7fffea60da9_center
+      - action: light.turn_on
+        data:
+          entity_id:
+            - light.0x0017880108a897d5
+            - light.0x0017880108ada0e9
+            - light.0x0017880108a89a69
+          color_temp: "{{ color_temp }}"
+    set_effect:
+      - action: switch.turn_on
+        data:
+          entity_id: switch.0x28dba7fffea60da9_center
+      - action: light.turn_on
+        data:
+          entity_id:
+            - light.0x0017880108a897d5
+            - light.0x0017880108ada0e9
+            - light.0x0017880108a89a69
+          effect: "{{ effect }}"
+    default_entity_id: light.kitchen_table
+    icon: mdi:vanity-light
+    name: "식탁등"
+    effect_list: "{{ state_attr('light.0x0017880108ada0e9', 'effect_list') }}"
+    effect: "{{ state_attr('light.0x0017880108ada0e9', 'effect') }}"
+    level: "{{ state_attr('light.0x0017880108ada0e9', 'brightness') }}"
+    temperature: "{{ state_attr('light.0x0017880108ada0e9', 'color_temp') }}"
+    state: >-
+      {% if is_state('switch.0x28dba7fffea60da9_center', 'on') %}
+        on
+      {% else %}
+        off
+      {% endif %}
+- sensor:
+    - name: "Binance BTCUSDT 09:00 Change"
+      unique_id: binance_btcusdt_24h_change
+      icon: mdi:chart-line
+      unit_of_measurement: "%"
+      state_class: measurement
+      availability: >-
+        {{ has_value('sensor.binance_btcusdt_price') and
+           states('input_number.binance_btcusdt_0900_price') | float(0) > 0 }}
+      state: >-
+        {% set current = states('sensor.binance_btcusdt_price') | float(0) %}
+        {% set base = states('input_number.binance_btcusdt_0900_price') | float(0) %}
+        {{ (((current - base) / base) * 100) | round(2) }}
+    - name: "Binance ETHUSDT 09:00 Change"
+      unique_id: binance_ethusdt_24h_change
+      icon: mdi:chart-line
+      unit_of_measurement: "%"
+      state_class: measurement
+      availability: >-
+        {{ has_value('sensor.binance_ethusdt_price') and
+           states('input_number.binance_ethusdt_0900_price') | float(0) > 0 }}
+      state: >-
+        {% set current = states('sensor.binance_ethusdt_price') | float(0) %}
+        {% set base = states('input_number.binance_ethusdt_0900_price') | float(0) %}
+        {{ (((current - base) / base) * 100) | round(2) }}
+    - name: "Binance ONDOUSDT 09:00 Change"
+      unique_id: binance_ondousdt_24h_change
+      icon: mdi:chart-line
+      unit_of_measurement: "%"
+      state_class: measurement
+      availability: >-
+        {{ has_value('sensor.binance_ondousdt_price') and
+           states('input_number.binance_ondousdt_0900_price') | float(0) > 0 }}
+      state: >-
+        {% set current = states('sensor.binance_ondousdt_price') | float(0) %}
+        {% set base = states('input_number.binance_ondousdt_0900_price') | float(0) %}
+        {{ (((current - base) / base) * 100) | round(2) }}
+    - name: "Binance TRUMPUSDT 09:00 Change"
+      unique_id: binance_trumpusdt_24h_change
+      icon: mdi:chart-line
+      unit_of_measurement: "%"
+      state_class: measurement
+      availability: >-
+        {{ has_value('sensor.binance_trumpusdt_price') and
+           states('input_number.binance_trumpusdt_0900_price') | float(0) > 0 }}
+      state: >-
+        {% set current = states('sensor.binance_trumpusdt_price') | float(0) %}
+        {% set base = states('input_number.binance_trumpusdt_0900_price') | float(0) %}
+        {{ (((current - base) / base) * 100) | round(2) }}

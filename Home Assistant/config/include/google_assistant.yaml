@@ -1,0 +1,13 @@
+# Google Assistant cloud-to-cloud integration package. Matterbridge is the primary voice path; keep this for exceptions only.
+google_assistant:
+  project_id: smarthome-5d54d
+  service_account: !include ../secrets/google_assistant_service_account.json
+  report_state: true
+  expose_by_default: false
+  entity_config:
+    switch.0x0cae5ffffe341ef8_left:
+      expose: true
+      name: "Study Ceiling Light"
+    cover.0x5c0272fffebe33d2:
+      expose: true
+      name: "Bedroom Blind"

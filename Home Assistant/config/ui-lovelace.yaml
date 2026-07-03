@@ -1,0 +1,3389 @@
+button_card_templates: !include dashboards/button_card_templates.yaml
+
+background: var(--background-image)
+views:
+  - title: SweetHome
+    path: switch
+    icon: mdi:home-assistant
+    # theme: ios-dark-mode
+    badges: []
+    cards:
+      #################################################
+      #                                               #
+      #                     날씨                       #
+      #                                               #
+      #################################################
+      - type: vertical-stack
+        cards:
+          - type: custom:weather-card
+            entity: weather.yeongtongdong
+            number_of_forecasts: "5"
+            name: 영통3동
+            forecast: false
+            details: true
+            current: true
+            hourly_forecast: true
+          #################################################
+          #                                               #
+          #                     소비전력                    #
+          #                                               #
+          #################################################
+          - type: custom:apexcharts-card
+            graph_span: 1month
+            span:
+              end: month
+            experimental:
+              color_threshold: true
+            header:
+              show: true
+              title: 실시간 소비전력
+              show_states: true
+              colorize_states: true
+            now:
+              show: false
+              label: Now
+            cache: true
+            series:
+              - entity: sensor.daily_energy_meter_total
+                type: column
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                  in_header: true
+                  in_chart: true
+                group_by:
+                  func: last
+                  duration: 1d
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 12
+                    color: yellow
+                  - value: 13
+                    color: orange
+                  - value: 14
+                    color: red
+              - entity: sensor.monthly_energy_meter_total
+                type: column
+                show:
+                  header_color_threshold: true
+                  extremas: false
+                  in_header: true
+                  in_chart: false
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 360
+                    color: yellow
+                  - value: 380
+                    color: orange
+                  - value: 400
+                    color: red
+              - entity: sensor.monthly_kwh_to_won_forecast_kwh
+                type: column
+                show:
+                  header_color_threshold: true
+                  extremas: false
+                  in_header: true
+                  in_chart: false
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 320
+                    color: yellow
+                  - value: 360
+                    color: orange
+                  - value: 400
+                    color: red
+            apex_config:
+              yaxis:
+                min: 0
+              xaxis:
+                labels:
+                  datetimeFormatter:
+                    month: M/dd
+                    day: M/dd
+          - type: entities
+            entities:
+              - entity: sensor.monthly_kwh_to_won_won
+              - entity: sensor.monthly_kwh_to_won_forecast_won
+          - type: entities
+            entities:
+              - type: custom:multiple-entity-row
+                entity: sensor.binance_btcusdt_24h_change
+                name: BTCUSDT
+                state_header: 09:00
+                entities:
+                  - entity: sensor.binance_btcusdt_price
+                    name: 가격
+              - type: custom:multiple-entity-row
+                entity: sensor.binance_ethusdt_24h_change
+                name: ETHUSDT
+                state_header: 09:00
+                entities:
+                  - entity: sensor.binance_ethusdt_price
+                    name: 가격
+              - type: custom:multiple-entity-row
+                entity: sensor.binance_ondousdt_24h_change
+                name: ONDOUSDT
+                state_header: 09:00
+                entities:
+                  - entity: sensor.binance_ondousdt_price
+                    name: 가격
+              - type: custom:multiple-entity-row
+                entity: sensor.binance_trumpusdt_24h_change
+                name: TRUMPUSDT
+                state_header: 09:00
+                entities:
+                  - entity: sensor.binance_trumpusdt_price
+                    name: 가격
+      #################################################
+      #                                               #
+      #                     Room 상태                 #
+      #                                               #
+      #################################################
+      - type: vertical-stack
+        cards:
+          - type: custom:button-card
+            entity: sensor.power_smart_meter_1
+            name: 안방
+            icon: mdi:bed
+            show_icon: true
+            show_name: false
+            show_state: true
+            styles:
+              card:
+                - height: 80px
+                - background: rgba(0, 0, 0, 0.3)
+                - border: 1px solid rgba(0, 0, 0, 0.3)
+                - border-radius: 10px
+              grid:
+                - grid-template-areas: |
+                    "i i o1i o2i o3i o4i"
+                    "i i o1s o2s o3s o4s"
+                    "i i o5i o6i o7i o8i"
+                    "s s o5s o6s o7s o8s"
+                - grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr
+                - grid-template-rows: repeat(4, 25%)
+              icon:
+                - align-self: start
+                - justify-self: center
+                - color: |
+                    [[[
+                      if (entity.state < 50) return 'cyan';
+                      else if (entity.state >= 50 && entity.state < 200) return 'green';
+                      else if (entity.state >= 200 && entity.state < 500) return 'yellow';
+                      else if (entity.state >= 500 && entity.state < 1000) return 'orange';
+                      else return 'red';
+                    ]]]
+              state:
+                - align-self: start
+                - justify-self: center
+                - font-size: 0.8em
+                - font-weight: bold
+                - color: |
+                    [[[
+                      if (entity.state < 50) return 'cyan';
+                      else if (entity.state >= 50 && entity.state < 200) return 'green';
+                      else if (entity.state >= 200 && entity.state < 500) return 'yellow';
+                      else if (entity.state >= 500 && entity.state < 1000) return 'orange';
+                      else return 'red';
+                    ]]]
+              custom_fields:
+                o1i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-0.7em'
+                o2i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-0.7em'
+                o3i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-0.7em'
+                o4i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-0.7em'
+                o5i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_10_0_m_value"].state < 31) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 31 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 81) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 81 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 151) return 'orange';
+                        else return 'red';
+                      ]]]
+                o6i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_2_5_m_value"].state < 16) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 16 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 36) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 36 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 76) return 'orange';
+                        else return 'red';
+                      ]]]
+                o7i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_co2_value"].state < 400) return 'blue';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 400 && states["sensor.home_livingroom_iaq_co2_value"].state < 700) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 700 && states["sensor.home_livingroom_iaq_co2_value"].state < 1000) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1000 && states["sensor.home_livingroom_iaq_co2_value"].state < 1500) return 'yellow';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1500 && states["sensor.home_livingroom_iaq_co2_value"].state < 2000) return 'orange';
+                        else return 'red';
+                      ]]]
+                o8i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                o1s:
+                  - align-self: start
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["person.weinhwan"].state == 'home') return 'green';   
+                        else return 'yellow';
+                      ]]]
+                o2s:
+                  - align-self: start
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["person.jangseongeun"].state == 'home') return 'green';   
+                        else return 'yellow';
+                      ]]]
+                o3s:
+                  - align-self: start
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["person.wejiyeon"].state == 'home') return 'green';   
+                        else return 'yellow';
+                      ]]]
+                o4s:
+                  - align-self: start
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["person.wegahyeon"].state == 'home') return 'green';
+                        else return 'yellow';
+                      ]]]
+                o5s:
+                  - align-self: startd
+                  - justify-self: center
+                  - margin-top: 2.2em
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_10_0_m_value"].state < 31) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 31 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 81) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 81 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 151) return 'orange';
+                        else return 'red';
+                      ]]]
+                o6s:
+                  - align-self: start
+                  - justify-self: center
+                  - margin-top: 1em
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_2_5_m_value"].state < 16) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 16 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 36) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 36 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 76) return 'orange';
+                        else return 'red';
+                      ]]]
+                o7s:
+                  - align-self: start
+                  - justify-self: center
+                  - margin-top: 1em
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_co2_value"].state < 400) return 'blue';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 400 && states["sensor.home_livingroom_iaq_co2_value"].state < 700) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 700 && states["sensor.home_livingroom_iaq_co2_value"].state < 1000) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1000 && states["sensor.home_livingroom_iaq_co2_value"].state < 1500) return 'yellow';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1500 && states["sensor.home_livingroom_iaq_co2_value"].state < 2000) return 'orange';
+                        else return 'red';
+                      ]]]
+                o8s:
+                  - align-self: start
+                  - justify-self: center
+                  - margin-top: 1em
+                  - font-size: 0.7em
+                  - font-weight: bold
+            custom_fields:
+              o1i: |
+                [[[
+                  return `
+                    <img src='/local/lovelace/위인환.jpg' width="25em" height="25em" style="border-radius:50%">
+                    </img>`
+                ]]]
+              o2i: |
+                [[[
+                  return `
+                    <img src='/local/lovelace/장성은.jpg' width="25em" height="25em" style="border-radius:50%">
+                    </img>`
+                ]]]
+              o3i: |
+                [[[
+                  return `
+                    <img src='/local/lovelace/위지연.jpg' width="25em" height="25em" style="border-radius:50%">
+                    </img>`
+                ]]]
+              o4i: |
+                [[[
+                  return `
+                    <img src='/local/lovelace/위가현.jpg' width="25em" height="25em" style="border-radius:50%">
+                    </img>`
+                ]]]
+              o5i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:blur"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o6i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:blur-linear"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o7i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:molecule-co2"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o8i: |
+                [[[
+                  return ``
+                ]]]
+              o1s: |
+                [[[
+                  if (states["person.weinhwan"].state == 'home') return `<span>
+                    <span style="color: var(--text-color-sensor);">재실</span>`
+                  else if (states["person.weinhwan"].state == 'not_home') return `<span>
+                    <span style="color: var(--text-color-sensor);">외출</span>`
+                  else return `<span>
+                    <span style="color: var(--text-color-sensor);">${states["person.weinhwan"].state}</span>`
+                ]]]
+              o2s: |
+                [[[
+                  if (states["person.jangseongeun"].state == 'home') return `<span>
+                    <span style="color: var(--text-color-sensor);">재실</span>`
+                  else if (states["person.jangseongeun"].state == 'not_home') return `<span>
+                    <span style="color: var(--text-color-sensor);">외출</span>`
+                  else return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['person.jangseongeun'].state}</span>`
+                ]]]
+              o3s: |
+                [[[
+                  if (states["person.wejiyeon"].state == 'home') return `<span>
+                    <span style="color: var(--text-color-sensor);">재실</span>`
+                  else if (states["person.wejiyeon"].state == 'not_home') return `<span>
+                    <span style="color: var(--text-color-sensor);">외출</span>`
+                  else return `<span>
+                    <span style="color: var(--text-color-sensor);">${states["person.wejiyeon"].state}</span>`
+                ]]]
+              o4s: |
+                [[[
+                  if (states["person.wegahyeon"].state == 'home') return `<span>
+                    <span style="color: var(--text-color-sensor);">재실</span>`
+                  else if (states["person.wegahyeon"].state == 'not_home') return `<span>
+                    <span style="color: var(--text-color-sensor);">외출</span>`
+                  else return `<span>
+                    <span style="color: var(--text-color-sensor);">${states["person.wegahyeon"].state}</span>`
+                ]]]
+              o5s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states["sensor.livingroom_iaq_10_0_m_value"].state} ㎍/㎥</span>`
+                ]]]
+              o6s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states["sensor.livingroom_iaq_2_5_m_value"].state} ㎍/㎥</span>`
+                ]]]
+              o7s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states["sensor.home_livingroom_iaq_co2_value"].state } ppm</span>`
+                ]]]
+              o8s: |
+                [[[
+                  return ''
+                ]]]
+
+          - type: picture-elements
+            image: /local/lovelace/살구골.png
+            aspect_ratio: '16:9'
+            elements:
+              # 안방
+              - type: custom:button-card
+                entity: sensor.0xa4c1384e9f327a98_temperature
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 77%
+                  left: 78%
+                template:
+                  - custom_floor_card
+                  - custom_display_temperature_humidity
+                variables:
+                  input_opt1_value: '[[[ return states["sensor.0xa4c1384e9f327a98_temperature"].state; ]]]'
+                  input_opt2_value: '[[[ return states["sensor.0xa4c1384e9f327a98_humidity"].state; ]]]'
+              # 서재
+              - type: custom:button-card
+                entity: sensor.ble_temperature_a4c13849e1c4
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 27%
+                  left: 76%
+                template:
+                  - custom_floor_card
+                  - custom_display_temperature_humidity
+                variables:
+                  input_opt1_value: '[[[ return states["sensor.ble_temperature_a4c13849e1c4"].state; ]]]'
+                  input_opt2_value: '[[[ return states["sensor.ble_humidity_a4c13849e1c4"].state; ]]]'
+              # 지연방
+              - type: custom:button-card
+                entity: sensor.0xa4c138d9cde80e2b_temperature
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 70%
+                  left: 19%
+                template:
+                  - custom_floor_card
+                  - custom_display_temperature_humidity
+                variables:
+                  input_opt1_value: '[[[ return states["sensor.0xa4c138d9cde80e2b_temperature"].state; ]]]'
+                  input_opt2_value: '[[[ return states["sensor.0xa4c138d9cde80e2b_humidity"].state; ]]]'
+              # 가현방
+              - type: custom:button-card
+                entity: sensor.0xa4c13878ea655c16_temperature
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 21%
+                  left: 19%
+                template:
+                  - custom_floor_card
+                  - custom_display_temperature_humidity
+                variables:
+                  input_opt1_value: '[[[ return states["sensor.0xa4c13878ea655c16_temperature"].state; ]]]'
+                  input_opt2_value: '[[[ return states["sensor.0xa4c13878ea655c16_humidity"].state; ]]]'
+              # 주방
+              - type: custom:button-card
+                entity: sensor.0x00124b001f875767_temperature
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 15%
+                  left: 49%
+                template:
+                  - custom_floor_card
+                  - custom_display_temperature_humidity
+                variables:
+                  input_opt1_value: '[[[ return states["sensor.0x00124b001f875767_temperature"].state; ]]]'
+                  input_opt2_value: '[[[ return states["sensor.0x00124b001f875767_humidity"].state; ]]]'
+              # 거실
+              - type: custom:button-card
+                entity: sensor.ble_temperature_a4c138c1986c
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 64%
+                  left: 56%
+                template:
+                  - custom_floor_card
+                  - custom_display_temperature_humidity
+                variables:
+                  input_opt1_value: '[[[ return states["sensor.ble_temperature_a4c138c1986c"].state ; ]]]'
+                  input_opt2_value: '[[[ return states["sensor.ble_humidity_a4c138c1986c"].state ; ]]]'
+              # 안방 스탠드
+              - type: custom:button-card
+                entity: light.0xa4c1384d99bd2c5c
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 83%
+                  left: 90%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 안방 화장실
+              - type: custom:button-card
+                entity: switch.0x7cb94c7722560000
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 47%
+                  left: 88%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 거실 스탠드
+              - type: custom:button-card
+                entity: light.0xb40ecfd0e64f0000
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 83%
+                  left: 32%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 거실 배란다등
+              - type: custom:button-card
+                entity: switch.0x286847fffe272438_left
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 85%
+                  left: 47%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 거실 4구등
+              - type: custom:button-card
+                entity: switch.0x286847fffe272438_right
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 65%
+                  left: 42%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 거실 5구등
+              - type: custom:button-card
+                entity: switch.0x286847fffe272438_center
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 65%
+                  left: 48%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 서재 형광등
+              - type: custom:button-card
+                entity: switch.0x0cae5ffffe341ef8_left
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 21%
+                  left: 75%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # Home-PC
+              - type: custom:button-card
+                entity: switch.computer
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 21%
+                  left: 89%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 지연방 형광등
+              - type: custom:button-card
+                entity: switch.0x187a3efffefadc31_left
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 68%
+                  left: 8%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 지연방 보조등
+              - type: custom:button-card
+                entity: switch.0x187a3efffefadc31_center
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 84%
+                  left: 8%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 가현방 형광등
+              - type: custom:button-card
+                entity: switch.0x28dba7fffea610fb_left
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 26%
+                  left: 8%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 가현방 보조등
+              - type: custom:button-card
+                entity: switch.0x28dba7fffea610fb_center
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 10%
+                  left: 8%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 식탁등
+              - type: custom:button-card
+                entity: light.kitchen_table
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 27%
+                  left: 61%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 주방등
+              - type: custom:button-card
+                entity: switch.0x28dba7fffea60da9_left
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 20%
+                  left: 38%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 복도등
+              - type: custom:button-card
+                entity: switch.0x28dba7fffea60da9_right
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 47%
+                  left: 52%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 거실 화장실등
+              - type: custom:button-card
+                entity: switch.0xf4b3b1fffe60182a_left
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 38%
+                  left: 36%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 안방 에어콘
+              - type: custom:button-card
+                entity: climate.anbang_eeokeon
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 82%
+                  left: 68%
+                template:
+                  - custom_floor_card
+                  - custom_action
+              # 거실 에어콘
+              - type: custom:button-card
+                entity: climate.geosil_eeokeon
+                show_icon: false
+                show_name: false
+                show_state: false
+                style:
+                  top: 82%
+                  left: 59%
+                template:
+                  - custom_floor_card
+                  - custom_action
+      #################################################
+      #                                               #
+      #                 Room Entity                   #
+      #                                               #
+      #################################################
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: light.0xa4c1384d99bd2c5c
+                name: 안방 스탠드
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_brightness
+                  - custom_display_slider
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_brightness: '[[[ return entity.attributes.brightness; ]]]'
+                  input_signal: '[[[ return states["sensor.0xa4c1384d99bd2c5c_linkquality"].state; ]]]'
+
+              - type: custom:button-card
+                entity: cover.0x5c0272fffebe33d2
+                name: 안방 블라인드
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_cover_card
+                  - custom_display_position
+                  - custom_display_slider
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_posision: '[[[ return entity.attributes.current_position; ]]]'
+                  input_signal: '[[[ return states["sensor.0x5c0272fffebe33d2_linkquality"].state; ]]]'
+
+              - type: custom:button-card
+                entity: media_player.bedroom_speaker
+                name: 안방 스피커
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_media_card
+                  - custom_display_media
+                  - custom_display_slider
+                  - custom_action
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: media_player.bedroom_tv
+                name: 안방 TV
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_media_card
+                  - custom_display_media
+                  - custom_display_slider
+                  - custom_action
+
+              - type: custom:button-card
+                entity: climate.anbang_eeokeon
+                name: 안방 에어콘
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_climate_card
+                  - custom_display_climate
+                  - custom_display_slider
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_power: '[[[ return states["sensor.anbang_eeokeon_power"].state; ]]]'
+                  input_signal: '[[[ return states["sensor.0x60a423fffe1381b3_linkquality"].state; ]]]'
+
+              - type: custom:button-card
+                entity: switch.0x60a423fffe1381b3
+                name: 에어콘 전원
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x60a423fffe1381b3_linkquality"].state; ]]]'
+                  input_power: '[[[ return states["sensor.0x60a423fffe1381b3_power"].state; ]]]'
+                  
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.0x187a3efffefadc31_left
+                name: 지연방 형광등
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - sensor.0x00124b001f9b0429_action
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x187a3efffefadc31_linkquality"].state; ]]]'
+
+              - type: custom:button-card
+                entity: switch.0x187a3efffefadc31_center
+                name: 지연방 보조등
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - sensor.0x00124b001f9b0429_action
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x187a3efffefadc31_linkquality"].state; ]]]'
+
+            #   - type: custom:button-card
+            #     entity: switch.0x60a423fffe62174c
+            #     name: 지연방 스위치
+            #     show_icon: false
+            #     show_name: true
+            #     show_state: true
+            #     triggers_update:
+            #       - switch.0x60a423fffe62174c
+            #     template:
+            #       - custom_base_card
+            #       - custom_switch_card
+            #       - custom_display_power
+            #       - custom_display_signal
+            #       - custom_action
+            #     variables:
+            #       input_signal: '[[[ return states["sensor.0x60a423fffe62174c_linkquality"].state; ]]]'
+            #       input_power: '[[[ return states["sensor.0x60a423fffe62174c_power"].state; ]]]'
+              - type: custom:button-card
+                color_type: blank-card
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.0x28dba7fffea610fb_left
+                name: 가현방 형광등
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - sensor.0x00124b0022e962e1_action
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x28dba7fffea610fb_linkquality"].state; ]]]'
+
+              - type: custom:button-card
+                entity: switch.0x28dba7fffea610fb_center
+                name: 가현방 보조등
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - sensor.0x00124b0022e962e1_action
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x28dba7fffea610fb_linkquality"].state; ]]]'
+
+            #   - type: custom:button-card
+            #     entity: switch.0x60a423fffe69c3cd
+            #     name: 가현방 스위치
+            #     show_icon: false
+            #     show_name: true
+            #     show_state: true
+            #     triggers_update:
+            #       - switch.0x60a423fffe69c3cd
+            #     template:
+            #       - custom_base_card
+            #       - custom_switch_card
+            #       - custom_display_power
+            #       - custom_display_signal
+            #       - custom_action
+            #     variables:
+            #       input_signal: '[[[ return states["sensor.0x60a423fffe69c3cd_linkquality"].state; ]]]'
+            #       input_power: '[[[ return states["sensor.0x60a423fffe69c3cd_power"].state; ]]]'
+              - type: custom:button-card
+                color_type: blank-card
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.home_assistant
+                name: Home-Assistant
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - switch.switch_4
+                  - sensor.db_size
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_option2
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x60a423fffe651e20_linkquality"].state; ]]]'
+                  input_power: '[[[ return states["sensor.0x60a423fffe651e20_power"].state; ]]]'
+                  input_opt2_value: '[[[ return states["sensor.db_size"].state; ]]]'
+                  input_opt2_icon: '[[[ return states["sensor.db_size"].attributes.icon; ]]]'
+
+              - type: custom:button-card
+                entity: switch.home_cloud
+                name: Home-Cloud
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - switch.switch_3
+                  - sensor.homecloud_cpu_utilization_total
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_option2
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x60a423fffe651e20_linkquality"].state; ]]]'
+                  input_power: '[[[ return states["sensor.0x60a423fffe651e20_power"].state; ]]]'
+                  input_opt2_value: '[[[ return states["sensor.homecloud_cpu_utilization_total"].state; ]]]'
+                  input_opt2_icon: '[[[ return "mdi:speedometer"; ]]]'
+
+              - type: custom:button-card
+                entity: switch.computer
+                name: Home-PC
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - switch.0x60a423fffe620ee1
+                  - sensor.home_pc_cpu_usage
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_option2
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x60a423fffe620ee1_linkquality"].state; ]]]'
+                  input_power: '[[[ return states["sensor.0x60a423fffe620ee1_power"].state; ]]]'
+                  input_opt2_value: '[[[ return states["sensor.home_pc_cpu_usage"].state; ]]]'
+                  input_opt2_icon: '[[[ return "mdi:speedometer"; ]]]'
+
+      #################################################
+      #                                               #
+      #              Living Room Entity               #
+      #                                               #
+      #################################################
+      - type: vertical-stack
+        cards:
+          - type: custom:button-card
+            entity: sensor.power_smart_meter_3
+            name: 거실
+            icon: mdi:sofa
+            show_icon: true
+            show_name: false
+            show_state: true
+            show_entity_picture: false
+            entity_picture: null
+            styles:
+              card:
+                - height: 80px
+                - background: rgba(0, 0, 0, 0.3)
+                - border: 1px solid rgba(0, 0, 0, 0.3)
+                - border-radius: 10px
+              grid:
+                - grid-template-areas: |
+                    "i i o1i o2i o3i o4i"
+                    "i i o1s o2s o3s o4s"
+                    "i i o5i o6i o7i o8i"
+                    "s s o5s o6s o7s o8s"
+                - grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr
+                - grid-template-rows: repeat(4, 25%)
+              icon:
+                - align-self: end
+                - justify-self: center
+                - color: |
+                    [[[
+                      if (entity.state < 50) return 'cyan';
+                      else if (entity.state >= 50 && entity.state < 200) return 'green';
+                      else if (entity.state >= 200 && entity.state < 500) return 'yellow';
+                      else if (entity.state >= 500 && entity.state < 1000) return 'orange';
+                      else return 'red';
+                    ]]]
+              state:
+                - align-self: start
+                - justify-self: center
+                - font-size: 0.8em
+                - font-weight: bold
+                - color: |
+                    [[[
+                      if (entity.state < 50) return 'cyan';
+                      else if (entity.state >= 50 && entity.state < 200) return 'green';
+                      else if (entity.state >= 200 && entity.state < 500) return 'yellow';
+                      else if (entity.state >= 500 && entity.state < 1000) return 'orange';
+                      else return 'red';
+                    ]]]
+              custom_fields:
+                o1i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-1em'
+                  - width: 20px
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.ble_temperature_a4c13849e1c4"].state < -5) return 'blue';
+                        else if (states["sensor.ble_temperature_a4c13849e1c4"].state >= -5 && states["sensor.ble_temperature_a4c13849e1c4"].state < 18) return 'cyan';
+                        else if (states["sensor.ble_temperature_a4c13849e1c4"].state >= 18 && states["sensor.ble_temperature_a4c13849e1c4"].state < 26) return 'green';
+                        else if (states["sensor.ble_temperature_a4c13849e1c4"].state >= 26 && states["sensor.ble_temperature_a4c13849e1c4"].state < 30) return 'orange';
+                        else return 'red';
+                      ]]]
+                o2i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-1em'
+                  - width: 20px
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.ble_humidity_a4c13849e1c4"].state < 10) return 'blue';
+                        else if (states["sensor.ble_humidity_a4c13849e1c4"].state >= 10 && states["sensor.ble_humidity_a4c13849e1c4"].state < 40) return 'cyan';
+                        else if (states["sensor.ble_humidity_a4c13849e1c4"].state >= 40 && states["sensor.ble_humidity_a4c13849e1c4"].state < 60) return 'green';
+                        else if (states["sensor.ble_humidity_a4c13849e1c4"].state >= 60 && states["sensor.ble_humidity_a4c13849e1c4"].state < 80) return 'orange';
+                        else return 'red';
+                      ]]]
+                o3i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-1em'
+                  - width: 20px
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.0x54ef4410000c2a46_illuminance"].state < 10) return 'green';
+                        else return 'yellow';
+                      ]]]
+                o5i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_10_0_m_value"].state < 31) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 31 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 81) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 81 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 151) return 'orange';
+                        else return 'red';
+                      ]]]
+                o6i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_2_5_m_value"].state < 16) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 16 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 36) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 36 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 76) return 'orange';
+                        else return 'red';
+                      ]]]
+                o7i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_co2_value"].state < 400) return 'blue';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 400 && states["sensor.home_livingroom_iaq_co2_value"].state < 700) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 700 && states["sensor.home_livingroom_iaq_co2_value"].state < 1000) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1000 && states["sensor.home_livingroom_iaq_co2_value"].state < 1500) return 'yellow';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1500 && states["sensor.home_livingroom_iaq_co2_value"].state < 2000) return 'orange';
+                        else return 'red';
+                      ]]]
+                o8i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                o1s:
+                  - align-self: center
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.ble_temperature_a4c13849e1c4"].state < -5) return 'blue';
+                        else if (states["sensor.ble_temperature_a4c13849e1c4"].state >= -5 && states["sensor.ble_temperature_a4c13849e1c4"].state < 18) return 'cyan';
+                        else if (states["sensor.ble_temperature_a4c13849e1c4"].state >= 18 && states["sensor.ble_temperature_a4c13849e1c4"].state < 26) return 'green';
+                        else if (states["sensor.ble_temperature_a4c13849e1c4"].state >= 26 && states["sensor.ble_temperature_a4c13849e1c4"].state < 30) return 'orange';
+                        else return 'red';
+                      ]]]
+                o2s:
+                  - align-self: center
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.ble_humidity_a4c13849e1c4"].state < 10) return 'blue';
+                        else if (states["sensor.ble_humidity_a4c13849e1c4"].state >= 10 && states["sensor.ble_humidity_a4c13849e1c4"].state < 40) return 'cyan';
+                        else if (states["sensor.ble_humidity_a4c13849e1c4"].state >= 40 && states["sensor.ble_humidity_a4c13849e1c4"].state < 60) return 'green';
+                        else if (states["sensor.ble_humidity_a4c13849e1c4"].state >= 60 && states["sensor.ble_humidity_a4c13849e1c4"].state < 80) return 'orange';
+                        else return 'red';
+                      ]]]
+                o3s:
+                  - align-self: center
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.0x54ef4410000c2a46_illuminance"].state < 10) return 'green';
+                        else return 'yellow';
+                      ]]]
+                o5s:
+                  - align-self: startd
+                  - justify-self: center
+                  - margin-top: 2.2em
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_10_0_m_value"].state < 31) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 31 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 81) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 81 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 151) return 'orange';
+                        else return 'red';
+                      ]]]
+                o6s:
+                  - align-self: start
+                  - justify-self: center
+                  - margin-top: 1em
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_2_5_m_value"].state < 16) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 16 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 36) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 36 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 76) return 'orange';
+                        else return 'red';
+                      ]]]
+                o7s:
+                  - align-self: start
+                  - justify-self: center
+                  - margin-top: 1em
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_co2_value"].state < 400) return 'blue';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 400 && states["sensor.home_livingroom_iaq_co2_value"].state < 700) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 700 && states["sensor.home_livingroom_iaq_co2_value"].state < 1000) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1000 && states["sensor.home_livingroom_iaq_co2_value"].state < 1500) return 'yellow';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1500 && states["sensor.home_livingroom_iaq_co2_value"].state < 2000) return 'orange';
+                        else return 'red';
+                      ]]]
+                o8s:
+                  - align-self: start
+                  - justify-self: center
+                  - margin-top: 1em
+                  - font-size: 0.7em
+                  - font-weight: bold
+            custom_fields:
+              o1i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:thermometer"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o2i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:water-percent"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o3i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:brightness-5"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o5i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:blur"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o6i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:blur-linear"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o7i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:molecule-co2"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o8i: |
+                [[[
+                  return ``
+                ]]]
+              o1s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.livingroom_iaq_temperature'].state} °C</span>`
+                ]]]
+              o2s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.livingroom_iaq_humidity'].state} %</span>`
+                ]]]
+              o3s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.0x54ef4410000c2a46_illuminance'].state} lx</span>`
+                ]]]
+              o5s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.livingroom_iaq_10_0_m_value'].state} ㎍/㎥</span>`
+                ]]]
+              o6s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.livingroom_iaq_2_5_m_value'].state} ㎍/㎥</span>`
+                ]]]
+              o7s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.home_livingroom_iaq_co2_value'].state} ppm</span>`
+                ]]]
+              o8s: |
+                [[[
+                  return ''
+                ]]]
+          - show_state: false
+            show_name: false
+            camera_view: auto
+            fit_mode: cover
+            type: picture-entity
+            camera_image: camera.living_room
+            entity: camera.living_room
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: cover.livingroom_curtain
+                name: 거실 커튼
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - binary_sensor.0x00124b0022ea5fc2_contact
+                template:
+                  - custom_base_card
+                  - custom_cover_card
+                  - custom_display_position
+                  - custom_display_slider
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x00124b0022ea5fc2_linkquality"].state; ]]]'
+                  input_posision: "[[[ return entity.attributes.current_position; ]]]"
+
+              - type: custom:button-card
+                entity: climate.geosil_eeokeon
+                name: 거실 에어콘
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_climate_card
+                  - custom_display_climate
+                  - custom_display_slider
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x60a423fffe1381b3_linkquality"].state; ]]]'
+                  input_power: '[[[ return states["sensor.geosil_eeokeon_power"].state; ]]]'
+
+              - type: custom:button-card
+                entity: vacuum.bbolbboli
+                name: 뾸뾸이
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_vacuum_card
+                  - custom_display_option1
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.bbolbboli_wi_fi_rssi"].state; ]]]'
+                  input_opt1_value: '[[[ return states["sensor.bbolbboli_battery"].state; ]]]'
+                  input_opt1_icon: '[[[ return states["sensor.bbolbboli_battery"].attributes.icon || "mdi:battery"; ]]]'
+          
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.0x286847fffe272438_right
+                name: 거실 4구등
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - sensor.0x54ef4410000c2a46_illuminance
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_brightness
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x286847fffe272438_linkquality"].state; ]]]'
+                  input_brightness: '[[[ return states["sensor.0x54ef4410000c2a46_illuminance"].state; ]]]'
+              
+              - type: custom:button-card
+                entity: switch.0x286847fffe272438_center
+                name: 거실 5구등
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - sensor.0x54ef4410000c2a46_illuminance
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_brightness
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x286847fffe272438_linkquality"].state; ]]]'
+                  input_brightness: '[[[ return states["sensor.0x54ef4410000c2a46_illuminance"].state; ]]]'
+                
+              - type: custom:button-card
+                entity: switch.0x28dba7fffea60da9_right
+                name: 복도등
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - sensor.0x54ef4410000c2a46_illuminance
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_brightness
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x28dba7fffea60da9_linkquality"].state; ]]]'
+                  input_brightness: '[[[ return states["sensor.0x54ef4410000c2a46_illuminance"].state; ]]]'
+                  
+          - type: horizontal-stack
+            cards:
+              
+            
+            #   - type: custom:button-card
+            #     entity: media_player.livingroom_tv
+            #     name: 거실 TV
+            #     show_icon: false
+            #     show_name: true
+            #     show_state: true
+            #     template:
+            #       - custom_base_card
+            #       - custom_media_card
+            #       - custom_display_slider
+            #       - custom_display_media
+            #       - custom_action
+            
+              - type: custom:button-card
+                entity: switch.0x286847fffe272438_left
+                name: 거실 배란다등
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - sensor.0x54ef4410000c2a46_illuminance
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_brightness
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x7cb94c76d22c0000_linkquality"].state; ]]]'
+                  input_brightness: '[[[ return states["sensor.0x54ef4410000c2a46_illuminance"].state; ]]]'
+                  
+              - type: custom:button-card
+                entity: light.0xb40ecfd0e64f0000
+                name: 거실 스탠드
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_brightness
+                  - custom_display_slider
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0xb40ecfd0e64f0000_linkquality"].state; ]]]'
+                  input_brightness: "[[[ return entity.attributes.brightness; ]]]"
+                  
+              - type: custom:button-card
+                entity: switch.theater
+                name: 영화관 모드
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - switch.0x60a423fffe651ef3
+                  - cover.livingroom_screen
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_option1
+                  - custom_display_option2
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x286847fffe27072d_linkquality"].state; ]]]'
+                  input_opt1_value: |
+                    [[[
+                      if (states["switch.projector"].state == 'on') return 'On';
+                      else return '';
+                    ]]]
+                  input_opt1_icon: |
+                    [[[
+                      if (states["switch.projector"].state == 'on') return 'mdi:projector';
+                      else return 'mdi:projector-off';
+                    ]]]
+                  input_opt2_value: |
+                    [[[
+                      if (states["cover.livingroom_screen"].state == 'open') return 'On';
+                      else return '';
+                    ]]]
+                  input_opt2_icon: |
+                    [[[
+                      if (states["cover.livingroom_screen"].state == 'open') return 'mdi:blinds';
+                      else return 'mdi:blinds-open';
+                    ]]]
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.ksgi_1
+                name: 기초교학
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_action
+                  
+              - type: custom:button-card
+                entity: switch.ksgi_2
+                name: 영상물시청
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_action
+                  
+              - type: custom:button-card
+                entity: switch.ksgi_3
+                name: 좌담회
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_action
+                  
+            #   - type: custom:button-card
+            #     entity: switch.theater
+            #     name: 영화관모드
+            #     show_icon: false
+            #     show_name: true
+            #     show_state: true
+            #     triggers_update:
+            #       - switch.0x286847fffe27072d_left
+            #       - cover.livingroom_screen
+            #     template:
+            #       - custom_base_card
+            #       - custom_switch_card
+            #       - custom_display_option1
+            #       - custom_display_option2
+            #       - custom_display_signal
+            #       - custom_action
+            #     variables:
+            #       input_signal: '[[[ return states["switch.0x286847fffe27072d_left"].attributes.linkquality; ]]]'
+            #       input_opt1_value: |
+            #         [[[
+            #           if (states["switch.0x286847fffe27072d_left"].state == 'on') return 'On';
+            #           else return '';
+            #         ]]]
+            #       input_opt1_icon: |
+            #         [[[
+            #           if (states["switch.0x286847fffe27072d_left"].state == 'on') return 'mdi:projector';
+            #           else return '';
+            #         ]]]
+            #       input_opt2_value: |
+            #         [[[
+            #           if (states["cover.livingroom_screen"].state == 'close') return 'close';
+            #           else return '';
+            #         ]]]
+            #       input_opt2_icon: |
+            #         [[[
+            #           if (states["cover.livingroom_screen"].state == 'open') return 'mdi:blinds';
+            #           else return '';
+            #         ]]]
+
+            #   - type: custom:button-card
+            #     entity: switch.projector
+            #     name: 프로젝터
+            #     show_icon: false
+            #     show_name: true
+            #     show_state: true
+            #     triggers_update:
+            #       - switch.0x286847fffe27072d_left
+            #     template:
+            #       - custom_base_card
+            #       - custom_switch_card
+            #       - custom_display_signal
+            #       - custom_action
+            #     variables:
+            #       input_signal: '[[[ return states["switch.0x286847fffe27072d_left"].attributes.linkquality; ]]]'
+
+            #   - type: custom:button-card
+            #     entity: cover.livingroom_screen
+            #     name: 거실 스크린
+            #     show_icon: false
+            #     show_name: true
+            #     show_state: true
+            #     template:
+            #       - custom_base_card
+            #       - custom_cover_card
+            #       - custom_display_position
+            #       - custom_display_slider
+            #       - custom_display_signal
+            #       - custom_action
+            #     variables:
+            #       input_signal: '[[[ return states["switch.0x286847fffe27072d_left"].attributes.linkquality; ]]]'
+            #       input_posision: "[[[ return entity.attributes.current_position; ]]]"
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.0xf4b3b1fffe60182a_left
+                name: 거실 화장실등
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0xf4b3b1fffe60182a_linkquality"].state; ]]]'
+                  
+              - type: custom:button-card
+                entity: switch.0x60a423fffe652db7
+                name: 거실 앞
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x60a423fffe652db7_linkquality"].state; ]]]'
+                  input_power: '[[[ return states["sensor.0x60a423fffe652db7_power"].state; ]]]'
+
+              - type: custom:button-card
+                entity: switch.projector
+                name: 프로젝터
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - switch.0x60a423fffe651ef3
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_power: '[[[ return states["sensor.0x60a423fffe651ef3_power"].state; ]]]'
+                  input_signal: '[[[ return states["sensor.0x60a423fffe651ef3_linkquality"].state; ]]]'
+
+      #################################################
+      #                                               #
+      #                  Kitchen Entity               #
+      #                                               #
+      #################################################
+      - type: vertical-stack
+        cards:
+          - type: custom:button-card
+            entity: sensor.power_smart_meter_2
+            name: 주방
+            icon: mdi:silverware-fork-knife
+            show_icon: true
+            show_name: false
+            show_state: true
+            show_entity_picture: false
+            entity_picture: null
+            styles:
+              card:
+                - height: 80px
+                - background: rgba(0, 0, 0, 0.3)
+                - border: 1px solid rgba(0, 0, 0, 0.3)
+                - border-radius: 10px
+              grid:
+                - grid-template-areas: |
+                    "i i o1i o2i o3i o4i"
+                    "i i o1s o2s o3s o4s"
+                    "i i o5i o6i o7i o8i"
+                    "s s o5s o6s o7s o8s"
+                - grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr
+                - grid-template-rows: repeat(4, 25%)
+              icon:
+                - align-self: end
+                - justify-self: center
+                - color: |
+                    [[[
+                      if (entity.state < 200) return 'cyan';
+                      else if (entity.state >= 200 && entity.state < 400) return 'green';
+                      else if (entity.state >= 400 && entity.state < 600) return 'yellow';
+                      else if (entity.state >= 600 && entity.state < 2000) return 'orange';
+                      else return 'red';
+                    ]]]
+              state:
+                - align-self: start
+                - justify-self: center
+                - font-size: 0.8em
+                - font-weight: bold
+                - color: |
+                    [[[
+                      if (entity.state < 200) return 'cyan';
+                      else if (entity.state >= 200 && entity.state < 400) return 'green';
+                      else if (entity.state >= 400 && entity.state < 600) return 'yellow';
+                      else if (entity.state >= 600 && entity.state < 2000) return 'orange';
+                      else return 'red';
+                    ]]]
+              custom_fields:
+                o1i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-1em'
+                  - width: 20px
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.0x00124b001f875767_temperature"].state < -5) return 'blue';
+                        else if (states["sensor.0x00124b001f875767_temperature"].state >= -5 && states["sensor.0x00124b001f875767_temperature"].state < 18) return 'cyan';
+                        else if (states["sensor.0x00124b001f875767_temperature"].state >= 18 && states["sensor.0x00124b001f875767_temperature"].state < 26) return 'green';
+                        else if (states["sensor.0x00124b001f875767_temperature"].state >= 26 && states["sensor.0x00124b001f875767_temperature"].state < 30) return 'orange';
+                        else return 'red';
+                      ]]]
+                o2i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-1em'
+                  - width: 20px
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.0x00124b001f875767_humidity"].state < 10) return 'blue';
+                        else if (states["sensor.0x00124b001f875767_humidity"].state >= 10 && states["sensor.0x00124b001f875767_humidity"].state < 40) return 'cyan';
+                        else if (states["sensor.0x00124b001f875767_humidity"].state >= 40 && states["sensor.0x00124b001f875767_humidity"].state < 60) return 'green';
+                        else if (states["sensor.0x00124b001f875767_humidity"].state >= 60 && states["sensor.0x00124b001f875767_humidity"].state < 80) return 'orange';
+                        else return 'red';
+                      ]]]
+                o3i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-1em'
+                  - width: 20px
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.0x04cf8cdf3c7d054d_illuminance"].state < 40) return 'green';
+                        else return 'yellow';
+                      ]]]
+                o4i:
+                  - align-self: center
+                  - justify-self: center
+                  - margin-top: '-1em'
+                  - width: 20px
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["binary_sensor.0x00124b002267369a_occupancy"].state == 'off') return 'green';
+                        else return 'yellow';
+                      ]]]
+                o5i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_10_0_m_value"].state < 31) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 31 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 81) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 81 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 151) return 'orange';
+                        else return 'red';
+                      ]]]
+                o6i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_2_5_m_value"].state < 16) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 16 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 36) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 36 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 76) return 'orange';
+                        else return 'red';
+                      ]]]
+                o7i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_co2_value"].state < 400) return 'blue';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 400 && states["sensor.home_livingroom_iaq_co2_value"].state < 700) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 700 && states["sensor.home_livingroom_iaq_co2_value"].state < 1000) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1000 && states["sensor.home_livingroom_iaq_co2_value"].state < 1500) return 'yellow';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1500 && states["sensor.home_livingroom_iaq_co2_value"].state < 2000) return 'orange';
+                        else return 'red';
+                      ]]]
+                o8i:
+                  - align-self: start
+                  - justify-self: center
+                  - width: 1em
+                o1s:
+                  - align-self: center
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.0x00124b001f875767_temperature"].state < -5) return 'blue';
+                        else if (states["sensor.0x00124b001f875767_temperature"].state >= -5 && states["sensor.0x00124b001f875767_temperature"].state < 18) return 'cyan';
+                        else if (states["sensor.0x00124b001f875767_temperature"].state >= 18 && states["sensor.0x00124b001f875767_temperature"].state < 26) return 'green';
+                        else if (states["sensor.0x00124b001f875767_temperature"].state >= 26 && states["sensor.0x00124b001f875767_temperature"].state < 30) return 'orange';
+                        else return 'red';
+                      ]]]
+                o2s:
+                  - align-self: center
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.0x00124b001f875767_humidity"].state < 10) return 'blue';
+                        else if (states["sensor.0x00124b001f875767_humidity"].state >= 10 && states["sensor.0x00124b001f875767_humidity"].state < 40) return 'cyan';
+                        else if (states["sensor.0x00124b001f875767_humidity"].state >= 40 && states["sensor.0x00124b001f875767_humidity"].state < 60) return 'green';
+                        else if (states["sensor.0x00124b001f875767_humidity"].state >= 60 && states["sensor.0x00124b001f875767_humidity"].state < 80) return 'orange';
+                        else return 'red';
+                      ]]]
+                o3s:
+                  - align-self: center
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.0x04cf8cdf3c7d054d_illuminance"].state < 40) return 'green';
+                        else return 'yellow';
+                      ]]]
+                o4s:
+                  - align-self: center
+                  - justify-self: center
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - text-transform: uppercase
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["binary_sensor.0x00124b002267369a_occupancy"].state =='off') return 'green';
+                        else return 'yellow';
+                      ]]]
+                o5s:
+                  - align-self: startd
+                  - justify-self: center
+                  - margin-top: 2.2em
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_10_0_m_value"].state < 31) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 31 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 81) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_10_0_m_value"].state >= 81 && states["sensor.home_livingroom_iaq_10_0_m_value"].state < 151) return 'orange';
+                        else return 'red';
+                      ]]]
+                o6s:
+                  - align-self: start
+                  - justify-self: center
+                  - margin-top: 1em
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_2_5_m_value"].state < 16) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 16 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 36) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_2_5_m_value"].state >= 36 && states["sensor.home_livingroom_iaq_2_5_m_value"].state < 76) return 'orange';
+                        else return 'red';
+                      ]]]
+                o7s:
+                  - align-self: start
+                  - justify-self: center
+                  - margin-top: 1em
+                  - font-size: 0.7em
+                  - font-weight: bold
+                  - '--text-color-sensor': |
+                      [[[
+                        if (states["sensor.home_livingroom_iaq_co2_value"].state < 400) return 'blue';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 400 && states["sensor.home_livingroom_iaq_co2_value"].state < 700) return 'cyan';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 700 && states["sensor.home_livingroom_iaq_co2_value"].state < 1000) return 'green';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1000 && states["sensor.home_livingroom_iaq_co2_value"].state < 1500) return 'yellow';
+                        else if (states["sensor.home_livingroom_iaq_co2_value"].state >= 1500 && states["sensor.home_livingroom_iaq_co2_value"].state < 2000) return 'orange';
+                        else return 'red';
+                      ]]]
+                o8s:
+                  - align-self: start
+                  - justify-self: center
+                  - margin-top: 1em
+                  - font-size: 0.7em
+                  - font-weight: bold
+            custom_fields:
+              o1i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:thermometer"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o2i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:water-percent"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o3i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:brightness-5"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o4i: |
+                [[[
+                  if (states["binary_sensor.0x00124b002267369a_occupancy"].state == 'off') return `<ha-icon
+                    icon="mdi:motion-sensor-off"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                  else return `<ha-icon
+                    icon="mdi:motion-sensor"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o5i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:blur"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o6i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:blur-linear"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o7i: |
+                [[[
+                  return `<ha-icon
+                    icon="mdi:molecule-co2"
+                    style="color: var(--text-color-sensor);"></ha-icon>`
+                ]]]
+              o8i: |
+                [[[
+                  return ``
+                ]]]
+              o1s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.0x00124b001f875767_temperature'].state} °C</span>`
+                ]]]
+              o2s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.0x00124b001f875767_humidity'].state} %</span>`
+                ]]]
+              o3s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.0x04cf8cdf3c7d054d_illuminance'].state} lx</span>`
+                ]]]
+              o4s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['binary_sensor.0x00124b002267369a_occupancy'].state}</span>`
+                ]]]
+              o5s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.livingroom_iaq_10_0_m_value'].state} ㎍/㎥</span>`
+                ]]]
+              o6s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.livingroom_iaq_2_5_m_value'].state} ㎍/㎥</span>`
+                ]]]
+              o7s: |
+                [[[
+                  return `<span>
+                    <span style="color: var(--text-color-sensor);">${states['sensor.home_livingroom_iaq_co2_value'].state} ppm</span>`
+                ]]]
+              o8s: |
+                [[[
+                  return ''
+                ]]]
+          - show_state: false
+            show_name: false
+            camera_view: auto
+            type: picture-entity
+            camera_image: camera.kitchen
+            aspect_ratio: '16:9'
+            entity: camera.kitchen
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: light.kitchen_table
+                name: 식탁등
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - light.0x0017880108a89a69
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_brightness
+                  - custom_display_slider
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x0017880108a89a69_linkquality"].state; ]]]'
+                  input_brightness: '[[[ return states["light.0x0017880108a89a69"].attributes.brightness; ]]]'
+
+              - type: custom:button-card
+                entity: switch.0x28dba7fffea60da9_left
+                name: 주방등
+                show_icon: false
+                show_name: true
+                show_state: true
+                triggers_update:
+                  - sensor.0x00124b002267369a_linkquality
+                  - binary_sensor.0x00124b002267369a_occupancy
+                  - binary_sensor.cooktop_activate
+                template:
+                  - custom_base_card
+                  - custom_light_card
+                  - custom_display_option1
+                  - custom_display_option2
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x00124b002267369a_linkquality"].state; ]]]'
+                  input_opt1_value: |
+                    [[[
+                      if (states["binary_sensor.0x00124b002267369a_occupancy"].state == 'on') return "감지됨";
+                      else return '';
+                    ]]]
+                  input_opt1_icon: |
+                    [[[
+                      if (states["binary_sensor.0x00124b002267369a_occupancy"].state == 'on') return "mdi:motion-sensor";
+                      else return "mdi:motion-sensor-off";
+                    ]]]
+                  input_opt2_value: |
+                    [[[
+                      if (states["binary_sensor.cooktop_activate"].state == 'on') return "조리중";
+                      else return '';
+                    ]]]
+                  input_opt2_icon: |
+                    [[[
+                      if (states["binary_sensor.cooktop_activate"].state == 'on') return "mdi:radiator";
+                      else return "mdi:radiator-off";
+                    ]]]
+
+              - type: custom:button-card
+                entity: media_player.hk_citation_100_256bf3
+                name: 주방 스피커
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_media_card
+                  - custom_display_media
+                  - custom_display_slider
+                  - custom_action
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.0x00124b002265ddda_l1
+                name: 오븐
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x00124b002265ddda_linkquality"].state; ]]]'
+
+              - type: custom:button-card
+                entity: switch.0x00124b002265ddda_l2
+                name: 밥솥
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x00124b002265ddda_linkquality"].state; ]]]'
+
+              - type: custom:button-card
+                entity: switch.0x00124b002265ddda_l3
+                name: 전기포트
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x00124b002265ddda_linkquality"].state; ]]]'
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.0x00124b002265ddda_l4
+                name: 커피메이커
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x00124b002265ddda_linkquality"].state; ]]]'
+
+              - type: custom:button-card
+                color_type: blank-card
+
+              - type: custom:button-card
+                color_type: blank-card
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.refrigerator
+                name: 냉장고
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_option2
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x00124b002267369a_linkquality"].state; ]]]'
+                  input_power: '[[[ return states["sensor.naengjanggo_power"].state; ]]]'
+                  input_opt2_value: |
+                    [[[
+                      if (states["binary_sensor.naengjanggo_cooler_door"].state == 'off' ) return '';
+                      else return '열림';
+                    ]]]
+                  input_opt2_icon: |
+                    [[[
+                      if (states["binary_sensor.naengjanggo_cooler_door"].state == 'off' ) return "mdi:window-close";
+                      else return "mdi:window-open-variant";
+                    ]]]
+
+              - type: custom:button-card
+                entity: switch.dryer
+                name: 건조기
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_option2
+                  - custom_action
+                variables:
+                  input_power: |
+                    [[[
+                      if (states["sensor.geonjogi_power"].state == 'unavailable') return '0';
+                      else return 1000*states["sensor.geonjogi_power"].state;
+                    ]]]
+                  input_opt2_value: |
+                    [[[
+                      if (states["sensor.geonjogi_dryer_job_state"].state == 'rinse') return '헹금중';
+                      else if (states["sensor.geonjogi_dryer_job_state"].state == 'wash') return '세척중';
+                      else if (states["sensor.geonjogi_dryer_job_state"].state == 'prewash') return '사전세탁';
+                      else if (states["sensor.geonjogi_dryer_job_state"].state == 'drying') return '건조중';
+                      else if (states["sensor.geonjogi_dryer_job_state"].state == 'finish') return '마무리중';
+                      else if (states["sensor.geonjogi_dryer_job_state"].state == 'none') return '';
+                      else if (states["sensor.geonjogi_dryer_job_state"].state == 'unknown') return '';
+                      else return states["sensor.geonjogi_dryer_job_state"].state;
+                    ]]]
+                  input_opt2_icon: '[[[ return "mdi:tumble-dryer"; ]]]'
+
+              - type: custom:button-card
+                entity: switch.dishwasher
+                name: 식기세척기
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_option2
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x00124b002267369a_linkquality"].state; ]]]'
+                  input_power: |
+                    [[[
+                      if (states["sensor.siggiseceoggi_power"].state == '0') return '0';
+                      else return 1000*states["sensor.siggiseceoggi_power"].state;
+                    ]]]
+                  input_opt2_value: |
+                    [[[
+                      if (states["sensor.siggiseceoggi_dishwasher_job_state"].state == 'rinse') return '헹금중';
+                      else if (states["sensor.siggiseceoggi_dishwasher_job_state"].state == 'wash') return '세척중';
+                      else if (states["sensor.siggiseceoggi_dishwasher_job_state"].state == 'prewash') return '사전세탁';
+                      else if (states["sensor.siggiseceoggi_dishwasher_job_state"].state == 'drying') return '건조중';
+                      else if (states["sensor.siggiseceoggi_dishwasher_job_state"].state == 'dry') return '건조중';
+                      else if (states["sensor.siggiseceoggi_dishwasher_job_state"].state == 'finish') return '마무리중';
+                      else if (states["sensor.siggiseceoggi_dishwasher_job_state"].state == 'none') return '';
+                      else if (states["sensor.siggiseceoggi_dishwasher_job_state"].state == 'unknown') return '';
+                      else return states["sensor.siggiseceoggi_dishwasher_job_state"].state;
+                    ]]]
+                  input_opt2_icon: '[[[ return "mdi:dishwasher"; ]]]'
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: switch.cooktop
+                name: 쿡탑
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x00124b002267369a_linkquality"].state; ]]]'
+                  input_power: "[[[ return entity.attributes.current_consumption; ]]]"
+
+              - type: custom:button-card
+                entity: switch.0x60a423fffe620f3a
+                name: 환풍기
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x60a423fffe620f3a_linkquality"].state; ]]]'
+                  input_power: '[[[ return states["sensor.0x60a423fffe620f3a_power"].state; ]]]'
+              
+              - type: custom:button-card
+                entity: switch.0x70b3d52b60077a61
+                name: 세척기 전원
+                show_icon: false
+                show_name: true
+                show_state: true
+                template:
+                  - custom_base_card
+                  - custom_switch_card
+                  - custom_display_power
+                  - custom_display_signal
+                  - custom_action
+                variables:
+                  input_signal: '[[[ return states["sensor.0x70b3d52b60077a61_linkquality"].state; ]]]'
+                  input_power: '[[[ return states["sensor.0x70b3d52b60077a61_power"].state; ]]]'
+                  
+            #   - type: custom:button-card
+            #     entity: switch.0x60a423fffe6207b3
+            #     name: 세탁실 조명
+            #     show_icon: false
+            #     show_name: true
+            #     show_state: true
+            #     template:
+            #       - custom_base_card
+            #       - custom_switch_card
+            #       - custom_display_power
+            #       - custom_display_signal
+            #       - custom_action
+            #     variables:
+            #       input_signal: '[[[ return states["sensor.0x60a423fffe6207b3_linkquality"].state; ]]]'
+            #       input_power: '[[[ return states["sensor.0x60a423fffe6207b3_power"].state; ]]]'
+
+  #################################################
+  #                                               #
+  #                   실내 공기질                 #
+  #                                               #
+  #################################################
+  - title: 실내 공기질
+    path: iaq
+    icon: mdi:weather-partly-snowy-rainy
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            all_series_config:
+              stroke_width: 2
+              curve: smooth
+            header:
+              show: true
+              title: 실내 미세먼지
+              show_states: true
+              colorize_states: true
+            graph_span: 24h
+            cache: true
+            series:
+              - entity: sensor.home_livingroom_iaq_10_0_m_value
+                name: 미세먼지
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: 12
+                    color: cyan
+                  - value: 31
+                    color: green
+                  - value: 81
+                    color: yellow
+                  - value: 151
+                    color: orange
+                  - value: 255
+                    color: red
+              - entity: sensor.home_livingroom_iaq_2_5_m_value
+                name: 초미세먼지
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: 8
+                    color: cyan
+                  - value: 16
+                    color: green
+                  - value: 36
+                    color: yellow
+                  - value: 76
+                    color: orange
+                  - value: 151
+                    color: red
+            apex_config:
+              xaxis:
+                labels:
+                  datetimeFormatter:
+                    month: M/dd
+                    day: M/dd
+                    hour: HH:mm
+          - type: entities
+            entities:
+              - entity: sensor.misemeonji
+                name: 미세먼지(영통3동)
+              - entity: sensor.comisemeonji
+                name: 초미세먼지(영통3동)
+            state_color: true
+            show_header_toggle: false
+      - type: vertical-stack
+        cards:
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            all_series_config:
+              stroke_width: 2
+              curve: smooth
+            header:
+              show: true
+              title: 실내 이산화탄소
+              show_states: true
+              colorize_states: true
+            graph_span: 24h
+            cache: true
+            series:
+              - entity: sensor.home_livingroom_iaq_co2_value
+                name: 이산화탄소
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: 400
+                    color: cyan
+                  - value: 600
+                    color: green
+                  - value: 800
+                    color: yellow
+                  - value: 1200
+                    color: orange
+                  - value: 2000
+                    color: red
+            apex_config:
+              xaxis:
+                labels:
+                  datetimeFormatter:
+                    month: M/dd
+                    day: M/dd
+                    hour: HH:mm
+          - type: entities
+            entities:
+              - entity: sensor.ojondeunggeub
+                name: 오존(영통3동)
+              - entity: sensor.jaoeseondeunggeub
+                name: 자외선(영통3동)
+            state_color: true
+            show_header_toggle: false
+      - type: vertical-stack
+        cards:
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            all_series_config:
+              stroke_width: 2
+              curve: smooth
+            header:
+              show: true
+              title: 실내 온도
+              show_states: true
+              colorize_states: true
+            graph_span: 24h
+            cache: true
+            series:
+              - entity: sensor.0xa4c1384e9f327a98_temperature
+                name: 안방
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: -5
+                    color: blue
+                  - value: 18
+                    color: cyan
+                  - value: 28
+                    color: green
+                  - value: 30
+                    color: yellow
+                  - value: 32
+                    color: orange
+                  - value: 33
+                    color: red
+              - entity: sensor.ble_temperature_a4c13849e1c4
+                name: 서재
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: -5
+                    color: blue
+                  - value: 18
+                    color: cyan
+                  - value: 28
+                    color: green
+                  - value: 30
+                    color: yellow
+                  - value: 32
+                    color: orange
+                  - value: 33
+                    color: red
+              - entity: sensor.0xa4c138d9cde80e2b_temperature
+                name: 지연방
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: -5
+                    color: blue
+                  - value: 18
+                    color: cyan
+                  - value: 28
+                    color: green
+                  - value: 30
+                    color: yellow
+                  - value: 32
+                    color: orange
+                  - value: 33
+                    color: red
+              - entity: sensor.0xa4c13878ea655c16_temperature
+                name: 가현방
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: -5
+                    color: blue
+                  - value: 18
+                    color: cyan
+                  - value: 28
+                    color: green
+                  - value: 30
+                    color: yellow
+                  - value: 32
+                    color: orange
+                  - value: 33
+                    color: red
+            apex_config:
+              xaxis:
+                labels:
+                  datetimeFormatter:
+                    month: MM/dd
+                    day: MM/dd
+                    hour: HH:mm
+          - type: entities
+            entities:
+              - entity: sensor.0x00124b001f875767_temperature
+                name: 주방
+              - entity: sensor.hyeonjaeondo
+                name: 실외(영통3동)
+            show_header_toggle: false
+            state_color: true
+      - type: vertical-stack
+        cards:
+          - type: custom:apexcharts-card
+            experimental:
+              color_threshold: true
+            all_series_config:
+              stroke_width: 2
+              curve: smooth
+            header:
+              show: true
+              title: 실내 습도
+              show_states: true
+              colorize_states: true
+            graph_span: 24h
+            cache: true
+            series:
+              - entity: sensor.0xa4c1384e9f327a98_humidity
+                name: 안방
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: 10
+                    color: blue
+                  - value: 40
+                    color: cyan
+                  - value: 60
+                    color: green
+                  - value: 70
+                    color: yellow
+                  - value: 80
+                    color: orange
+                  - value: 90
+                    color: red
+              - entity: sensor.ble_humidity_a4c13849e1c4
+                name: 서재
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: 10
+                    color: blue
+                  - value: 40
+                    color: cyan
+                  - value: 60
+                    color: green
+                  - value: 70
+                    color: yellow
+                  - value: 80
+                    color: orange
+                  - value: 90
+                    color: red
+              - entity: sensor.0xa4c138d9cde80e2b_humidity
+                name: 지연방
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: 10
+                    color: blue
+                  - value: 40
+                    color: cyan
+                  - value: 60
+                    color: green
+                  - value: 70
+                    color: yellow
+                  - value: 80
+                    color: orange
+                  - value: 90
+                    color: red
+              - entity: sensor.0xa4c13878ea655c16_humidity
+                name: 가현방
+                type: line
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                group_by:
+                  func: avg
+                  duration: 10m
+                color_threshold:
+                  - value: 10
+                    color: blue
+                  - value: 40
+                    color: cyan
+                  - value: 60
+                    color: green
+                  - value: 70
+                    color: yellow
+                  - value: 80
+                    color: orange
+                  - value: 90
+                    color: red
+            apex_config:
+              xaxis:
+                labels:
+                  datetimeFormatter:
+                    month: M/d
+                    day: M/d
+                    hour: HH:mm
+          - type: entities
+            entities:
+              - entity: sensor.0x00124b001f875767_humidity
+                name: 주방
+              - entity: sensor.hyeonjaeseubdo
+                name: 실외(영통3동)
+            show_header_toggle: false
+            state_color: true
+
+  #################################################
+  #                                               #
+  #                 전력 소비량량                 #
+  #                                               #
+  #################################################
+  - title: 전력 소비량
+    path: power
+    icon: mdi:counter
+    theme: ''
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:apexcharts-card
+            graph_span: 8h
+            span:
+              end: minute
+            all_series_config:
+              stroke_width: 2
+            experimental:
+              color_threshold: true
+            header:
+              show: true
+              title: 실시간 소비전력
+              show_states: true
+              colorize_states: true
+            cache: true
+            now:
+              show: false
+              label: Now
+            series:
+              - entity: sensor.power_smart_meter_1
+                name: 전등라인
+              - entity: sensor.power_smart_meter_2
+                name: 주방라인
+              - entity: sensor.power_smart_meter_3
+                name: 거실라인
+              - entity: sensor.power_smart_meter_4
+                name: 에어콘라인
+            apex_config:
+              xaxis:
+                labels:
+                  datetimeFormatter:
+                    month: M/d
+                    day: M/d
+                    hour: HH:mm
+          - type: entities
+            entities:
+              - entity: sensor.power_smart_meter_1
+                name: 전등라인
+              - entity: sensor.power_smart_meter_2
+                name: 주방라인
+              - entity: sensor.power_smart_meter_3
+                name: 거실라인
+              - entity: sensor.power_smart_meter_4
+                name: 에어콘라인
+      - type: vertical-stack
+        cards:
+          - type: custom:apexcharts-card
+            graph_span: 1day
+            span:
+              end: day
+            experimental:
+              color_threshold: true
+            header:
+              show: true
+              title: 시간별 소비전력
+              show_states: true
+              colorize_states: true
+            now:
+              show: false
+              label: Now
+            cache: true
+            series:
+              - entity: sensor.hourly_energy_meter_total
+                type: column
+                opacity: 0.75
+                show:
+                  header_color_threshold: true
+                  in_header: true
+                  extremas: true
+                  in_chart: true
+                group_by:
+                  func: last
+                  duration: 1h
+                color_threshold:
+                  - value: 0.4
+                    color: green
+                  - value: 0.6
+                    color: yellow
+                  - value: 0.8
+                    color: orange
+                  - value: 1
+                    color: red
+              - entity: sensor.hourly_energy_meter_total
+                type: line
+                name: 어제(시간별)
+                offset: '-1d'
+                stroke_width: 2
+                show:
+                  header_color_threshold: true
+                  extremas: false
+                  in_header: false
+                  in_chart: true
+                  offset_in_name: false
+                group_by:
+                  func: max
+                  duration: 1h
+                color_threshold:
+                  - value: 0.4
+                    color: green
+                  - value: 0.6
+                    color: yellow
+                  - value: 0.8
+                    color: orange
+                  - value: 1
+                    color: red
+              - entity: sensor.daily_energy_meter_total
+                type: column
+                show:
+                  header_color_threshold: true
+                  extremas: false
+                  in_header: true
+                  in_chart: false
+                group_by:
+                  func: last
+                  duration: 1d
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 12
+                    color: yellow
+                  - value: 13
+                    color: orange
+                  - value: 14
+                    color: red
+            apex_config:
+              yaxis:
+                min: 0
+              xaxis:
+                labels:
+                  datetimeFormatter:
+                    month: M/d
+                    day: M/d
+                    hour: HH:mm
+          - type: entities
+            entities:
+              - entity: sensor.hourly_energy_meter_1
+              - entity: sensor.hourly_energy_meter_2
+              - entity: sensor.hourly_energy_meter_3
+              - entity: sensor.hourly_energy_meter_4
+      - type: vertical-stack
+        cards:
+          - type: custom:apexcharts-card
+            graph_span: 1month
+            span:
+              end: month
+            experimental:
+              color_threshold: true
+            header:
+              show: true
+              title: 일별 소비전력
+              show_states: true
+              colorize_states: true
+            now:
+              show: false
+              label: Now
+            cache: true
+            series:
+              - entity: sensor.daily_energy_meter_total
+                type: column
+                opacity: 0.75
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                  in_header: true
+                  in_chart: true
+                group_by:
+                  func: last
+                  duration: 1d
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 12
+                    color: yellow
+                  - value: 13
+                    color: orange
+                  - value: 14
+                    color: red
+              - entity: sensor.daily_energy_meter_total
+                type: line
+                name: 지난달(일별)
+                offset: '-1month'
+                stroke_width: 2
+                show:
+                  header_color_threshold: true
+                  extremas: false
+                  in_header: false
+                  in_chart: true
+                  offset_in_name: false
+                group_by:
+                  func: max
+                  duration: 1d
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 12
+                    color: yellow
+                  - value: 13
+                    color: orange
+                  - value: 14
+                    color: red
+              - entity: sensor.monthly_energy_meter_total
+                type: column
+                show:
+                  header_color_threshold: true
+                  extremas: false
+                  in_header: true
+                  in_chart: false
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 360
+                    color: yellow
+                  - value: 380
+                    color: orange
+                  - value: 400
+                    color: red
+            apex_config:
+              yaxis:
+                min: 0
+              xaxis:
+                labels:
+                  datetimeFormatter:
+                    month: M/dd
+                    day: M/dd
+          - type: entities
+            entities:
+              - entity: sensor.daily_energy_meter_1
+              - entity: sensor.daily_energy_meter_2
+              - entity: sensor.daily_energy_meter_3
+              - entity: sensor.daily_energy_meter_4
+            state_color: false
+      - type: vertical-stack
+        cards:
+          - type: custom:apexcharts-card
+            graph_span: 3month
+            span:
+              end: month
+            experimental:
+              color_threshold: true
+            header:
+              show: true
+              title: 월별 소비전력
+              show_states: true
+              colorize_states: true
+            now:
+              show: false
+              label: Now
+            cache: true
+            series:
+              - entity: sensor.monthly_energy_meter_total
+                type: column
+                opacity: 0.75
+                group_by:
+                  func: last
+                  duration: 1month
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                  in_header: true
+                  in_chart: false
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 360
+                    color: yellow
+                  - value: 380
+                    color: orange
+                  - value: 400
+                    color: red
+              - entity: sensor.monthly_energy_meter_total
+                type: column
+                opacity: 0.75
+                group_by:
+                  func: max
+                  duration: 1month
+                show:
+                  header_color_threshold: true
+                  extremas: true
+                  in_header: false
+                  in_chart: true
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 360
+                    color: yellow
+                  - value: 380
+                    color: orange
+                  - value: 400
+                    color: red
+              - entity: sensor.monthly_kwh_to_won_forecast_kwh
+                type: line
+                group_by:
+                  func: last
+                  duration: 1month
+                show:
+                  header_color_threshold: true
+                  extremas: false
+                  in_header: true
+                  in_chart: false
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 360
+                    color: yellow
+                  - value: 380
+                    color: orange
+                  - value: 400
+                    color: red
+            apex_config:
+              yaxis:
+                min: 0
+              xaxis:
+                labels:
+                  datetimeFormatter:
+                    year: yy.MM
+                    month: yy.MM
+                    day: yy.MM
+          - type: entities
+            entities:
+              - entity: sensor.monthly_energy_meter_1
+              - entity: sensor.monthly_energy_meter_2
+              - entity: sensor.monthly_energy_meter_3
+              - entity: sensor.monthly_energy_meter_4
+
+  #################################################
+  #                                               #
+  #                   IT 기기 상태                #
+  #                                               #
+  #################################################
+  - title: IT기기
+    path: work
+    icon: mdi:laptop
+    visible:
+      - user: c5281a1dfa3a4b3098ff090e2438067d
+      - user: 1611e15b19a84cedada82d46ea11b07f
+      - user: 18d1d97dc86b44ebbb94b3646808d012
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: button
+            entity: switch.computer
+            name: Home-PC
+            show_state: false
+            show_icon: true
+            show_name: true
+            icon_height: 100px
+            tap_action:
+              action: more-info
+          - type: conditional
+            conditions:
+              - entity: switch.computer
+                state: 'on'
+            card:
+              type: picture-glance
+              entities: []
+              camera_image: camera.home_pc_screen_0
+              tap_action:
+                action: more-info
+          - type: conditional
+            conditions:
+              - entity: switch.computer
+                state: 'on'
+            card:
+              type: horizontal-stack
+              cards:
+                - type: entities
+                  entities:
+                    - entity: sensor.home_pc_system_boot_time
+                      name: 부팅 시간
+                    - entity: sensor.home_pc_system_uptime
+                      name: 기동 시간
+                    - entity: sensor.home_pc_network_0_ipv4
+                      name: IP (유선)
+          - type: conditional
+            conditions:
+              - entity: switch.computer
+                state: 'on'
+              - entity: sensor.home_pc_cpu_usage
+                state_not: unknown
+            card:
+              type: horizontal-stack
+              cards:
+                - type: gauge
+                  entity: sensor.home_pc_cpu_usage
+                  min: 0
+                  max: 100
+                  name: CPU 사용률
+                - type: gauge
+                  entity: sensor.home_pc_memory_usage
+                  min: 0
+                  max: 100
+                  name: Memory 사용률
+          - type: conditional
+            conditions:
+              - entity: switch.computer
+                state: 'on'
+              - entity: sensor.home_pc_storage_c_usage
+                state_not: unknown
+              - entity: sensor.home_pc_storage_d_usage
+                state_not: unknown
+            card:
+              type: horizontal-stack
+              cards:
+                - type: gauge
+                  entity: sensor.home_pc_storage_c_usage
+                  min: 0
+                  max: 100
+                  name: C-Drive (465MB)
+                  severity:
+                    green: 25
+                    yellow: 50
+                    red: 75
+                - type: gauge
+                  entity: sensor.home_pc_storage_d_usage
+                  min: 0
+                  max: 100
+                  name: D-Drive (931GB)
+                  severity:
+                    green: 25
+                    yellow: 50
+                    red: 75
+
+      - type: vertical-stack
+        cards:
+          - type: button
+            entity: switch.home_cloud
+            name: Home-Cloud (DS920+)
+            show_state: false
+            show_icon: true
+            show_name: true
+            icon_height: 100px
+            tap_action:
+              action: more-info
+          - type: conditional
+            conditions:
+              - entity: switch.home_cloud
+                state: 'on'
+            card:
+              type: horizontal-stack
+              cards:
+                - type: entities
+                  entities:
+                    - entity: binary_sensor.homecloud_drive_2_exceeded_max_bad_sectors
+                      name: Disk 1 (WD20EFRX-68EUZN0)
+                      icon: mdi:harddisk
+                      secondary_info: last-changed
+                    - entity: binary_sensor.homecloud_drive_3_exceeded_max_bad_sectors
+                      name: Disk 2 (WD20EFRX-68EUZN0)
+                      icon: mdi:harddisk
+                      secondary_info: last-changed
+                    - entity: binary_sensor.homecloud_drive_4_exceeded_max_bad_sectors
+                      name: Disk 3 (DT01ACA200)
+                      icon: mdi:harddisk
+                      secondary_info: last-changed
+                    - entity: binary_sensor.homecloud_drive_5_exceeded_max_bad_sectors
+                      name: Disk 4 (MQ01ABD100)
+                      secondary_info: last-changed
+                      icon: mdi:harddisk
+          - type: conditional
+            conditions:
+              - entity: switch.home_cloud
+                state: 'on'
+            card:
+              type: horizontal-stack
+              cards:
+                - type: gauge
+                  entity: sensor.homecloud_cpu_utilization_total
+                  min: 0
+                  max: 100
+                  name: CPU 사용률
+                - type: gauge
+                  entity: sensor.homecloud_memory_usage_real
+                  min: 0
+                  max: 100
+                  name: Memory 사용률
+          - type: conditional
+            conditions:
+              - entity: switch.home_cloud
+                state: 'on'
+            card:
+              type: horizontal-stack
+              cards:
+                - type: gauge
+                  name: Volume 1 사용률
+                  entity: sensor.homecloud_volume_1_volume_used
+                  min: 0
+                  max: 100
+                  severity:
+                    green: 25
+                    yellow: 50
+                    red: 75
+                - type: gauge
+                  name: Volume 2 사용률
+                  entity: sensor.homecloud_volume_2_volume_used
+                  min: 0
+                  max: 100
+                  severity:
+                    green: 25
+                    yellow: 50
+                    red: 75
+          - type: conditional
+            conditions:
+              - entity: switch.home_cloud
+                state: 'on'
+            card:
+              type: horizontal-stack
+              cards:
+                - type: gauge
+                  entity: sensor.homecloud_volume_1_average_disk_temp
+                  min: 0
+                  name: Volume 1 온도
+                  max: 80
+                - type: gauge
+                  entity: sensor.homecloud_volume_2_average_disk_temp
+                  min: 0
+                  name: Volume 2 온도
+                  max: 80
+    #   - type: vertical-stack
+    #     cards:
+    #       - type: button
+    #         entity: switch.jiyeon_notebook
+    #         show_state: false
+    #         show_icon: true
+    #         show_name: true
+    #         icon_height: 100px
+    #         tap_action:
+    #           action: more-info
+    #       - type: conditional
+    #         conditions:
+    #           - entity: camera.ji_yeon_screen_0
+    #             state_not: unavailable
+    #           - entity: camera.ji_yeon_screen_0
+    #             state_not: unknown
+    #         card:
+    #           type: picture-glance
+    #           entities: []
+    #           camera_image: camera.ji_yeon_screen_0
+    #           tap_action:
+    #             action: more-info
+    #       - type: conditional
+    #         conditions:
+    #           - entity: switch.jiyeon_notebook
+    #             state: 'on'
+    #         card:
+    #           type: horizontal-stack
+    #           cards:
+    #             - type: entities
+    #               entities:
+    #                 - entity: sensor.ji_yeon_system_boot_time
+    #                   name: 부팅 시간
+    #                 - entity: sensor.ji_yeon_system_uptime
+    #                   name: 기동 시간
+    #                 - entity: sensor.ji_yeon_network_0_ipv4
+    #                   name: IP (유선)
+    #       - type: conditional
+    #         conditions:
+    #           - entity: sensor.ji_yeon_cpu_usage
+    #             state_not: unavailable
+    #           - entity: sensor.ji_yeon_cpu_usage
+    #             state_not: unknown
+    #         card:
+    #           type: horizontal-stack
+    #           cards:
+    #             - type: gauge
+    #               entity: sensor.ji_yeon_cpu_usage
+    #               min: 0
+    #               max: 100
+    #               name: CPU 사용률
+    #             - type: gauge
+    #               entity: sensor.ji_yeon_memory_usage
+    #               min: 0
+    #               max: 100
+    #               name: Memory 사용률
+    #       - type: conditional
+    #         conditions:
+    #           - entity: sensor.ji_yeon_storage_c_usage
+    #             state_not: unavailable
+    #           - entity: sensor.ji_yeon_storage_c_usage
+    #             state_not: unknown
+    #         card:
+    #           type: horizontal-stack
+    #           cards:
+    #             - type: gauge
+    #               entity: sensor.ji_yeon_storage_c_usage
+    #               min: 0
+    #               max: 100
+    #               name: C-Drive
+    #               severity:
+    #                 green: 25
+    #                 yellow: 50
+    #                 red: 75
+    #   - type: vertical-stack
+    #     cards:
+    #       - type: button
+    #         entity: switch.gahyeon_notebook
+    #         show_state: false
+    #         show_icon: true
+    #         show_name: true
+    #         icon_height: 100px
+    #         tap_action:
+    #           action: more-info
+    #       - type: conditional
+    #         conditions:
+    #           - entity: camera.ga_hyeon_screen_0
+    #             state_not: unavailable
+    #           - entity: camera.ga_hyeon_screen_0
+    #             state_not: unknown
+    #         card:
+    #           type: picture-glance
+    #           entities: []
+    #           camera_image: camera.ga_hyeon_screen_0
+    #           tap_action:
+    #             action: more-info
+    #       - type: conditional
+    #         conditions:
+    #           - entity: switch.gahyeon_notebook
+    #             state: 'on'
+    #         card:
+    #           type: horizontal-stack
+    #           cards:
+    #             - type: entities
+    #               entities:
+    #                 - entity: sensor.ga_hyeon_system_boot_time
+    #                   name: 부팅 시간
+    #                 - entity: sensor.ga_hyeon_system_uptime
+    #                   name: 기동 시간
+    #                 - entity: sensor.ga_hyeon_network_0_ipv4
+    #                   name: IP (유선)
+    #       - type: conditional
+    #         conditions:
+    #           - entity: sensor.ga_hyeon_cpu_usage
+    #             state_not: unavailable
+    #           - entity: sensor.ga_hyeon_cpu_usage
+    #             state_not: unknown
+    #         card:
+    #           type: horizontal-stack
+    #           cards:
+    #             - type: gauge
+    #               entity: sensor.ga_hyeon_cpu_usage
+    #               min: 0
+    #               max: 100
+    #               name: CPU 사용률
+    #             - type: gauge
+    #               entity: sensor.ga_hyeon_memory_usage
+    #               min: 0
+    #               max: 100
+    #               name: Memory 사용률
+    #       - type: conditional
+    #         conditions:
+    #           - entity: sensor.ga_hyeon_storage_c_usage
+    #             state_not: unavailable
+    #           - entity: sensor.ga_hyeon_storage_c_usage
+    #             state_not: unknown
+    #         card:
+    #           type: horizontal-stack
+    #           cards:
+    #             - type: gauge
+    #               entity: sensor.ga_hyeon_storage_c_usage
+    #               min: 0
+    #               max: 100
+    #               name: C-Drive
+    #               severity:
+    #                 green: 25
+    #                 yellow: 50
+    #                 red: 75
+
+  #################################################
+  #                                               #
+  #                   위치 표시                   #
+  #                                               #
+  #################################################
+  - title: map
+    path: map
+    icon: mdi:map
+    theme: ios-dark-mode
+    panel: true
+    badges: []
+    cards:
+      - type: map
+        entities:
+          - entity: person.weinhwan
+          - entity: person.jangseongeun
+          - entity: person.wejiyeon
+          - entity: person.wegahyeon

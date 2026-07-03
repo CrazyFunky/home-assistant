@@ -1,0 +1,40 @@
+iptime_inhwan_we:
+  name: iptime_Inhwan-We
+  mac: HTTP://192.168.0.1_96-7F-19-F6-85-16
+  icon:
+  picture:
+  track: true
+
+iptime_seungeun_jang:
+  name: iptime_SeungEun-Jang
+  mac: HTTP://192.168.0.1_D2-3D-3A-0D-78-FE
+  icon:
+  picture:
+  track: true
+  
+iptime_jiyeon_we:
+  name: iptime_JiYeon-We
+  mac: HTTP://192.168.0.1_9A-5F-36-27-43-F3
+  icon:
+  picture:
+  track: true
+
+iptime_gahyeon_we:
+  name: iptime_GaHyeon-We
+  mac: HTTP://192.168.0.1_96-47-04-DB-11-9D
+  icon:
+  picture:
+  track: true
+iptime_inhwan_we_2:
+  name: iptime_Inhwan-We
+  mac: HTTP://192.168.0.1_9E-23-E3-C7-FF-F0
+  icon:
+  picture:
+  track: true
+
+iptime_gahyeon_we_2:
+  name: iptime_GaHyeon-We
+  mac: HTTP://192.168.0.1_F0-CD-31-41-43-EE
+  icon:
+  picture:
+  track: true

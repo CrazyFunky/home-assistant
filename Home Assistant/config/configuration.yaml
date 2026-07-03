@@ -1,0 +1,79 @@
+﻿homeassistant:
+  customize: !include customize.yaml
+  packages: !include_dir_named include
+  allowlist_external_dirs: [/config/]
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+http:
+#   base_url: https://detion-home.duckdns.org:8123
+#   ssl_certificate: /ssl/fullchain.pem
+#   ssl_key: /ssl/privkey.pem
+  use_x_forwarded_for: true
+  trusted_proxies:
+  - 127.0.0.1
+  - 172.30.33.0/24    # NGINX 而⑦뀒?대꼫??IP 踰붿쐞
+
+lovelace:
+  mode: yaml
+  resources: [{url: /hacsfiles/apexcharts-card/apexcharts-card.js, type: module},
+    {url: /hacsfiles/weather-card/weather-card-210416.js, type: module}, {url: 
+        /hacsfiles/button-card/button-card.js, type: module}, {url: 
+        /hacsfiles/lovelace-slider-entity-row/slider-entity-row.js, type: module},
+    {url: /hacsfiles/lovelace-multiple-entity-row/multiple-entity-row.js, type: module},
+    
+    #   { url: /hacsfiles/vacuum-card/vacuum-card.js,                         type: module },
+    #   { url: /hacsfiles/lovelace-more-info-card/more-info-card.js,          type: module },
+    #   { url: /hacsfiles/bar-card/bar-card.js,                               type: module },
+    #   { url: /hacsfiles/light-entity-card/light-entity-card.js,             type: module },
+    #   { url: /hacsfiles/light-popup-card/light-popup-card.js,               type: module },
+    #   { url: /hacsfiles/lovelace-card-mod/card-mod.js,                      type: module },
+    #   { url: /hacsfiles/lovelace-hui-element/hui-element.js,                type: module },
+    #   { url: /hacsfiles/lovelace-layout-card/layout-card.js,                type: module },
+    #   { url: /hacsfiles/lovelace-valetudo-map-card/valetudo-map-card.js,    type: module },
+    #   { url: /hacsfiles/swipe-card/swipe-card.js,                           type: module },
+   {url: '/local/lovelace/custom_icons.js?v=25052001', type: module}, {url: '/local/lovelace/font.css',
+      type: css}, {url: 'https://code.iconify.design/2/2.0.3/iconify.min.js', 
+        type: module}]
+
+# Text to speech
+tts:
+- platform: google_translate
+  service_name: google_say
+  language: 'ko'
+
+# Example configuration.yaml entry for the Telegram Bot
+# telegram_bot:
+#   - platform: polling
+#     api_key: !secret telegram_api_key
+#     allowed_chat_ids:
+#       - 400751803
+#       - -854393463
+
+# Example configuration.yaml entry for the notifier
+notify:
+#   - name: telegram
+#     platform: telegram
+#     chat_id: -854393463
+
+- name: bedroom_speaker
+  platform: tts
+  tts_service: tts.google_say
+  media_player: media_player.bedroom_speaker
+
+- name: kitchen_speaker
+  platform: tts
+  tts_service: tts.google_say
+  media_player: media_player.kitchen_speaker
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+
+#for Virtual device
+template: !include include/templates.yaml
+
+

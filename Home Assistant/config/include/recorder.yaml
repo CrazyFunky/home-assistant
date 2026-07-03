@@ -1,0 +1,42 @@
+recorder:
+  purge_keep_days: 90
+  commit_interval: 1
+  db_url: !secret sqldb_url
+  include:
+    entity_globs:
+      - sensor.*_temperature
+      - sensor.ble_temperature_*
+      - sensor.*_humidity
+      - sensor.ble_humidity_*
+      - sensor.power_smart_meter_*
+      - sensor.hourly_energy_meter_*
+      - sensor.daily_energy_meter_*
+      - sensor.monthly_energy_meter_*
+      - sensor.monthly_kwh_to_won_*
+      - sensor.binance_*
+    entities:
+      - sensor.db_size
+      - sensor.home_livingroom_iaq_co2_value
+      - sensor.home_livingroom_iaq_2_5_m_value
+      - sensor.home_livingroom_iaq_10_0_m_value
+      - sensor.misemeonji
+      - sensor.comisemeonji
+      - sensor.hyeonjaeondo
+      - sensor.hyeonjaeseubdo
+  exclude:
+    entity_globs:
+      - sensor.homecloud_*
+      - sensor.sm_t500_*
+      - binary_sensor.homecloud_*
+      - device_tracker.*
+      - person.*
+    entities:
+      - sensor.home_livingroom_iaq_living_room_mh_z19_temperature
+      - sensor.naengjanggo_temperature_measurement
+      - sensor.gwangpaobeun_oven_upper_target_temperature
+      - sensor.gwangpaobeun_oven_lower_target_temperature
+      - sensor.geosil_eeokeon_temperature_measurement
+      - sensor.anbang_eeokeon_temperature_measurement
+      - sensor.anbang_eeokeon_relative_humidity_measurement
+      - sensor.geosil_eeokeon_relative_humidity_measurement
+      - binary_sensor.sm_t500_is_charging

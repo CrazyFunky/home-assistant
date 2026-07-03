@@ -1,0 +1,1008 @@
+# !toggle word-wrap
+
+#################################################
+#                                               #
+#                 Card Template                 #
+#                                               #
+#################################################
+custom_base_card:
+  styles:
+    card:
+      - height: 100px
+      - border-radius: 10%
+      - animation: |
+          [[[
+            if (entity.state == 'unknown' ||  entity.state == 'unavailable' )
+              return 'error 1s linear infinite alternate';
+          ]]]
+    grid:
+      - grid-template-areas: |
+          "mdi   opt1"
+          "mdi   opt2"
+          "n      n   "
+          "slider slider"
+          "s      signal"
+      - grid-template-columns: repeat(2, 1fr)
+      - grid-template-rows: repeat(5, 20%)
+    lock:
+      - justify-content: flex-end
+      - align-items: flex-start
+    name:
+      - justify-self: start
+      - align-self: end
+      - padding-left: 0.7em
+      - font-size: 0.8em
+      - font-weight: bold
+    state:
+      - justify-self: start
+      - align-self: end
+      - padding-left: 0.8em
+      - font-size: 0.7em
+    custom_fields:
+      mdi:
+        - width: 2em
+        - justify-self: center
+        - align-self: end
+  extra_styles: |
+    @keyframes error {
+      0% {transform: scale(0.9); }
+      50% {transform: scale(1); }
+      100% {transform: scale(0.9); }
+    }
+    @keyframes animation_on {
+      0% {transform: rotatez(0deg) translateY(-3%); color: rgba(255,185,0,1);}
+      25% {transform: rotatez(5deg); }
+      50% {transform: rotatez(0deg) translateY(3%); color: rgba(255,185,0,1);}
+      75% {transform: rotatez(-5deg); }
+      100% {transform: rotatez(0deg) translateY(-3%); color: rgba(255,185,0,1);}
+    }
+    @keyframes animation_light_on {
+      0% {transform: scale(1);}
+      20% {transform: scale(1.2); color: var(--button-card-light-color);}
+      40% {transform: scale(1.05); color: var(--button-card-light-color);}
+      60% {transform: scale(1.2); color: var(--button-card-light-color);}
+      80% {transform: scale(1.2); color: var(--button-card-light-color);}
+      100% {transform: scale(1);}
+    }
+    @keyframes animation_off {
+      0% {transform: scale(1);}
+      50% {transform: scale(1.1); }
+      100% {transform: scale(1); }
+    }
+    @keyframes animation_active {
+      0% {transform: rotatez(0deg) translateY(-3%);}
+      25% {transform: rotatez(5deg)}
+      50% {transform: rotatez(0deg) translateY(3%); color: rgba(255,185,0,1);}
+      75% {transform: rotatez(-5deg)}
+      100% {transform: rotatez(0deg) translateY(-3%);}
+    }
+    @keyframes animation_idle {
+      0% { transform: scale(1.08, 0.92); }
+      50% { transform: translateY(-15%) scale(1, 1);}
+      100% { transform: scale(1.08, 0.92); }
+    }
+    @keyframes animation_cleaning {
+      0% {transform: rotatez(0deg);}
+      25% {transform: rotatez(25deg)}
+      50% {color: rgba(255, 214, 10, 1);}
+      75% {transform: rotatez(-25deg)}
+      100% {transform: rotatez(0deg);}
+    }
+    @keyframes animation_rotate {
+      0% {transform: rotate(0deg);}
+      50%  {transform: rotate(180deg); color: rgba(255,185,0,1);}
+      100% {transform: rotate(360deg);}
+    }
+    @keyframes bounceflasher {
+      0% {transform: scale(1);}
+      20% {transform: scale(1.2); color: rgba(255,185,0,1);}
+      40% {transform: scale(1.05); color: rgba(255,185,0,1);}
+      60% {transform: scale(1.2); color: rgba(255,185,0,1);}
+      80% {transform: scale(1.2); color: rgba(255,185,0,1);}
+      100% {transform: scale(1);}
+    }
+    @keyframes animation_playing {
+      0% {transform: scale(1); }
+      10% {transform: scale(1.3); color: rgba(255,185,0,1);}
+      20% {transform: scale(1.1); color: rgba(255,185,0,1);}
+      50% {transform: scale(1); }
+      100% {transform: scale(1); }
+    }
+    @keyframes rotateCard {
+      0% {transform: rotateY(0deg)}
+      100% {transform: rotateY(360deg)}
+    }
+    @keyframes IconClick {
+      0% {transform: scale(1);}
+      15% {transform: scale(0.9);}
+      25% {transform: scale(1);}
+      30% {transform: scale(0.98);}
+      100% {transform: scale(1);}
+    }
+
+custom_light_card:
+  styles:
+    card:
+      - "--mdc-ripple-color": |
+          [[[
+              if (entity.state == 'on' )
+                return 'rgba(255, 255, 255, 0.9)';
+              else if (entity.state == 'off')
+                return 'rgba(0, 0, 0, 0.9)';
+              else
+                return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - color: |
+          [[[
+            if (entity.state == 'on' )
+              return 'rgba(0, 0, 0, 0.7)';
+            else if (entity.state == 'off')
+              return 'rgba(255, 255, 255, 0.5)';
+            else
+              return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - background: |
+          [[[
+            if (entity.state == 'on')
+              return 'rgba(255, 255, 255, 0.5)';
+            else if (entity.state == 'off')
+              return 'rgba(0, 0, 0, 0.1)';
+            else
+              return 'rgba(255, 0, 0, 0.1)';
+          ]]]
+  custom_fields:
+    mdi: |
+      [[[
+        if (entity.state == 'on')
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_light_on 1s linear infinite;"></ha-icon>`;
+        else if (entity.state == 'off')
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+        else
+          return `<ha-icon
+              icon="mdi:alert"
+              </ha-icon>`;
+      ]]]
+
+custom_switch_card:
+  styles:
+    card:
+      - "--mdc-ripple-color": |
+          [[[
+              if (entity.state == 'on' ) 
+                return 'rgba(255, 255, 255, 0.9)';
+              else if (entity.state == 'off')
+                return 'rgba(0, 0, 0, 0.9)';
+              else 
+                return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - color: |
+          [[[
+            if (entity.state == 'on' ) 
+              return 'rgba(0, 0, 0, 0.7)';
+            else if (entity.state == 'off') 
+              return 'rgba(255, 255, 255, 0.5)';
+            else 
+              return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - background: |
+          [[[
+            if (entity.state == 'on')
+              if(variables.input_power != undefined && variables.input_power < 2)
+                return 'rgba(255, 255, 255, 0.3)';
+              else 
+                return 'rgba(255, 255, 255, 0.5)';
+            else if (entity.state == 'off')
+              return 'rgba(0, 0, 0, 0.1)';
+            else 
+              return 'rgba(255, 0, 0, 0.1)';
+          ]]]
+  custom_fields:
+    mdi: |
+      [[[
+        if (entity.state == 'on') 
+          if(variables.input_power != undefined && variables.input_power < 2)
+            return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_idle 1s 1s ease-in-out infinite;"></ha-icon>`;
+          else if(variables.input_power != undefined && variables.input_power >= 2)
+            if (entity.attributes.icon == 'mdi:fan')
+              return `<ha-icon
+                icon="${entity.attributes.icon}"
+                style="animation: animation_rotate 500ms linear infinite;"></ha-icon>`;
+            else
+              return `<ha-icon
+                icon="${entity.attributes.icon}"
+                style="animation: animation_active 500ms linear infinite alternate;"></ha-icon>`;
+          else
+            return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_on 500ms linear infinite;"></ha-icon>`;
+        else if (entity.state == 'off' )
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+        else
+          return `<ha-icon
+              icon="mdi:alert"
+              </ha-icon>`;
+      ]]]
+
+custom_media_card:
+  styles:
+    card:
+      - "--mdc-ripple-color": |
+          [[[
+              if (entity.state == 'on' )
+                return 'rgba(255, 255, 255, 0.9)';
+              else if (entity.state == 'off')
+                return 'rgba(0, 0, 0, 0.9)';
+              else
+                return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - color: |
+          [[[
+            if (entity.state == 'on' ||
+                entity.state == 'playing' ||
+                entity.state == 'idle' ||
+                entity.state == 'standby' ||
+                entity.state == 'buffering' ||
+                entity.state == 'paused' ) 
+              return 'rgba(0, 0, 0, 0.7)';
+            else if (entity.state == 'off')
+              return 'rgba(255, 255, 255, 0.5)';
+            else
+              return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - background: |
+          [[[
+            if (entity.state == 'on' ||
+                entity.state == 'playing') 
+              return 'rgba(255, 255, 255, 0.5)';
+            else if (entity.state == 'idle' ||
+                entity.state == 'standby' ||
+                entity.state == 'buffering' ||
+                entity.state == 'paused') 
+              return 'rgba(255, 255, 255, 0.3)';
+            else if (entity.state == 'off')
+              return 'rgba(0, 0, 0, 0.1)';
+            else
+              return 'rgba(255, 0, 0, 0.1)';
+          ]]]
+      - background-size: cover
+      - background-image: |
+          [[[ 
+            if (entity.state == 'playing' && entity.attributes.entity_picture != undefined)
+              return `url("${entity.attributes.entity_picture}")`;
+            else if (entity.state == 'playing' && entity.attributes.entity_picture == undefined)
+              if (entity.attributes.media_content_type == 'video')
+                return `url("/local/lovelace/video.jpg")`;
+              else if (entity.attributes.media_content_type == 'music')
+                return `url("/local/lovelace/music.jpg")`;
+              else
+                return `url("/local/lovelace/background.jpg")`;
+          ]]]
+  custom_fields:
+    mdi: |
+      [[[
+        if (entity.state == 'on')
+          return `<ha-icon
+            icon="${entity.attributes.icon}"
+            style="animation: bounceflasher 900ms linear infinite;"></ha-icon>`;
+        else if (entity.state == 'playing')
+          return `<ha-icon
+            icon="${entity.attributes.icon}"
+            style="animation: animation_playing 0.5s linear infinite;"></ha-icon>`;
+        else if (entity.state == 'idle' || entity.state == 'paused' || entity.state == 'standby' || entity.state == 'buffering')
+          return `<ha-icon
+            icon="${entity.attributes.icon}"
+            style="animation: animation_idle 1s 1s ease-in-out infinite;"></ha-icon>`;
+        else if (entity.state == 'off')
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+        else
+          return `<ha-icon
+              icon="mdi:alert"
+              </ha-icon>`;
+      ]]]
+
+custom_climate_card:
+  styles:
+    card:
+      - "--mdc-ripple-color": |
+          [[[
+              if (entity.state == 'on' )
+                return 'rgba(255, 255, 255, 0.9)';
+              else if (entity.state == 'off')
+                return 'rgba(0, 0, 0, 0.9)';
+              else if (entity.state == 'unavailable')
+                return 'rgba(0, 0, 0, 0.9)';
+              else
+                return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - color: |
+          [[[
+            if (entity.state == 'on' || 
+                entity.state == 'cool' || entity.state == 'aIComfort' || entity.state == 'comfortCooling' || entity.state == 'dry' || entity.state == 'wind' || entity.state == 'fan_only') 
+              return 'rgba(0, 0, 0, 0.7)';
+            else if (entity.state == 'off')
+              return 'rgba(255, 255, 255, 0.5)';
+            else if (entity.state == 'unavailable')
+              return 'rgba(255, 255, 255, 0.5)';
+            else
+              return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - background: |
+          [[[
+            if (entity.state == 'on')
+              return 'rgba(255, 255, 255, 0.3)';
+            else if (entity.state == 'cool' || entity.state == 'aIComfort' || entity.state == 'comfortCooling' || entity.state == 'dry' || entity.state == 'wind' || entity.state == 'fan_only') 
+              return 'rgba(255, 255, 255, 0.5)';
+            else if (entity.state == 'off')
+              return 'rgba(0, 0, 0, 0.1)';
+            else if (entity.state == 'unavailable')
+              return 'rgba(0, 0, 0, 0.1)';
+            else
+              return 'rgba(255, 0, 0, 0.1)';
+          ]]]
+  custom_fields:
+    mdi: |
+      [[[
+        if (entity.state == 'on')
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: bounceflasher 900ms linear infinite;"></ha-icon>`;
+        else if (entity.state == 'cool' || entity.state == 'aIComfort' || entity.state == 'comfortCooling' || entity.state == 'dry' || entity.state == 'wind' || entity.state == 'fan_only') 
+          return `<ha-icon
+              icon="mdi:fan"
+              style="animation: animation_rotate 1s linear infinite;"></ha-icon>`;
+        else if (entity.state === 'off')
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+        else if (entity.state === 'unavailable')
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+        else
+          return `<ha-icon
+              icon="mdi:alert"
+              </ha-icon>`;
+      ]]]
+
+custom_cover_card:
+  styles:
+    card:
+      - "--mdc-ripple-color": |
+          [[[
+              if (entity.state == 'on' )
+                return 'rgba(255, 255, 255, 0.9)';
+              else if (entity.state == 'off')
+                return 'rgba(0, 0, 0, 0.9)';
+              else
+                return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - color: |
+          [[[
+            if (entity.state == 'open')
+              if (entity.attributes.icon == 'mdi:curtains')
+                return 'rgba(255, 255, 255, 0.5)';
+              else
+                return 'rgba(0, 0, 0, 0.7)';
+            else if (entity.state == 'opening' || entity.state == 'closing')
+              return 'rgba(0, 0, 0, 0.5)';
+            else if (entity.state == 'closed') 
+              return 'rgba(255, 255, 255, 0.5)';
+            else
+              return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - background: |
+          [[[
+            if (entity.state == 'open')
+              if (entity.attributes.icon == 'mdi:curtains')
+                return 'rgba(0, 0, 0, 0.1)';
+              else
+                return 'rgba(255, 255, 255, 0.5)';
+            else if (entity.state == 'opening' || entity.state == 'closing') 
+              return 'rgba(255, 255, 255, 0.5)';
+            else if (entity.state == 'closed') 
+              return 'rgba(0, 0, 0, 0.1)';
+            else
+              return 'rgba(255, 0, 0, 0.1)';
+          ]]]
+  custom_fields:
+    mdi: |
+      [[[
+        if (entity.state == 'open')
+          if (entity.attributes.icon == 'mdi:blinds') 
+            return `<ha-icon
+              icon="mdi:blinds"
+              style="animation: bounceflasher 1.5s linear infinite;"></ha-icon>`;
+          else if (entity.attributes.icon == 'mdi:curtains') 
+            return `<ha-icon
+              icon="mdi:curtains"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+          else if (entity.attributes.icon == 'mdi:window-shutter') 
+            return `<ha-icon
+              icon="mdi:window-shutter-open"
+              style="animation: bounceflasher 1.5s linear infinite;"></ha-icon>`;
+          else
+            return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: bounceflasher 1.5s linear infinite;"></ha-icon>`;
+        else if (entity.state == 'opening' || entity.state == 'closing')
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: bounceflasher 1s linear infinite;"></ha-icon>`;
+        else if (entity.state == 'closed')
+          if (entity.attributes.icon == 'mdi:blinds') 
+            return `<ha-icon
+              icon="mdi:blinds-open"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+          else if (entity.attributes.icon == 'mdi:curtains') 
+            return `<ha-icon
+              icon="mdi:curtains-closed"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+          else if (entity.attributes.icon == 'mdi:window-shutter') 
+            return `<ha-icon
+              icon="mdi:window-shutter"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+          else
+            return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+        else
+          return `<ha-icon
+              icon="mdi:alert"
+              </ha-icon>`;
+      ]]]
+
+custom_vacuum_card:
+  styles:
+    card:
+      - "--mdc-ripple-color": |
+          [[[
+              if (entity.state == 'on' )
+                return 'rgba(255, 255, 255, 0.9)';
+              else if (entity.state == 'off')
+                return 'rgba(0, 0, 0, 0.9)';
+              else
+                return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - color: |
+          [[[
+            if (entity.state == 'cleaning') 
+              return 'rgba(0, 0, 0, 0.7)';
+            else if (entity.state == 'returning') 
+              return 'rgba(255, 255, 255, 0.7)';
+            else if ( entity.state == 'docked' || entity.state == 'idle' ) 
+              return 'rgba(255, 255, 255, 0.5)';
+            else
+              return 'rgba(255, 0, 0, 0.9)';
+          ]]]
+      - background: |
+          [[[
+            if (entity.state == 'cleaning') 
+              return 'rgba(255, 255, 255, 0.5)';
+            else if (entity.state == 'returning') 
+              return 'rgba(255, 255, 255, 0.3)';
+            else if (entity.state == 'docked' || entity.state == 'idle' ) 
+              return 'rgba(0, 0, 0, 0.1)';
+            else
+              return 'rgba(255, 0, 0, 0.1)';
+          ]]]
+    #   - background-size: cover
+    #   - background-image: |
+    #       [[[ 
+    #         if (entity.state == 'docked')
+    #           return `url("${states["image.bbyolbbyoli_map"].attributes.entity_picture}")`;
+    #       ]]]
+  custom_fields:
+    mdi: |
+      [[[
+        if (entity.state == 'cleaning')
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_cleaning 1s linear infinite;"></ha-icon>`;
+        else if (entity.state == 'returning')
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_idle 1s linear infinite;"></ha-icon>`;
+        else if (entity.state == 'docked' || entity.state == 'idle' ) 
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+        else
+          return `<ha-icon
+              icon="mdi:alert"
+              </ha-icon>`;
+      ]]]
+
+#################################################
+#                                               #
+#             Floor Card Template               #
+#                                               #
+#################################################
+custom_floor_card:
+  styles:
+    card:
+      - border-radius: 10%
+      - "--mdc-ripple-color": |
+          [[[
+              if (entity.state == 'off' ) return 'rgba(255, 255, 255, 0.0)';
+              else return 'rgba(0, 0, 0, 0.0)';
+          ]]]
+      - color: |
+          [[[
+            if (
+                entity.state === 'on' || 
+                entity.state === 'open' || entity.state === 'opening' || entity.state === 'closing' || 
+                entity.state === 'playing' || 
+                entity.state === 'cool' || entity.state === 'aIComfort' || entity.state === 'comfortCooling' || entity.state === 'dry' || entity.state === 'wind' || entity.state === 'unknown' ||
+                entity.state === 'cleaning' || entity.state === 'returning' ) 
+              return 'rgba(0, 0, 0, 0.0)';
+            else if (
+                entity.state === 'idle' || 
+                entity.state === 'paused'
+              ) 
+              return 'rgba(0, 0, 0, 0.0)';
+            else if (
+                entity.state === 'off' || 
+                entity.state === 'closed' || 
+                entity.state === 'docked'||
+                entity.state === 'unknown'
+              ) 
+              return 'rgba(0, 0, 0, 0.5)';
+            else return 'rgba(255, 255, 255, 0.3)';
+          ]]]
+      - background: |
+          [[[
+            if (
+                entity.state === 'on' || 
+                entity.state === 'open' || 
+                entity.state === 'playing' || 
+                entity.state === 'opening' || entity.state === 'closing' || 
+                entity.state === 'cool' || entity.state === 'aIComfort' || entity.state === 'comfortCooling' || entity.state === 'dry' || entity.state === 'wind' || entity.state === 'unknown' ||
+                entity.state === 'cleaning'
+              ) 
+              return 'rgba(255, 255, 255, 0.0)';
+            else if (
+                entity.state === 'idle' || 
+                entity.state === 'paused' || 
+                entity.state === 'returning') 
+              return 'rgba(255, 255, 255, 0.0)';
+            else if (
+                entity.state === 'off' || 
+                entity.state === 'closed' || 
+                entity.state === 'docked' ||
+                entity.state === 'unknown'
+              ) 
+              return 'rgba(0, 0, 0, 0.0)';
+            else return 'rgba(255, 0, 0, 0.0)';
+          ]]]
+    grid:
+      - grid-template-areas: |
+          "icon"
+          "opt1"
+          "opt2"
+      - grid-template-columns: 1fr
+      - grid-template-rows: auto
+    custom_fields:
+      icon:
+        - width: 1.7em
+        - justify-self: center
+        - align-self: end
+  custom_fields:
+    icon: |
+      [[[
+        if (entity.state == 'on')
+          return `<ha-icon
+            icon="${entity.attributes.icon}"
+            style="animation: bounceflasher 1s linear infinite;"></ha-icon>`;
+        else if (entity.state == 'off')
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+        else if (entity.state == 'cool' || entity.state == 'aIComfort' || entity.state == 'comfortCooling' || entity.state == 'dry' || entity.state == 'wind' )
+          return `<ha-icon
+              icon="mdi:fan"
+              style="animation: animation_rotate 1s linear infinite;"></ha-icon>`;
+        else if (entity.state == 'unavailable')
+          return `<ha-icon
+              icon="mdi:alert"
+              style="animation: error 1s linear infinite;"></ha-icon>`;
+        else
+          return `<ha-icon
+              icon="${entity.attributes.icon}"
+              style="animation: animation_off 1.5s linear infinite;"></ha-icon>`;
+      ]]]
+  extra_styles: |
+    @keyframes error {
+      0% { transform: scale(1.08, 0.92); }
+      50% { transform: translateY(-15%) scale(1, 1); }
+      100% { transform: scale(1.08, 0.92); }
+    }
+    @keyframes animation_on {
+      0% {transform: rotatez(0deg) translateY(-3%); color: var(--button-card-light-color); }
+      25% {transform: rotatez(5deg)}
+      50% {transform: rotatez(0deg) translateY(3%);}
+      75% {transform: rotatez(-5deg)}
+      100% {transform: rotatez(0deg) translateY(-3%); color: var(--button-card-light-color); }
+    }
+    @keyframes animation_light_on {
+      0% {transform: scale(1);}
+      20% {transform: scale(1.2); color: var(--button-card-light-color);}
+      40% {transform: scale(1.05); color: var(--button-card-light-color);}
+      60% {transform: scale(1.2); color: var(--button-card-light-color);}
+      80% {transform: scale(1.2); color: var(--button-card-light-color);}
+      100% {transform: scale(1);}
+    }
+    @keyframes animation_off {
+      0% {transform: scale(1);}
+      50% {transform: scale(1.1); }
+      100% {transform: scale(1); }
+    }
+    @keyframes animation_active {
+      0% {transform: rotatez(0deg) translateY(-3%); color: var(--button-card-light-color); }
+      25% {transform: rotatez(5deg)}
+      50% {transform: rotatez(0deg) translateY(3%);}
+      75% {transform: rotatez(-5deg)}
+      100% {transform: rotatez(0deg) translateY(-3%); color: var(--button-card-light-color); }
+    }
+    @keyframes animation_idle {
+      0% { transform: scale(1.08, 0.92); }
+      50% { transform: translateY(-15%) scale(1, 1); }
+      100% { transform: scale(1.08, 0.92); }
+    }
+    @keyframes animation_cleaning {
+      0% {transform: rotatez(0deg);}
+      25% {transform: rotatez(25deg)}
+      50% {color: var(--button-card-light-color);}
+      75% {transform: rotatez(-25deg)}
+      100% {transform: rotatez(0deg);}
+    }
+    @keyframes animation_rotate {
+      0% {transform: rotate(0deg);}
+      50%  {transform: rotate(180deg); color: var(--button-card-light-color);}
+      100% {transform: rotate(360deg);}
+    }
+    @keyframes bounceflasher {
+      0% {transform: scale(1);}
+      20% {transform: scale(1.2); color: var(--button-card-light-color);}
+      40% {transform: scale(1.05); color: var(--button-card-light-color);}
+      60% {transform: scale(1.2); color: var(--button-card-light-color);}
+      80% {transform: scale(1.2); color: var(--button-card-light-color);}
+      100% {transform: scale(1);}
+    }
+    @keyframes animation_playing {
+      0% {transform: scale(1); color: var(--button-card-light-color);}
+      10% {transform: scale(1.3); color: var(--button-card-light-color);}
+      20% {transform: scale(1.1); color: var(--button-card-light-color);}
+      50% {transform: scale(1); color: var(--button-card-light-color);}
+      100% {transform: scale(1); }
+    }
+
+custom_display_temperature_humidity:
+  styles:
+    custom_fields:
+      opt1:
+        - justify-self: start
+        - align-self: start
+        - font-size: 0.7em
+        - font-weight: bold
+        - "--text-color-sensor": |
+            [[[
+              if (variables.input_opt1_value < -5) return 'blue';
+              else if (variables.input_opt1_value >= -5 && variables.input_opt1_value < 18) return 'cyan';
+              else if (variables.input_opt1_value >= 18 && variables.input_opt1_value < 26) return 'cyan';
+              else if (variables.input_opt1_value >= 26 && variables.input_opt1_value < 30) return 'orange';
+              else return 'red';
+            ]]]
+      opt2:
+        - justify-self: start
+        - align-self: start
+        - font-size: 0.7em
+        - font-weight: bold
+        - "--text-color-sensor": |
+            [[[
+              if (variables.input_opt2_value < 10) return 'blue';
+              else if (variables.input_opt2_value >= 10 && variables.input_opt2_value < 40) return 'cyan';
+              else if (variables.input_opt2_value >= 40 && variables.input_opt2_value < 60) return 'cyan';
+              else if (variables.input_opt2_value >= 60 && variables.input_opt2_value < 80) return 'orange';
+              else return 'red';
+            ]]]
+  custom_fields:
+    opt1: |
+      [[[
+        return `
+          <ha-icon icon="mdi:thermometer" style="width: 1em; color: var(--text-color-sensor);"></ha-icon>
+          <span style="color: var(--text-color-sensor);">${variables.input_opt1_value}°C</span>`
+      ]]]
+    opt2: |
+      [[[
+        return `
+          <ha-icon icon="mdi:water-percent" style="width: 1em; color: var(--text-color-sensor);"></ha-icon>
+          <span style="color: var(--text-color-sensor);">${variables.input_opt2_value}%</span>`
+      ]]]
+
+#################################################
+#                                               #
+#                    ACTION                     #
+#                                               #
+#################################################
+custom_action:
+  tap_action:
+    animation_card: |
+      [[[
+        const animation_speed_ms = 900;
+        const animation = `IconClick ${animation_speed_ms}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+        this.shadowRoot.getElementById("card").style.animation = animation;
+        window.setTimeout(() => {
+          this.shadowRoot.getElementById("card").style.animation = "none";
+        }, animation_speed_ms)
+      ]]]
+    action: toggle
+    haptic: medium
+  double_tap_action:
+    animation_card: |
+      [[[
+        const animation_speed_ms = 900;
+        const animation = `rotateCard ${animation_speed_ms}ms ease infinite`;
+        this.shadowRoot.getElementById("card").style.animation = animation;
+        window.setTimeout(() => {
+          this.shadowRoot.getElementById("card").style.animation = "none";
+        }, animation_speed_ms)
+      ]]]
+    action: more-info
+    haptic: medium
+  hold_action:
+    animation_card: |
+      [[[
+        const animation_speed_ms = 900;
+        const animation = `rotateCard ${animation_speed_ms}ms ease infinite`;
+        this.shadowRoot.getElementById("card").style.animation = animation;
+        window.setTimeout(() => {
+          this.shadowRoot.getElementById("card").style.animation = "none";
+        }, animation_speed_ms)
+      ]]]
+    action: more-info
+    haptic: medium
+
+#################################################
+#                                               #
+#                Additional Display             #
+#                                               #
+#################################################
+custom_display_slider:
+  custom_fields:
+    slider:
+      card:
+        full_row: true
+        hide_state: true
+        hide_when_off: true
+        colorize: true
+        step: 10
+        type: custom:slider-entity-row
+        entity: "[[[ return entity.entity_id ]]]"
+
+custom_display_signal:
+  styles:
+    custom_fields:
+      signal:
+        - justify-self: end
+        - align-self: end
+        - padding-right: 1em
+        - font-size: 0.7em
+        - color: green
+  custom_fields:
+    signal: |
+      [[[
+        if (entity.state == 'unavailable' || variables.input_signal == null) return;
+        else
+          return `
+            <ha-icon icon="mdi:signal" style="width: 0.7em"></ha-icon>
+            <span style=>${variables.input_signal}</span>`
+      ]]]
+
+custom_display_brightness:
+  styles:
+    custom_fields:
+      opt1:
+        - justify-self: end
+        - align-self: end
+        - padding-right: 1em
+        - font-size: 0.7em
+        - color: green
+  custom_fields:
+    opt1: |
+      [[[
+        if (entity.state == 'unavailable' || variables.input_brightness == null || variables.input_brightness == 0 ) return;
+        else 
+          return `
+            <ha-icon icon="mdi:brightness-5" style="width: 1em;"></ha-icon>
+            <span style=>${variables.input_brightness}Lx</span>`;
+      ]]]
+
+custom_display_position:
+  styles:
+    custom_fields:
+      opt1:
+        - justify-self: end
+        - align-self: end
+        - padding-right: 1em
+        - font-size: 0.7em
+        - color: green
+  custom_fields:
+    opt1: |
+      [[[
+        if (entity.state == 'unavailable' || variables.input_posision == null || variables.input_posision == 0 ) return;
+        else
+          if (entity.state == 'open' && entity.attributes.icon == 'mdi:window-shutter')
+            return `
+              <ha-icon icon=mdi:window-shutter-open style="width: 1em;"></ha-icon>
+              <span style=>${variables.input_posision}%</span>`
+          else if (entity.state == 'closed' && entity.attributes.icon == 'mdi:curtains-closed')
+            return `
+              <ha-icon icon=mdi:curtains-closed style="width: 1em;"></ha-icon>
+              <span style=>${variables.input_posision}%</span>`
+          else if (entity.state == 'closed' && entity.attributes.icon == 'mdi:blinds')
+            return `
+              <ha-icon icon=mdi:blinds-open style="width: 1em;"></ha-icon>
+              <span style=>${variables.input_posision}%</span>`
+          else
+            return `
+              <ha-icon icon=${entity.attributes.icon} style="width: 1em;"></ha-icon>
+              <span style=>${variables.input_posision}%</span>`
+      ]]]
+
+custom_display_power:
+  styles:
+    custom_fields:
+      opt1:
+        - justify-self: end
+        - align-self: end
+        - padding-right: 1em
+        - font-size: 0.7em
+        - color: green
+  custom_fields:
+    opt1: |
+      [[[
+        if (entity.state == 'unavailable' || variables.input_power == null || variables.input_power < 1) return;
+        else return `
+          <ha-icon icon="hass:flash" style="width: 1em;"></ha-icon>
+          <span style=>${variables.input_power}W</span>`
+      ]]]
+
+custom_display_media:
+  styles:
+    custom_fields:
+      opt1:
+        - justify-self: end
+        - align-self: end
+        - padding-right: 1em
+        - font-size: 0.7em
+        - color: green
+      opt2:
+        - justify-self: end
+        - align-self: start
+        - padding-right: 1em
+        - font-size: 0.7em
+        - color: green
+  custom_fields:
+    opt1: |
+      [[[
+        if (entity.state == 'off' || entity.state == 'unavailable')
+          return;
+        else if (entity.attributes.media_content_type == undefined && entity.attributes.app_name != undefined) 
+          return `<marquee scrollamount="2" width=60px>
+            <span style=>${entity.attributes.app_name}</span><marquee>`
+        else if (entity.attributes.media_content_type == 'video')
+          return `<marquee scrollamount="2" width=60px>
+            <span style=>${entity.attributes.app_name}</span></marquee>`
+        else if (entity.attributes.media_content_type == 'music')
+          if (entity.attributes.media_artist != undefined)
+            return `<marquee scrollamount="2" width=60px>
+              <span style=>${entity.attributes.media_artist}</span></marquee>`;
+          else if (entity.attributes.app_name != undefined && entity.attributes.media_artist == undefined)
+            return `<marquee scrollamount="2" width=60px>
+              <span style=>${entity.attributes.app_name}</span></marquee>`;
+          else 
+            return `<marquee scrollamount="2" width=60px>
+              <span style=>Music</span></marquee>`;
+        else
+          return `<marquee scrollamount="2" width=60px>
+            <span style=>Debug Line</span></marquee>`
+      ]]]
+    opt2: |
+      [[[
+        if (entity.state == 'off' || entity.state == 'unavailable')
+          return;
+        else if (entity.attributes.media_content_type == 'video')
+          if (entity.attributes.media_title != undefined)
+            return `<marquee scrollamount="2" width=60px>
+              <span style=>${entity.attributes.media_title}</span></marquee>`;
+          else 
+            return `<marquee scrollamount="2" width=60px>
+              <span style=>Video</span></marquee>`;
+        else if(entity.attributes.media_content_type == 'music')
+          if (entity.attributes.media_title != undefined)
+            return `<marquee scrollamount="2" width=60px>
+              <span style=>${entity.attributes.media_title}</span></marquee>`;
+          else 
+            return `<marquee scrollamount="2" width=60px>
+              <span style=>Music</span></marquee>`;
+        else
+          return `<marquee scrollamount="2" width=60px>
+            <span style=>Debug Line</span></marquee>`
+      ]]]
+
+custom_display_climate:
+  styles:
+    custom_fields:
+      opt1:
+        - justify-self: end
+        - align-self: end
+        - padding-right: 1em
+        - font-size: 0.7em
+        - color: green
+      opt2:
+        - justify-self: end
+        - align-self: start
+        - padding-right: 1em
+        - font-size: 0.7em
+        - color: green
+  custom_fields:
+    opt1: |
+      [[[
+        if (entity.state == undefined || entity.state == 'off' ) return;
+        else return `
+          <ha-icon icon="mdi:flash" style="width: 1em;"></ha-icon>
+          <span style=>${variables.input_power}</span>`
+      ]]]
+    opt2: |
+      [[[
+        if (entity.state == undefined || entity.state == 'off' ) return;
+        else return `
+          <span style=>설정: ${entity.attributes.temperature}°C</span>`
+      ]]]
+
+custom_display_option1:
+  styles:
+    custom_fields:
+      opt1:
+        - justify-self: end
+        - align-self: end
+        - padding-right: 1em
+        - font-size: 0.7em
+        - color: green
+  custom_fields:
+    opt1: |
+      [[[
+        if (entity.state == undefined || variables.input_opt1_value == 'unavailable' || variables.input_opt1_value == '') return;
+        else return `
+          <ha-icon icon="${variables.input_opt1_icon}" style="width: 1em;"></ha-icon>
+          <span style=>${variables.input_opt1_value}</span>`
+      ]]]
+
+custom_display_option2:
+  styles:
+    custom_fields:
+      opt2:
+        - justify-self: end
+        - align-self: start
+        - padding-right: 1em
+        - font-size: 0.7em
+        - color: green
+  custom_fields:
+    opt2: |
+      [[[
+        if (entity.state == undefined || variables.input_opt2_value == 'unavailable' || variables.input_opt2_value == '') return;
+        else 
+          return `
+            <ha-icon icon="${variables.input_opt2_icon}" style="width: 1em;"></ha-icon>
+            <span style=>${variables.input_opt2_value}</span>`;
+      ]]]
