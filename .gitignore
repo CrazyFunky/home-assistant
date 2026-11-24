@@ -25,6 +25,7 @@ www/community/
 # Python and tooling caches
 __pycache__/
 *.py[cod]
+.venv-cad/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -34,4 +35,3 @@ __pycache__/
 Thumbs.db
 .vscode/
 .idea/
-

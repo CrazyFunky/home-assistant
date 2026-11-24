@@ -1,76 +1,76 @@
-# Dashboard Management
+# 대시보드 관리
 
-This document records how the home's Home Assistant dashboards are organized and how they should be maintained.
+이 문서는 우리 집 Home Assistant 대시보드가 어떻게 구성되어 있고 어떻게 유지보수해야 하는지 기록한다.
 
-## Current Dashboards
+## 현재 대시보드
 
-The home currently uses two tablet-oriented dashboard surfaces derived from the same button-card design language.
+현재 집에서는 같은 button-card 디자인 언어에서 파생된 태블릿용 대시보드 화면 두 개를 사용한다.
 
-| Dashboard | URL path | Mode | Purpose |
+| 대시보드 | URL 경로 | 모드 | 목적 |
 | --- | --- | --- | --- |
-| 개요 | `lovelace` | YAML | Main tablet dashboard backed by `ui-lovelace.yaml` |
-| SweetHome | `lovelace-sweetkitchen` | Storage | Smaller tablet dashboard derived from the main dashboard |
+| 개요 | `lovelace` | YAML | `ui-lovelace.yaml`을 기반으로 하는 메인 태블릿 대시보드 |
+| SweetHome | `lovelace-sweetkitchen` | Storage | 메인 대시보드에서 파생된 작은 태블릿용 대시보드 |
 
-Other dashboards may exist, but these two are the primary living-room tablet dashboards.
+다른 대시보드도 있을 수 있지만, 이 두 개가 거실 태블릿용 주요 대시보드다.
 
-## Design Relationship
+## 디자인 관계
 
-`ui-lovelace.yaml` is the baseline dashboard.
+`ui-lovelace.yaml`은 기준 대시보드다.
 
-`SweetHome` is a smaller-screen derivative. It keeps the same overall layout and button-card behavior, but scales the card dimensions and typography down for a smaller tablet screen.
+`SweetHome`은 작은 화면용 파생 대시보드다. 전체 레이아웃과 button-card 동작은 유지하되, 작은 태블릿 화면에 맞게 카드 크기와 글자 크기를 줄였다.
 
-Known differences:
+알려진 차이는 다음과 같다.
 
-| Setting | `ui-lovelace.yaml` | `SweetHome` |
+| 설정 | `ui-lovelace.yaml` | `SweetHome` |
 | --- | --- | --- |
-| `custom_base_card` height | `100px` | `80px` |
-| name font size | `0.8em` | `0.7em` |
-| state font size | `0.7em` | `0.6em` |
-| main icon width | `2em` | `1.7em` |
+| `custom_base_card` 높이 | `100px` | `80px` |
+| 이름 글자 크기 | `0.8em` | `0.7em` |
+| 상태 글자 크기 | `0.7em` | `0.6em` |
+| 메인 아이콘 너비 | `2em` | `1.7em` |
 
-## Template Strategy
+## 템플릿 전략
 
-The dashboards are based on `custom:button-card`.
+대시보드는 `custom:button-card`를 기반으로 한다.
 
-Important template groups:
+중요한 템플릿 그룹은 다음과 같다.
 
-- `custom_base_card`: base layout, card height, grid areas, common animation hooks.
-- `custom_light_card`: light state, color, background, and icon animation.
-- `custom_switch_card`: switch state, optional power-aware display, and icon animation.
-- `custom_media_card`: media state, playback display, background image handling.
-- `custom_climate_card`: climate state and cooling/fan display.
-- `custom_cover_card`: curtain, blind, and cover display.
-- `custom_vacuum_card`: robot vacuum state display.
-- `custom_floor_card`: floor-plan button state display.
-- Display templates for temperature, humidity, power, signal, sliders, and option fields.
-- `custom_action`: tap, double-tap, hold, haptic, and button animation behavior.
+- `custom_base_card`: 기본 레이아웃, 카드 높이, grid 영역, 공통 애니메이션 훅
+- `custom_light_card`: 조명 상태, 색상, 배경, 아이콘 애니메이션
+- `custom_switch_card`: 스위치 상태, 선택적 전력 표시, 아이콘 애니메이션
+- `custom_media_card`: 미디어 상태, 재생 표시, 배경 이미지 처리
+- `custom_climate_card`: 냉난방 상태와 냉방/팬 표시
+- `custom_cover_card`: 커튼, 블라인드, 커버 표시
+- `custom_vacuum_card`: 로봇청소기 상태 표시
+- `custom_floor_card`: 평면도 버튼 상태 표시
+- 온도, 습도, 전력, 신호, 슬라이더, 옵션 필드 표시 템플릿
+- `custom_action`: 탭, 더블탭, 길게 누르기, 햅틱, 버튼 애니메이션 동작
 
-Because `SweetHome` is storage-mode, it cannot conveniently share YAML `!include` files such as `button_card_templates.yaml`. For now, keep the current dashboard modes and document differences here instead of converting dashboards immediately.
+`SweetHome`은 storage-mode이므로 `button_card_templates.yaml` 같은 YAML `!include` 파일을 편하게 공유하기 어렵다. 지금은 대시보드 모드를 유지하고, 즉시 변환하기보다 차이점을 이 문서에 기록한다.
 
-## Maintenance Rules
+## 유지보수 규칙
 
-- Treat `ui-lovelace.yaml` as the source design reference.
-- Treat `SweetHome` as a smaller-screen derivative, not an unrelated dashboard.
-- Before changing either dashboard, inspect `button_card_templates` first.
-- Decide whether a change is:
-  - shared behavior that should be reflected in both dashboards, or
-  - screen-size-specific behavior that should stay different.
-- Do not edit Home Assistant `.storage` files directly.
-- Use Home Assistant dashboard APIs/MCP tools for storage-mode dashboards.
-- For YAML-mode dashboard changes, edit the dashboard YAML file directly through a managed, validated path.
-- Preserve tablet usability: avoid increasing card height, font size, or spacing without checking the target tablet screen.
-- Prefer small, reversible dashboard edits.
+- `ui-lovelace.yaml`을 디자인 기준으로 본다.
+- `SweetHome`은 별개의 대시보드가 아니라 작은 화면용 파생본으로 본다.
+- 어느 대시보드를 바꾸든 먼저 `button_card_templates`를 확인한다.
+- 변경이 다음 중 어디에 해당하는지 판단한다.
+  - 두 대시보드에 모두 반영해야 하는 공통 동작
+  - 화면 크기 때문에 다르게 유지해야 하는 동작
+- Home Assistant `.storage` 파일을 직접 편집하지 않는다.
+- storage-mode 대시보드는 Home Assistant 대시보드 API/MCP 도구로 수정한다.
+- YAML-mode 대시보드는 관리되고 검증 가능한 경로를 통해 대시보드 YAML 파일을 직접 수정한다.
+- 태블릿 사용성을 유지한다. 대상 태블릿 화면을 확인하지 않고 카드 높이, 글자 크기, 간격을 키우지 않는다.
+- 작고 되돌릴 수 있는 대시보드 수정을 우선한다.
 
-## Future Improvement Path
+## 향후 개선 방향
 
-The most maintainable long-term structure would be to convert derivative dashboards to YAML-mode and share common files:
+장기적으로 가장 유지보수하기 쉬운 구조는 파생 대시보드를 YAML-mode로 전환하고 공통 파일을 공유하는 방식이다.
 
 ```yaml
 button_card_templates: !include button_card_templates.yaml
 views: !include lovelace/sweethome/views.yaml
 ```
 
-Then small-screen differences could be handled through explicit override templates, such as:
+그 다음 작은 화면 차이는 아래처럼 명시적인 override 템플릿으로 처리할 수 있다.
 
 ```yaml
 custom_base_card_small:
@@ -80,5 +80,4 @@ custom_base_card_small:
       - height: 80px
 ```
 
-Do not perform this conversion casually. It should be treated as a planned dashboard migration because the current tablet dashboards are already in active use.
-
+이 전환은 가볍게 진행하지 않는다. 현재 태블릿 대시보드가 실제로 사용 중이므로 계획된 대시보드 마이그레이션으로 다룬다.

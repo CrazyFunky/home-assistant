@@ -1,172 +1,172 @@
-# MCP And Live Home Access
+# MCP와 실시간 집 접근
 
-This document describes how Codex should access live home systems.
+이 문서는 Codex가 실시간 집 시스템에 접근하는 방식을 설명한다.
 
-## Source Of Truth
+## 기준 시스템
 
-The mini PC is the source of truth for live home control.
+실시간 집 제어의 기준은 미니 PC다.
 
-Expected services on or near the mini PC:
+미니 PC 또는 그 주변에서 동작할 것으로 기대되는 서비스는 다음과 같다.
 
 - Home Assistant
-- MCP server or servers for Home Assistant and household tools
-- IoT bridges and integrations
-- Matterbridge for exposing selected Home Assistant devices to Google Home
-- Any supporting services needed for home operations
+- Home Assistant와 집안 도구를 위한 MCP 서버
+- IoT 브리지와 연동 서비스
+- 선택된 Home Assistant 장치를 Google Home에 노출하기 위한 Matterbridge
+- 집 운영에 필요한 보조 서비스
 
-## Home Network Topology
+## 홈 네트워크 구조
 
-The current home network is organized as:
+현재 집 네트워크는 아래처럼 구성되어 있다.
 
 ```text
-Public internet
--> wired/wireless router
--> wired and wireless home devices
-   -> Home Assistant server
-      -> Zigbee antenna
-      -> Zigbee2MQTT server
+공인 인터넷
+-> 유/무선 라우터
+-> 유선 및 무선 집안 장치
+   -> Home Assistant 서버
+      -> Zigbee 안테나
+      -> Zigbee2MQTT 서버
       -> Nginx Proxy Manager
       -> Matterbridge
-      -> MCP access layer
-   -> NAS server
-   -> other wired/wireless devices
+      -> MCP 접근 계층
+   -> NAS 서버
+   -> 기타 유선/무선 장치
 ```
 
-The router is the boundary between the public internet and the home LAN. Home Assistant, NAS, and other household devices are connected behind the router by wired or wireless networking.
+라우터는 공인 인터넷과 집 LAN 사이의 경계다. Home Assistant, NAS, 기타 집안 장치는 라우터 뒤에서 유선 또는 무선 네트워크로 연결된다.
 
-Home Assistant has the Zigbee antenna attached and runs Zigbee2MQTT. Zigbee devices should be treated as part of the Home Assistant-controlled device layer, even when the physical radio path is through Zigbee2MQTT.
+Home Assistant에는 Zigbee 안테나가 연결되어 있고 Zigbee2MQTT가 실행된다. Zigbee 장치는 물리적 무선 경로가 Zigbee2MQTT를 거치더라도 Home Assistant가 제어하는 장치 계층의 일부로 본다.
 
-Nginx Proxy Manager is installed in the Home Assistant environment. External DNS-based access reaches Nginx Proxy Manager first, and Nginx Proxy Manager routes the request to the configured internal service.
+Nginx Proxy Manager는 Home Assistant 환경에 설치되어 있다. 외부 DNS 기반 접근은 먼저 Nginx Proxy Manager에 도달하고, Nginx Proxy Manager가 요청을 설정된 내부 서비스로 라우팅한다.
 
-## Current Remote MCP Access
+## 현재 원격 MCP 접근
 
-The current Codex-to-Home-Assistant MCP access path is:
+현재 Codex에서 Home Assistant MCP로 접근하는 경로는 다음과 같다.
 
 ```text
-Codex on an external computer
--> external DNS name
--> Nginx Proxy Manager reverse proxy
--> Home Assistant MCP server
+외부 컴퓨터의 Codex
+-> 외부 DNS 이름
+-> Nginx Proxy Manager 리버스 프록시
+-> Home Assistant MCP 서버
 -> Home Assistant
 ```
 
-This is the live remote access model in use today. Treat it as an intentionally exposed HTTPS reverse-proxy path for MCP, not as a general-purpose LAN access method.
+이것이 현재 사용 중인 실시간 원격 접근 모델이다. 이 경로는 MCP를 위해 의도적으로 노출한 HTTPS 리버스 프록시 경로이며, 일반적인 LAN 접근 방식으로 취급하지 않는다.
 
-Security rules for this path:
+이 경로의 보안 규칙은 다음과 같다.
 
-- Do not expose Samba, SSH, NAS, router admin, or arbitrary LAN services through this same path.
-- Keep the exact DNS name, MCP secret path, bearer tokens, and Home Assistant tokens in local-only ignored files.
-- Prefer narrow MCP endpoints and least-privilege Home Assistant tokens where possible.
-- If a future VPN or AI gateway is added, document whether it replaces or supplements this NPM reverse-proxy path.
+- Samba, SSH, NAS, 라우터 관리자, 임의의 LAN 서비스를 같은 경로로 노출하지 않는다.
+- 정확한 DNS 이름, MCP 비밀 경로, bearer 토큰, Home Assistant 토큰은 로컬 전용 ignored 파일에 둔다.
+- 가능하면 좁은 MCP 엔드포인트와 최소 권한 Home Assistant 토큰을 사용한다.
+- 나중에 VPN 또는 AI 게이트웨이가 추가되면, 그것이 현재 NPM 리버스 프록시 경로를 대체하는지 보완하는지 문서화한다.
 
-## Voice Control Path
+## 음성 제어 경로
 
-The current voice-control path is:
+현재 음성 제어 경로는 다음과 같다.
 
 ```text
-Home Assistant devices
+Home Assistant 장치
 -> Matterbridge
 -> Google Home
--> Google speakers
--> spoken household commands
+-> Google 스피커
+-> 가족의 음성 명령
 ```
 
-Home Assistant remains the source of truth for device state and automation behavior. Matterbridge is the bridge that makes selected Home Assistant devices available in Google Home so household members can control them by voice through Google speakers.
+장치 상태와 자동화 동작의 기준은 계속 Home Assistant다. Matterbridge는 선택된 Home Assistant 장치를 Google Home에서 사용할 수 있게 해 주는 브리지이며, 가족 구성원은 Google 스피커를 통해 음성으로 장치를 제어한다.
 
-When troubleshooting voice control, check the path in this order:
+음성 제어 문제를 확인할 때는 다음 순서로 점검한다.
 
-1. Confirm the device works directly in Home Assistant.
-2. Confirm the device is exposed through Matterbridge.
-3. Confirm the device appears correctly in Google Home.
-4. Confirm the target Google speaker or voice command path is working.
+1. 장치가 Home Assistant에서 직접 동작하는지 확인한다.
+2. 장치가 Matterbridge를 통해 노출되어 있는지 확인한다.
+3. 장치가 Google Home에 올바르게 표시되는지 확인한다.
+4. 대상 Google 스피커 또는 음성 명령 경로가 동작하는지 확인한다.
 
-## Access Model
+## 접근 모델
 
-Other computers should not become separate home-control authorities.
+다른 컴퓨터는 별도의 집 제어 권한자가 되어서는 안 된다.
 
-They should act as terminals:
+다른 컴퓨터는 접근 단말로 동작해야 한다.
 
 ```text
-Codex on another PC
--> opens this repository
--> connects securely to the mini PC
--> uses MCP/Home Assistant for live state and actions
+다른 PC의 Codex
+-> 이 저장소를 연다
+-> 미니 PC에 안전하게 연결한다
+-> MCP/Home Assistant를 사용해 실시간 상태와 동작을 처리한다
 ```
 
-## Secure Remote Access
+## 안전한 원격 접근
 
-Use a secure private access method for remote connections, such as:
+원격 연결에는 다음과 같은 안전한 사설 접근 방식을 사용한다.
 
 - Tailscale
 - ZeroTier
 - WireGuard
-- Another trusted VPN
+- 그 밖의 신뢰할 수 있는 VPN
 
-Avoid exposing Home Assistant or MCP servers directly to the public internet unless there is a deliberate, reviewed security design.
+의도적으로 검토된 보안 설계가 없다면 Home Assistant 또는 MCP 서버를 공인 인터넷에 직접 노출하지 않는다.
 
-## Secrets
+## 비밀값
 
-Do not commit:
+다음은 커밋하지 않는다.
 
-- Access tokens
-- API keys
-- Passwords
-- Private tunnel keys
-- Exact sensitive addresses
+- 접근 토큰
+- API 키
+- 비밀번호
+- 사설 터널 키
+- 정확한 민감 주소
 
-Use local-only files such as:
+다음과 같은 로컬 전용 파일이나 저장소를 사용한다.
 
 - `.env`
 - `secrets.yaml`
-- Codex local configuration
-- Operating-system keychain or password manager
+- Codex 로컬 설정
+- 운영체제 키체인 또는 비밀번호 관리자
 
-Keep examples in tracked files only when they contain placeholders.
+추적되는 파일에는 자리표시자만 예시로 둔다.
 
-## Connection Checklist
+## 연결 체크리스트
 
-When setting up a new computer:
+새 컴퓨터를 설정할 때:
 
-1. Connect to the trusted home network or VPN.
-2. Confirm the mini PC is reachable.
-3. Confirm Home Assistant is reachable.
-4. Confirm MCP server endpoints are reachable.
-5. Configure local secrets or tokens.
-6. Start Codex from this repository.
-7. Ask Codex to read `AGENTS.md`.
+1. 신뢰할 수 있는 홈 네트워크 또는 VPN에 연결한다.
+2. 미니 PC에 접근 가능한지 확인한다.
+3. Home Assistant에 접근 가능한지 확인한다.
+4. MCP 서버 엔드포인트에 접근 가능한지 확인한다.
+5. 로컬 비밀값 또는 토큰을 설정한다.
+6. 이 저장소에서 Codex를 시작한다.
+7. Codex에게 `AGENTS.md`를 읽게 한다.
 
-## Local Codex MCP Configuration
+## 로컬 Codex MCP 설정
 
-This repository may use a local project-scoped Codex MCP configuration at `.codex/config.toml`.
+이 저장소는 프로젝트 범위의 로컬 Codex MCP 설정 파일 `.codex/config.toml`을 사용할 수 있다.
 
-That file can contain private Home Assistant MCP endpoint details and must stay local-only. It is ignored by Git and should not be committed.
+이 파일에는 비공개 Home Assistant MCP 엔드포인트 정보가 들어갈 수 있으므로 반드시 로컬 전용으로 유지한다. Git에서 무시되며 커밋하지 않아야 한다.
 
-Local environment hints may also be stored in `.env`, which is also ignored by Git.
+로컬 환경 힌트는 `.env`에도 저장될 수 있고, 이 파일 역시 Git에서 무시된다.
 
-## Access Profiles
+## 접근 프로필
 
-Each computer should choose the access profile that matches its network location.
+각 컴퓨터는 네트워크 위치에 맞는 접근 프로필을 선택해야 한다.
 
-- `local`: Use the private LAN Home Assistant IP address and private LAN MCP endpoint when inside the home network.
-- `remote`: Use the external DNS/HTTPS Home Assistant address and remote MCP endpoint when away from the home network.
+- `local`: 집 안 네트워크에 있을 때 사설 LAN Home Assistant IP와 사설 LAN MCP 엔드포인트를 사용한다.
+- `remote`: 집 밖에 있을 때 외부 DNS/HTTPS Home Assistant 주소와 원격 MCP 엔드포인트를 사용한다.
 
-Home Assistant is currently reachable in two ways:
+Home Assistant는 현재 두 가지 방식으로 접근할 수 있다.
 
-- Inside the home network: by private IP address.
-- Outside the home network: by external DNS name.
+- 집 안 네트워크: 사설 IP 주소
+- 집 밖 네트워크: 외부 DNS 이름
 
-Prefer the local IP path when physically at home because it avoids unnecessary external routing. Use the DNS path when away from home or on a network that cannot reach the private LAN address.
+집에 있을 때는 불필요한 외부 라우팅을 피하기 위해 로컬 IP 경로를 우선한다. 집 밖에 있거나 사설 LAN 주소에 접근할 수 없는 네트워크에서는 DNS 경로를 사용한다.
 
-The exact URLs, bearer tokens, and MCP secret path belong in ignored local files only:
+정확한 URL, bearer 토큰, MCP 비밀 경로는 ignored 로컬 파일에만 둔다.
 
-- `.env` for local environment hints such as `HOME_ASSISTANT_URL`, `HOME_ASSISTANT_LOCAL_URL`, `HOME_ASSISTANT_REMOTE_URL`, `MCP_HOME_SERVER_URL`, `MCP_HOME_LOCAL_SERVER_URL`, and `MCP_HOME_REMOTE_SERVER_URL`.
-- `.codex/config.toml` for project-scoped Codex MCP servers.
+- `.env`: `HOME_ASSISTANT_URL`, `HOME_ASSISTANT_LOCAL_URL`, `HOME_ASSISTANT_REMOTE_URL`, `MCP_HOME_SERVER_URL`, `MCP_HOME_LOCAL_SERVER_URL`, `MCP_HOME_REMOTE_SERVER_URL` 같은 로컬 환경 힌트
+- `.codex/config.toml`: 프로젝트 범위의 Codex MCP 서버 설정
 
-When configuring remote MCP access, include the required MCP secret path in the ignored local URL. Do not commit that path.
+원격 MCP 접근을 설정할 때는 필요한 MCP 비밀 경로를 ignored 로컬 URL에 포함한다. 그 경로를 커밋하지 않는다.
 
-## Open Items
+## 미정 항목
 
-- Document the mini PC hostname or private VPN name.
-- Document MCP server names and purposes.
-- Document local setup commands once confirmed.
-- Document health-check commands once confirmed.
+- 미니 PC 호스트 이름 또는 사설 VPN 이름 문서화
+- MCP 서버 이름과 목적 문서화
+- 확인된 로컬 설정 명령 문서화
+- 확인된 상태 점검 명령 문서화

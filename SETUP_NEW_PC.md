@@ -1,192 +1,192 @@
-# Setup A New Device
+# 새 장치 설정
 
-Use this checklist to continue the same home assistant environment from another device.
+다른 장치에서 같은 집 어시스턴트 환경을 이어가기 위한 체크리스트다.
 
-## Goal
+## 목표
 
-After setup, a new device should be able to:
+설정이 끝난 새 장치는 다음을 할 수 있어야 한다.
 
-- Open this repository.
-- Understand the home operating rules.
-- Connect securely to the mini PC.
-- Use MCP/Home Assistant for live state and actions.
-- Continue work without depending on the original Mac.
+- 이 저장소 열기
+- 집 운영 규칙 이해하기
+- 미니 PC에 안전하게 연결하기
+- MCP/Home Assistant를 사용해 실시간 상태와 동작 처리하기
+- 처음 사용하던 Mac에 의존하지 않고 작업 이어가기
 
-The exact setup differs by platform:
+정확한 설정 방식은 플랫폼마다 다르다.
 
-- macOS and Windows are full working environments.
-- Smartphones are light access terminals for review, urgent edits, Home Assistant control, and continuity prompts.
+- macOS와 Windows는 전체 작업 환경이다.
+- 스마트폰은 검토, 긴급 수정, Home Assistant 제어, 이어가기 프롬프트를 위한 가벼운 접근 단말이다.
 
-## Prerequisites
+## 준비 사항
 
-- Codex installed.
-- Git installed.
-- Access to the repository remote.
-- Access to the secure home network or VPN.
-- Required secrets or tokens available from a password manager or trusted local source.
+- Codex 설치
+- Git 설치
+- 원격 저장소 접근 권한
+- 안전한 홈 네트워크 또는 VPN 접근
+- 비밀번호 관리자나 신뢰할 수 있는 로컬 출처에서 필요한 비밀값 또는 토큰 확인 가능
 
-## GitHub Access
+## GitHub 접근
 
-Repository:
+저장소:
 
 ```text
 https://github.com/CrazyFunky/home-assistant.git
 ```
 
-Do not give GitHub tokens to Codex and do not commit them to this repository.
+GitHub 토큰을 Codex에게 주지 말고, 이 저장소에 커밋하지 않는다.
 
-Each device should store its own GitHub credentials locally through the operating system credential manager, Git Credential Manager, or a trusted password manager.
+각 장치는 운영체제 자격 증명 관리자, Git Credential Manager, 신뢰할 수 있는 비밀번호 관리자에 자체 GitHub 자격 증명을 로컬로 저장해야 한다.
 
-For HTTPS Git access, GitHub account passwords are not accepted. Use a Personal Access Token instead.
+HTTPS Git 접근에서는 GitHub 계정 비밀번호를 사용할 수 없다. 대신 Personal Access Token을 사용한다.
 
-Recommended token rule:
+권장 토큰 규칙:
 
-- Scope the token only to this repository when possible.
-- Grant `Contents: Read and write`.
-- Store the token locally on that device.
-- Never paste the token into chat.
-- Rotate or revoke the token if a device is lost or no longer trusted.
+- 가능하면 토큰 범위를 이 저장소로만 제한한다.
+- `Contents: Read and write` 권한을 부여한다.
+- 토큰은 해당 장치에 로컬로 저장한다.
+- 토큰을 채팅에 붙여넣지 않는다.
+- 장치를 잃어버렸거나 더 이상 신뢰하지 않는 경우 토큰을 교체하거나 폐기한다.
 
-## macOS Setup
+## macOS 설정
 
-1. Install Codex.
-2. Install Git. Xcode Command Line Tools or Homebrew Git are both acceptable.
-3. Connect to the home VPN or trusted network.
-4. Clone this repository:
+1. Codex를 설치한다.
+2. Git을 설치한다. Xcode Command Line Tools 또는 Homebrew Git 모두 가능하다.
+3. 홈 VPN 또는 신뢰할 수 있는 네트워크에 연결한다.
+4. 이 저장소를 클론한다.
 
 ```bash
 git clone https://github.com/CrazyFunky/home-assistant.git
 cd home-assistant
 ```
 
-5. Open the repository in Codex.
-6. Configure local secrets and tokens in Keychain, a password manager, `.env`, or other local-only files.
-7. Configure MCP connections to the mini PC.
-8. Confirm Home Assistant is reachable.
-9. Ask Codex to read `AGENTS.md`.
-10. Ask Codex to summarize current status from `HOUSE_LOG.md`.
+5. Codex에서 저장소를 연다.
+6. Keychain, 비밀번호 관리자, `.env`, 기타 로컬 전용 파일에 로컬 비밀값과 토큰을 설정한다.
+7. 미니 PC로 연결되는 MCP 연결을 설정한다.
+8. Home Assistant에 접근 가능한지 확인한다.
+9. Codex에게 `AGENTS.md`를 읽게 한다.
+10. Codex에게 `HOUSE_LOG.md` 기준으로 현재 상태를 요약하게 한다.
 
-## Windows Setup
+## Windows 설정
 
-1. Install Codex.
-2. Install Git for Windows.
-3. Make sure Git Credential Manager is enabled during Git installation.
-4. Connect to the home VPN or trusted network.
-5. Open PowerShell or Windows Terminal.
-6. Clone this repository:
+1. Codex를 설치한다.
+2. Git for Windows를 설치한다.
+3. Git 설치 과정에서 Git Credential Manager가 활성화되어 있는지 확인한다.
+4. 홈 VPN 또는 신뢰할 수 있는 네트워크에 연결한다.
+5. PowerShell 또는 Windows Terminal을 연다.
+6. 이 저장소를 클론한다.
 
 ```powershell
 git clone https://github.com/CrazyFunky/home-assistant.git
 cd home-assistant
 ```
 
-7. Open the repository in Codex.
-8. Configure local secrets and tokens in Windows Credential Manager, a password manager, `.env`, or other local-only files.
-9. Configure MCP connections to the mini PC.
-10. Confirm Home Assistant is reachable.
-11. Ask Codex to read `AGENTS.md`.
-12. Ask Codex to summarize current status from `HOUSE_LOG.md`.
+7. Codex에서 저장소를 연다.
+8. Windows Credential Manager, 비밀번호 관리자, `.env`, 기타 로컬 전용 파일에 로컬 비밀값과 토큰을 설정한다.
+9. 미니 PC로 연결되는 MCP 연결을 설정한다.
+10. Home Assistant에 접근 가능한지 확인한다.
+11. Codex에게 `AGENTS.md`를 읽게 한다.
+12. Codex에게 `HOUSE_LOG.md` 기준으로 현재 상태를 요약하게 한다.
 
-### Windows Notes
+### Windows 참고 사항
 
-- If Git was installed while Codex or PowerShell was already open, restart the terminal or Codex so the updated `PATH` is loaded.
-- If `git` is not found in the current session immediately after installation, Git can usually still be verified at `C:\Program Files\Git\cmd\git.exe`.
-- Keep GitHub credentials in Git Credential Manager or Windows Credential Manager. Do not paste tokens into Codex chat or commit them to the repository.
-- Use this repository as the durable context store, and use the mini PC for live Home Assistant and MCP state.
+- Codex나 PowerShell이 이미 열린 상태에서 Git을 설치했다면, 업데이트된 `PATH`가 로드되도록 터미널 또는 Codex를 다시 시작한다.
+- 설치 직후 현재 세션에서 `git`을 찾지 못해도 보통 `C:\Program Files\Git\cmd\git.exe`에서 Git을 확인할 수 있다.
+- GitHub 자격 증명은 Git Credential Manager 또는 Windows Credential Manager에 보관한다. 토큰을 Codex 채팅에 붙여넣거나 저장소에 커밋하지 않는다.
+- 이 저장소는 지속 맥락 저장소로 사용하고, 실시간 Home Assistant와 MCP 상태는 미니 PC를 기준으로 사용한다.
 
-## Smartphone Setup
+## 스마트폰 설정
 
-Smartphones should be treated as light access terminals, not the primary working environment for large Home Assistant or repository edits.
+스마트폰은 대규모 Home Assistant 수정이나 저장소 편집을 위한 주 작업 환경이 아니라, 가벼운 접근 단말로 다룬다.
 
-Use a smartphone for:
+스마트폰은 다음 용도로 사용한다.
 
-- Reading the repository.
-- Checking `HOUSE_LOG.md`.
-- Asking for household status or next actions.
-- Reviewing or approving small changes.
-- Accessing Home Assistant.
-- Emergency or away-from-desk operation.
+- 저장소 읽기
+- `HOUSE_LOG.md` 확인
+- 집 상태나 다음 작업 질문
+- 작은 변경 검토 또는 승인
+- Home Assistant 접근
+- 긴급 상황 또는 책상 밖에서의 작업
 
 ### Android
 
-1. Install the Home Assistant app.
-2. Install the VPN app used for home access, such as Tailscale, ZeroTier, or WireGuard.
-3. Install GitHub Mobile or use GitHub in a browser.
-4. Sign in to GitHub as `CrazyFunky`.
-5. Open `https://github.com/CrazyFunky/home-assistant`.
-6. Verify that `AGENTS.md`, `SETUP_NEW_PC.md`, and `HOUSE_LOG.md` are readable.
-7. If using a mobile Codex or ChatGPT surface that can access the repository, start with the continuity prompt below.
+1. Home Assistant 앱을 설치한다.
+2. Tailscale, ZeroTier, WireGuard 같은 홈 접근용 VPN 앱을 설치한다.
+3. GitHub Mobile을 설치하거나 브라우저에서 GitHub를 사용한다.
+4. GitHub에 `CrazyFunky` 계정으로 로그인한다.
+5. `https://github.com/CrazyFunky/home-assistant`를 연다.
+6. `AGENTS.md`, `SETUP_NEW_PC.md`, `HOUSE_LOG.md`를 읽을 수 있는지 확인한다.
+7. 저장소에 접근할 수 있는 모바일 Codex 또는 ChatGPT 환경을 사용한다면 아래 이어가기 프롬프트로 시작한다.
 
 ### iOS
 
-1. Install the Home Assistant app.
-2. Install the VPN app used for home access, such as Tailscale, ZeroTier, or WireGuard.
-3. Install GitHub Mobile or use GitHub in Safari.
-4. Sign in to GitHub as `CrazyFunky`.
-5. Open `https://github.com/CrazyFunky/home-assistant`.
-6. Verify that `AGENTS.md`, `SETUP_NEW_PC.md`, and `HOUSE_LOG.md` are readable.
-7. If using a mobile Codex or ChatGPT surface that can access the repository, start with the continuity prompt below.
+1. Home Assistant 앱을 설치한다.
+2. Tailscale, ZeroTier, WireGuard 같은 홈 접근용 VPN 앱을 설치한다.
+3. GitHub Mobile을 설치하거나 Safari에서 GitHub를 사용한다.
+4. GitHub에 `CrazyFunky` 계정으로 로그인한다.
+5. `https://github.com/CrazyFunky/home-assistant`를 연다.
+6. `AGENTS.md`, `SETUP_NEW_PC.md`, `HOUSE_LOG.md`를 읽을 수 있는지 확인한다.
+7. 저장소에 접근할 수 있는 모바일 Codex 또는 ChatGPT 환경을 사용한다면 아래 이어가기 프롬프트로 시작한다.
 
-### Smartphone Limits
+### 스마트폰 한계
 
-- Do not store broad GitHub tokens in plain text notes.
-- Prefer read/review on mobile and commit/push from macOS or Windows.
-- If a mobile token is needed, make it repository-scoped and revoke it when no longer needed.
-- For urgent live control, use the Home Assistant app through VPN rather than editing automation files on the phone.
+- 광범위한 GitHub 토큰을 일반 텍스트 메모에 저장하지 않는다.
+- 모바일에서는 읽기/검토를 우선하고, 커밋/푸시는 macOS 또는 Windows에서 진행한다.
+- 모바일 토큰이 필요하면 저장소 범위로 제한하고 더 이상 필요하지 않을 때 폐기한다.
+- 긴급 실시간 제어는 휴대폰에서 자동화 파일을 편집하기보다 VPN을 통해 Home Assistant 앱을 사용한다.
 
-## First Prompt For Codex
+## Codex 첫 프롬프트
 
-Use this prompt when opening the repository from a new device:
+새 장치에서 저장소를 열었을 때 이 프롬프트를 사용한다.
 
 ```text
 AGENTS.md를 먼저 읽고, HOUSE.md, MCP.md, DEVICES.md, OPERATIONS.md, HOUSE_LOG.md를 읽은 다음 우리 집 운영 비서 역할을 이어가.
 ```
 
-If the new session needs to continue from the latest documented context, add:
+새 세션이 최신 문서화된 맥락에서 이어져야 한다면 다음을 추가한다.
 
 ```text
 HOUSE_LOG.md의 마지막 항목을 기준으로 현재 상태를 요약하고 다음에 해야 할 일을 제안해줘.
 ```
 
-## Verification
+## 검증
 
-Confirm:
+다음을 확인한다.
 
-- `AGENTS.md` is readable.
-- `HOUSE.md` is readable.
-- The mini PC is reachable.
-- Home Assistant is reachable by private IP when inside the home network.
-- Home Assistant is reachable by external DNS when outside the home network.
-- MCP tools are available.
-- No secrets were committed into Git.
-- `git pull` works.
-- `git push` works after local authentication.
+- `AGENTS.md`를 읽을 수 있다.
+- `HOUSE.md`를 읽을 수 있다.
+- 미니 PC에 접근할 수 있다.
+- 집 안 네트워크에서는 사설 IP로 Home Assistant에 접근할 수 있다.
+- 집 밖 네트워크에서는 외부 DNS로 Home Assistant에 접근할 수 있다.
+- MCP 도구를 사용할 수 있다.
+- Git에 비밀값이 커밋되지 않았다.
+- `git pull`이 동작한다.
+- 로컬 인증 후 `git push`가 동작한다.
 
-For smartphones, confirm at minimum:
+스마트폰에서는 최소한 다음을 확인한다.
 
-- The Home Assistant app works through the secure network path.
-- The GitHub repository is readable.
-- `HOUSE_LOG.md` can be checked before asking the assistant to continue context.
+- 안전한 네트워크 경로를 통해 Home Assistant 앱이 동작한다.
+- GitHub 저장소를 읽을 수 있다.
+- 비서에게 맥락 이어가기를 요청하기 전에 `HOUSE_LOG.md`를 확인할 수 있다.
 
-## Local Files That May Be Needed
+## 필요할 수 있는 로컬 파일
 
-These files may exist locally but should not be committed with real secrets:
+다음 파일은 로컬에 있을 수 있지만 실제 비밀값이 들어간 상태로 커밋하면 안 된다.
 
 - `.env`
 - `secrets.yaml`
-- local Codex config files
-- VPN configuration
-- SSH keys
-- GitHub Personal Access Token stored in the local credential manager or password manager
+- 로컬 Codex 설정 파일
+- VPN 설정
+- SSH 키
+- 로컬 자격 증명 관리자 또는 비밀번호 관리자에 저장된 GitHub Personal Access Token
 
-## If Something Does Not Work
+## 문제가 생겼을 때
 
-Check in this order:
+다음 순서로 확인한다.
 
-1. VPN or network connection.
-2. Mini PC power and network status.
-3. Home Assistant status.
-4. MCP server status.
-5. Local token or secret configuration.
-6. Codex project configuration.
-7. Platform-specific credential manager behavior.
+1. VPN 또는 네트워크 연결
+2. 미니 PC 전원과 네트워크 상태
+3. Home Assistant 상태
+4. MCP 서버 상태
+5. 로컬 토큰 또는 비밀값 설정
+6. Codex 프로젝트 설정
+7. 플랫폼별 자격 증명 관리자 동작

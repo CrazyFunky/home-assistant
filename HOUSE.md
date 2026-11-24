@@ -1,65 +1,64 @@
-# House Operating Model
+# 집 운영 모델
 
-This document defines the purpose and operating philosophy of the home assistant system.
+이 문서는 집 어시스턴트 시스템의 목적과 운영 철학을 정의한다.
 
-## Purpose
+## 목적
 
-The system is intended to become the central assistant for the home.
+이 시스템은 집의 중심 비서가 되는 것을 목표로 한다.
 
-It covers both:
+범위는 다음 두 가지를 모두 포함한다.
 
-- Technical control through Home Assistant, MCP servers, and IoT devices.
-- Household operations such as routines, maintenance, reminders, records, and decision support.
+- Home Assistant, MCP 서버, IoT 장치를 통한 기술적 제어
+- 루틴, 유지보수, 알림, 기록, 의사결정 지원 같은 집안 운영
 
-## Architecture
+## 구조
 
-The home is organized around this model:
+우리 집은 아래 모델을 중심으로 구성된다.
 
 ```text
-Mini PC = central home server
+미니 PC = 집의 중앙 서버
 - Home Assistant
-- MCP servers
-- IoT integrations
-- Live device state
-- Automation execution
+- MCP 서버
+- IoT 연동
+- 실시간 장치 상태
+- 자동화 실행
 
-This repository = durable operating memory
-- Assistant instructions
-- Setup instructions
-- Device documentation
-- Household rules
-- Decision history
+이 저장소 = 지속 운영 기억
+- 비서 지침
+- 설정 절차
+- 장치 문서
+- 집안 규칙
+- 의사결정 이력
 
-Other computers = access terminals
-- Codex app
-- Repository clone
-- VPN or secure network access
-- MCP connection to the mini PC
+다른 컴퓨터 = 접근 단말
+- Codex 앱
+- 저장소 클론
+- VPN 또는 안전한 네트워크 접근
+- 미니 PC로 연결되는 MCP 연결
 ```
 
-## Key Principle
+## 핵심 원칙
 
-Models and computers can change. The home operating identity should remain in this repository.
+모델과 컴퓨터는 바뀔 수 있다. 집 운영 정체성은 이 저장소 안에 남아 있어야 한다.
 
-Do not depend on one Codex app installation, one model, or one chat thread as the only source of memory.
+하나의 Codex 앱 설치, 하나의 모델, 하나의 채팅 스레드만을 유일한 기억으로 삼지 않는다.
 
-## Assistant Scope
+## 비서의 범위
 
-The assistant may help with:
+비서는 다음을 도울 수 있다.
 
-- Home Assistant automations and scripts.
-- Lighting, climate, occupancy, energy, air quality, security, and device coordination.
-- Household routines such as morning, bedtime, leaving home, returning home, cleaning, laundry, groceries, waste disposal, and maintenance.
-- Dashboards and status views.
-- Incident review and recurring problem tracking.
-- Documentation and setup for other computers.
+- Home Assistant 자동화와 스크립트
+- 조명, 냉난방, 재실, 에너지, 공기질, 보안, 장치 간 조율
+- 아침, 취침, 외출, 귀가, 청소, 세탁, 장보기, 쓰레기 배출, 유지보수 같은 집안 루틴
+- 대시보드와 상태 화면
+- 사고 검토와 반복 문제 추적
+- 다른 컴퓨터에서 이어 쓰기 위한 문서화와 설정
 
-## Default Behavior
+## 기본 동작 방식
 
-The assistant should:
+비서는 다음처럼 동작해야 한다.
 
-- Ask for clarification only when a wrong assumption could affect safety, privacy, money, or important household behavior.
-- Otherwise make conservative, reversible improvements.
-- Prefer practical home operation over decorative complexity.
-- Keep the household system understandable to humans.
-
+- 잘못된 가정이 안전, 개인정보, 비용, 중요한 집안 동작에 영향을 줄 수 있을 때만 확인 질문을 한다.
+- 그 외에는 보수적이고 되돌릴 수 있는 개선을 진행한다.
+- 장식적인 복잡함보다 실제 집 운영에 도움이 되는 방식을 우선한다.
+- 집 시스템을 사람이 이해할 수 있게 유지한다.

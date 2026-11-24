@@ -1,67 +1,66 @@
-# Household Operations
+# 집안 운영
 
-This document defines non-technical household routines and operating rules.
+이 문서는 기술 설정이 아닌 집안 루틴과 운영 규칙을 정의한다.
 
-## Routine Categories
+## 루틴 분류
 
-Track and refine routines in these categories:
+다음 범주의 루틴을 추적하고 개선한다.
 
-- Morning
-- Leaving home
-- Returning home
-- Evening
-- Bedtime
-- Cleaning
-- Laundry
-- Groceries
-- Waste disposal
-- Ventilation
-- Climate comfort
-- Energy saving
-- Maintenance
-- Security
+- 아침
+- 외출
+- 귀가
+- 저녁
+- 취침
+- 청소
+- 세탁
+- 장보기
+- 쓰레기 배출
+- 환기
+- 냉난방 쾌적도
+- 에너지 절약
+- 유지보수
+- 보안
 
-## Decision Style
+## 판단 방식
 
-The assistant should consider:
+비서는 다음 요소를 고려해야 한다.
 
-- Who is home.
-- Time of day.
-- Indoor temperature and humidity.
-- Outdoor weather and air quality when available.
-- Noise-sensitive times.
-- Energy use.
-- Whether an alert is useful now or can wait.
+- 누가 집에 있는지
+- 하루 중 시간대
+- 실내 온도와 습도
+- 확인 가능한 경우 외부 날씨와 공기질
+- 소음에 민감한 시간대
+- 에너지 사용량
+- 지금 알림이 유용한지, 나중에 요약해도 되는지
 
-## Alerts
+## 알림
 
-Alerts should be useful, timely, and not excessive.
+알림은 유용하고, 시기적절하며, 과하지 않아야 한다.
 
-Prefer:
+다음을 우선한다.
 
-- Immediate alerts for safety, security, leaks, smoke, abnormal device behavior, or urgent maintenance.
-- Summaries for low-priority household reminders.
-- Quiet handling for expected or harmless state changes.
+- 안전, 보안, 누수, 연기, 비정상 장치 동작, 긴급 유지보수에는 즉시 알림
+- 우선순위가 낮은 집안 리마인더는 요약
+- 예상된 상태 변화나 무해한 변화는 조용히 처리
 
-## Maintenance Log Topics
+## 유지보수 로그 주제
 
-Record important maintenance decisions or recurring issues in `HOUSE_LOG.md`.
+중요한 유지보수 결정이나 반복 문제는 `HOUSE_LOG.md`에 기록한다.
 
-Examples:
+예시는 다음과 같다.
 
-- Filter replacement.
-- Battery replacement.
-- Device failures.
-- Network instability.
-- Automation false positives.
-- Comfort complaints.
-- Energy anomalies.
+- 필터 교체
+- 배터리 교체
+- 장치 고장
+- 네트워크 불안정
+- 자동화 오탐
+- 쾌적도 불만
+- 에너지 이상
 
-## Open Items
+## 미정 항목
 
-- Define household members and notification preferences.
-- Define quiet hours.
-- Define cleaning schedule.
-- Define waste disposal schedule.
-- Define regular maintenance schedule.
-
+- 가족 구성원과 알림 선호도 정의
+- 조용한 시간대 정의
+- 청소 일정 정의
+- 쓰레기 배출 일정 정의
+- 정기 유지보수 일정 정의
