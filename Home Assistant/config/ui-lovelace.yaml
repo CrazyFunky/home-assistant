@@ -36,24 +36,25 @@ views:
               color_threshold: true
             header:
               show: true
-              title: 실시간 소비전력
+              title: 이번달 전력 사용량
               show_states: true
               colorize_states: true
             now:
               show: false
               label: Now
-            cache: true
+            cache: false
             series:
               - entity: sensor.daily_energy_meter_total
                 type: column
                 show:
                   header_color_threshold: true
                   extremas: true
-                  in_header: true
+                  in_header: raw
                   in_chart: true
-                group_by:
-                  func: last
-                  duration: 1d
+                statistics:
+                  type: change
+                  period: day
+                  align: middle
                 color_threshold:
                   - value: 0
                     color: green
@@ -68,7 +69,7 @@ views:
                 show:
                   header_color_threshold: true
                   extremas: false
-                  in_header: true
+                  in_header: raw
                   in_chart: false
                 color_threshold:
                   - value: 0
@@ -84,7 +85,7 @@ views:
                 show:
                   header_color_threshold: true
                   extremas: false
-                  in_header: true
+                  in_header: raw
                   in_chart: false
                 color_threshold:
                   - value: 0
@@ -2749,9 +2750,9 @@ views:
       - type: vertical-stack
         cards:
           - type: custom:apexcharts-card
-            graph_span: 1day
+            graph_span: 24h
             span:
-              end: day
+              start: day
             experimental:
               color_threshold: true
             header:
@@ -2765,16 +2766,18 @@ views:
             cache: true
             series:
               - entity: sensor.hourly_energy_meter_total
+                name: 오늘(시간별)
                 type: column
                 opacity: 0.75
                 show:
                   header_color_threshold: true
-                  in_header: true
+                  in_header: raw
                   extremas: true
                   in_chart: true
-                group_by:
-                  func: last
-                  duration: 1h
+                statistics:
+                  type: change
+                  period: hour
+                  align: middle
                 color_threshold:
                   - value: 0.4
                     color: green
@@ -2795,9 +2798,10 @@ views:
                   in_header: false
                   in_chart: true
                   offset_in_name: false
-                group_by:
-                  func: max
-                  duration: 1h
+                statistics:
+                  type: change
+                  period: hour
+                  align: middle
                 color_threshold:
                   - value: 0.4
                     color: green
@@ -2812,11 +2816,8 @@ views:
                 show:
                   header_color_threshold: true
                   extremas: false
-                  in_header: true
+                  in_header: raw
                   in_chart: false
-                group_by:
-                  func: last
-                  duration: 1d
                 color_threshold:
                   - value: 0
                     color: green
@@ -2846,7 +2847,7 @@ views:
           - type: custom:apexcharts-card
             graph_span: 1month
             span:
-              end: month
+              start: month
             experimental:
               color_threshold: true
             header:
@@ -2865,11 +2866,12 @@ views:
                 show:
                   header_color_threshold: true
                   extremas: true
-                  in_header: true
+                  in_header: raw
                   in_chart: true
-                group_by:
-                  func: last
-                  duration: 1d
+                statistics:
+                  type: change
+                  period: day
+                  align: middle
                 color_threshold:
                   - value: 0
                     color: green
@@ -2890,9 +2892,10 @@ views:
                   in_header: false
                   in_chart: true
                   offset_in_name: false
-                group_by:
-                  func: max
-                  duration: 1d
+                statistics:
+                  type: change
+                  period: day
+                  align: middle
                 color_threshold:
                   - value: 0
                     color: green
@@ -2907,7 +2910,7 @@ views:
                 show:
                   header_color_threshold: true
                   extremas: false
-                  in_header: true
+                  in_header: raw
                   in_chart: false
                 color_threshold:
                   - value: 0
@@ -2936,7 +2939,7 @@ views:
       - type: vertical-stack
         cards:
           - type: custom:apexcharts-card
-            graph_span: 3month
+            graph_span: 6month
             span:
               end: month
             experimental:
@@ -2954,13 +2957,14 @@ views:
               - entity: sensor.monthly_energy_meter_total
                 type: column
                 opacity: 0.75
-                group_by:
-                  func: last
-                  duration: 1month
+                statistics:
+                  type: change
+                  period: month
+                  align: middle
                 show:
                   header_color_threshold: true
                   extremas: true
-                  in_header: true
+                  in_header: raw
                   in_chart: false
                 color_threshold:
                   - value: 0
@@ -2974,9 +2978,10 @@ views:
               - entity: sensor.monthly_energy_meter_total
                 type: column
                 opacity: 0.75
-                group_by:
-                  func: max
-                  duration: 1month
+                statistics:
+                  type: change
+                  period: month
+                  align: middle
                 show:
                   header_color_threshold: true
                   extremas: true
@@ -2993,13 +2998,10 @@ views:
                     color: red
               - entity: sensor.monthly_kwh_to_won_forecast_kwh
                 type: line
-                group_by:
-                  func: last
-                  duration: 1month
                 show:
                   header_color_threshold: true
                   extremas: false
-                  in_header: true
+                  in_header: raw
                   in_chart: false
                 color_threshold:
                   - value: 0

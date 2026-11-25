@@ -1,5 +1,7 @@
 # 집 운영 로그
 
+- 2026-11-25 정리: 복구용 최신 사용량 카드 4개를 `Home Assistant/config/ui-lovelace.yaml` 백업에 반영하고 중복 `recovery/` 파일을 삭제했다. 향후 복원은 Git 이력을 사용한다.
+
 ## 2026-11-25
 
 - HA 서버의 `ui-lovelace.yaml`을 다시 조회하여 11월 24일 수정한 사용량 ApexCharts 카드 4개가 저장된 상태임을 확인했다. 시간/일/월 통계는 `change`, 정렬은 `middle`, 현재 값 헤더는 `raw`이며 헤더 전용 일별 집계를 제거했다.
