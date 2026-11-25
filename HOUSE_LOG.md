@@ -1,5 +1,11 @@
 # 집 운영 로그
 
+## 2026-11-25
+
+- HA 서버의 `ui-lovelace.yaml`을 다시 조회하여 11월 24일 수정한 사용량 ApexCharts 카드 4개가 저장된 상태임을 확인했다. 시간/일/월 통계는 `change`, 정렬은 `middle`, 현재 값 헤더는 `raw`이며 헤더 전용 일별 집계를 제거했다.
+- `recovery/apexcharts-energy-cards.yaml`에 서버에서 추출한 카드 4개의 복구용 목록을 보관했다. 전체 대시보드 파일이 아니므로 원래 파일의 대응 카드만 교체해야 한다. 기본 대시보드는 `ui-lovelace.yaml`, 별도 SweetHome은 `dashboards/sweethome.yaml`로 구분한다.
+- `history:` 추가 후 이력 조회가 정상화된 사실을 기록한다. 첫 카드의 `cache: false`는 진단 설정으로 유지되어 있다. 브라우저 렌더링은 이번 보관 작업에서 검증하지 않았다.
+
 이 파일은 중요한 결정, 설정 이력, 운영 맥락을 기록한다.
 
 ## 2026-06-29
