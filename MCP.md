@@ -74,6 +74,11 @@ Home Assistant 장치
 장치 상태와 자동화 동작의 기준은 계속 Home Assistant다. Matterbridge는 선택된 Home Assistant 장치를 Google Home에서 사용할 수 있게 해 주는 브리지이며, 가족 구성원은 Google 스피커를 통해 음성으로 장치를 제어한다.
 
 음성 제어 문제를 확인할 때는 다음 순서로 점검한다.
+Use Matterbridge as the default Google Home exposure path. Keep Home Assistant's `google_assistant` cloud-to-cloud integration only as an exception path for entities that Matterbridge cannot represent well, such as selected scripts, scenes, helpers, or individual entities that need Google-specific names or aliases.
+
+The `google_assistant` YAML package is kept at `/config/include/google_assistant.yaml` and is loaded through `homeassistant.packages: !include_dir_named include`. Its service account JSON is kept under `/config/secrets/google_assistant_service_account.json`; this is secret material and must not be committed.
+
+When troubleshooting voice control, check the path in this order:
 
 1. 장치가 Home Assistant에서 직접 동작하는지 확인한다.
 2. 장치가 Matterbridge를 통해 노출되어 있는지 확인한다.
@@ -81,6 +86,47 @@ Home Assistant 장치
 4. 대상 Google 스피커 또는 음성 명령 경로가 동작하는지 확인한다.
 
 ## 접근 모델
+## Presence Detection
+
+Use Wi-Fi router presence as the default household presence source. Family members should not be required to install the Home Assistant Companion app only for presence detection.
+
+The current Wi-Fi presence path is:
+
+```text
+Family phones
+-> home Wi-Fi
+-> ipTIME router
+-> iptime_tracker device_tracker entities
+-> person entities
+-> automations and dashboards
+```
+
+Automations should prefer `person.*` entities over raw `device_tracker.*` entities. The raw ipTIME tracker entities are the input signal; the person entities are the household-facing presence state.
+
+The Home Assistant Companion app tracker may be used as an optional personal supplement, but it should not be required for spouse/children presence workflows.
+
+Keep the ipTIME tracker target names stable because Home Assistant derives the `device_tracker.iptime_*` entity IDs from those names. When a family member changes phones, update the MAC address for that person's existing target in `/config/include/device_tracker.yaml`; do not rename the target unless every person helper, automation, dashboard, and other consumer has been checked and updated.
+
+Current presence mapping:
+
+```text
+person.weinhwan      <- device_tracker.iptime_inhwan_we
+person.jangseongeun  <- device_tracker.iptime_seungeun_jang
+person.wejiyeon      <- device_tracker.iptime_jiyeon_we
+person.wegahyeon     <- device_tracker.iptime_gahyeon_we
+```
+
+Phone replacement checklist:
+
+1. Connect the new phone to the home Wi-Fi.
+2. Disable private/random MAC address for the home Wi-Fi network on that phone.
+3. Confirm the new stable MAC address from the ipTIME router client list.
+4. Replace only that person's `mac` value in `/config/include/device_tracker.yaml`.
+5. Leave the `name` value unchanged so the `device_tracker.iptime_*` entity ID stays stable.
+6. Restart Home Assistant or reload the relevant configuration path if supported.
+7. Confirm the matching `device_tracker.iptime_*` and `person.*` states.
+
+## Access Model
 
 다른 컴퓨터는 별도의 집 제어 권한자가 되어서는 안 된다.
 

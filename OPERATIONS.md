@@ -34,6 +34,13 @@
 - 지금 알림이 유용한지, 나중에 요약해도 되는지
 
 ## 알림
+## Presence Operations
+
+Family presence is based on phones connected to the home Wi-Fi through the ipTIME router. The Home Assistant Companion app can be used as an optional personal supplement, but family routines should not depend on every family member installing it.
+
+Use `person.*` entities for automations and dashboards, not raw `device_tracker.*` entities. When a phone is replaced, update the MAC address in the existing ipTIME tracker slot instead of renaming entities.
+
+## Alerts
 
 알림은 유용하고, 시기적절하며, 과하지 않아야 한다.
 

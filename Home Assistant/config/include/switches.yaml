@@ -1,0 +1,12 @@
+switch:
+  - platform: wake_on_lan
+    name: "Home-Cloud"
+    mac: !secret homecloud_synology_mac
+    host: !secret homecloud_synology_host
+    turn_off:
+      service: synology_dsm.shutdown
+      
+  - platform: wake_on_lan
+    name: "Home-TEST"
+    mac: !secret home_pc_mac
+    host: !secret home_pc_host

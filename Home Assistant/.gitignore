@@ -1,0 +1,15 @@
+secrets.yaml
+secrets/
+.storage/
+*.db
+*.db-*
+*.sqlite
+*.log
+*.key
+*.pem
+*.crt
+*.p12
+*.token
+*.bak_codex_*
+home-assistant.log*
+OZW_Log.txt

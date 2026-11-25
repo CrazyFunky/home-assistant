@@ -1,0 +1,23 @@
+# Household presence detection uses the ipTIME router as the source of truth.
+# Keep these target names stable: Home Assistant derives device_tracker entity IDs from them.
+# When a family member changes phones, update only that person's MAC address here.
+# Do not rename targets unless you also update the matching person helper and every consumer.
+device_tracker:
+  - platform: iptime_tracker
+    interval_seconds: 10
+    iptime_url: "192.168.0.1"
+    iptime_id: !secret iptime_id
+    iptime_pw: !secret iptime_pw
+    targets:
+      # person.weinhwan -> device_tracker.iptime_inhwan_we
+      - name: "Inhwan-We"
+        mac: "9E-23-E3-C7-FF-F0"
+      # person.jangseongeun -> device_tracker.iptime_seungeun_jang
+      - name: "SeungEun-Jang"
+        mac: "D2-3D-3A-0D-78-FE"
+      # person.wejiyeon -> device_tracker.iptime_jiyeon_we
+      - name: "JiYeon-We"
+        mac: "9A-5F-36-27-43-F3"
+      # person.wegahyeon -> device_tracker.iptime_gahyeon_we
+      - name: "GaHyeon-We"
+        mac: "F0-CD-31-41-43-EE"

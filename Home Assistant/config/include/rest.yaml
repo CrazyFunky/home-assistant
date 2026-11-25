@@ -1,0 +1,29 @@
+rest:
+  - resource: "https://api.binance.com/api/v3/ticker/24hr?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22ONDOUSDT%22,%22TRUMPUSDT%22%5D"
+    scan_interval: 60
+    timeout: 10
+    sensor:
+      - name: "Binance BTCUSDT Price"
+        unique_id: binance_btcusdt_price
+        icon: mdi:currency-usd
+        unit_of_measurement: "USDT"
+        state_class: measurement
+        value_template: "{{ (value_json | selectattr('symbol', 'eq', 'BTCUSDT') | map(attribute='lastPrice') | first | float(0)) }}"
+      - name: "Binance ETHUSDT Price"
+        unique_id: binance_ethusdt_price
+        icon: mdi:currency-usd
+        unit_of_measurement: "USDT"
+        state_class: measurement
+        value_template: "{{ (value_json | selectattr('symbol', 'eq', 'ETHUSDT') | map(attribute='lastPrice') | first | float(0)) }}"
+      - name: "Binance ONDOUSDT Price"
+        unique_id: binance_ondousdt_price
+        icon: mdi:currency-usd
+        unit_of_measurement: "USDT"
+        state_class: measurement
+        value_template: "{{ (value_json | selectattr('symbol', 'eq', 'ONDOUSDT') | map(attribute='lastPrice') | first | float(0)) }}"
+      - name: "Binance TRUMPUSDT Price"
+        unique_id: binance_trumpusdt_price
+        icon: mdi:currency-usd
+        unit_of_measurement: "USDT"
+        state_class: measurement
+        value_template: "{{ (value_json | selectattr('symbol', 'eq', 'TRUMPUSDT') | map(attribute='lastPrice') | first | float(0)) }}"

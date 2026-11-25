@@ -1,0 +1,81 @@
+sensor:
+    
+#   - platform: rest
+#     name: M5107 Arrival Time
+#     resource: "http://apis.data.go.kr/6410000/busarrivalservice/getBusArrivalList?serviceKey=!secret public_data_portal_key&stationId=02136&routeId=m5107"
+#     method: GET
+#     headers:
+#       Content-Type: application/json
+#     value_template: >
+#       {% if value_json.response.msgHeader.resultCode == '0' %}
+#         {{ value_json.response.msgBody.busArrivalList[0].predictTime1 }}
+#       {% else %}
+#         "정보 없음"
+#       {% endif %}
+#     scan_interval: 60  # 1분마다 업데이트
+
+# Room name comes from the integration to match attribute names
+# template:
+#   unique_id: deebot_bbyolbbyoli_queue
+#   trigger:
+#     - platform: state
+#       entity_id: input_text.deebot_bbyolbbyoli_queue
+#   sensor:
+#   # Add for each room the following. Change room_name accordingly
+#   - unique_id: deebot_bbyolbbyoli_queue_living_room
+#     name: deebot_bbyolbbyoli_queue_living_room
+#     state: >
+#       {% set room_name = "living_room" %}
+#       {% set queue = trigger.to_state.state.split(",") %}
+#       {{ queue.index(room_name)+1 if room_name in queue else 0 }}
+
+#   - unique_id: deebot_bbyolbbyoli_queue_kitchen
+#     name: deebot_bbyolbbyoli_queue_kitchen
+#     state: >
+#       {% set room_name = "kitchen" %}
+#       {% set queue = trigger.to_state.state.split(",") %}
+#       {{ queue.index(room_name)+1 if room_name in queue else 0 }}
+
+#   - unique_id: deebot_bbyolbbyoli_queue_study
+#     name: deebot_bbyolbbyoli_queue_study
+#     state: >
+#       {% set room_name = "study" %}
+#       {% set queue = trigger.to_state.state.split(",") %}
+#       {{ queue.index(room_name)+1 if room_name in queue else 0 }}
+
+#   - unique_id: deebot_bbyolbbyoli_queue_bedroom
+#     name: deebot_bbyolbbyoli_queue_bedroom
+#     state: >
+#       {% set room_name = "bedroom" %}
+#       {% set queue = trigger.to_state.state.split(",") %}
+#       {{ queue.index(room_name)+1 if room_name in queue else 0 }}
+
+#   - unique_id: deebot_bbyolbbyoli_queue_sunroom
+#     name: deebot_bbyolbbyoli_queue_sunroom
+#     state: >
+#       {% set room_name = "sunroom" %}
+#       {% set queue = trigger.to_state.state.split(",") %}
+#       {{ queue.index(room_name)+1 if room_name in queue else 0 }}
+
+#   - unique_id: deebot_bbyolbbyoli_queue_kids_room
+#     name: deebot_bbyolbbyoli_queue_kids_room
+#     state: >
+#       {% set room_name = "kids_room" %}
+#       {% set queue = trigger.to_state.state.split(",") %}
+#       {{ queue.index(room_name)+1 if room_name in queue else 0 }}
+
+#   - platform: rest
+#     name: living_room_optional_mode
+#     resource: !secret ac1_Optional_Mode
+#     headers:
+#       Authorization: !secret st_authorization
+#     value_template: "{{ value_json.acOptionalMode.value }}"
+#     scan_interval: 1
+
+#   - platform: rest
+#     name: bed_room_optional_mode
+#     resource: !secret ac2_Optional_Mode
+#     headers:
+#       Authorization: !secret st_authorization
+#     value_template: "{{ value_json.acOptionalMode.value }}"
+#     scan_interval: 1

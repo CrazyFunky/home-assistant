@@ -1,0 +1,1302 @@
+- id: '1613299487801'
+  alias: 알림 - 주간보고 알림
+  description: 주례 보고서 작성 알리미
+  triggers:
+  - hours: '16'
+    minutes: '00'
+    seconds: '00'
+    platform: time_pattern
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+  actions:
+  - action: telegram_bot.send_message
+    data:
+      entity_id:
+      - notify.crazyfunky_home_assistant_854393463
+      title: '*주간보고 작성 알림*'
+      message: https://confluence.tde.sktelecom.com/spaces/VSFS/pages/904859661/2026%EB%85%84+Weekly
+      parse_mode: html
+  mode: single
+- id: '1613300186276'
+  alias: Automation Notify Family Outgoing
+  description: 가족 외출 알리미
+  trigger:
+  - platform: state
+    entity_id: person.jangseongeun
+    from: home
+    to: not_home
+  - platform: state
+    entity_id: person.wejiyeon
+    from: home
+    to: not_home
+  - platform: state
+    entity_id: person.wegahyeon
+    from: home
+    to: not_home
+  - platform: state
+    entity_id: person.weinhwan
+    from: home
+    to: not_home
+  condition: []
+  action:
+  - service: notify.telegram
+    data:
+      title: '*외출 알리미*'
+      message: _{{trigger.to_state.name}}_님이 외출 하셨습니다
+  mode: single
+- id: '1613521668276'
+  alias: Automation Notify Family Arrive
+  description: 가족 귀가 알리미
+  trigger:
+  - platform: state
+    entity_id: person.jangseongeun
+    from: not_home
+    to: home
+  - platform: state
+    entity_id: person.wegahyeon
+    from: not_home
+    to: home
+  - platform: state
+    entity_id: person.wejiyeon
+    from: not_home
+    to: home
+  - platform: state
+    entity_id: person.weinhwan
+    from: not_home
+    to: home
+  condition: []
+  action:
+  - service: notify.telegram
+    data:
+      title: '*도착 알리미*'
+      message: _{{trigger.to_state.name}}_님이 도착 하셨습니다
+  mode: single
+- id: '1614061750578'
+  alias: 거실 커튼 열기 자동화
+  description: ''
+  triggers:
+  - at: '23:10:00'
+    trigger: time
+  - at: 07:28:00
+    trigger: time
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: cover.living_room_curtain
+        state: open
+      sequence:
+      - target:
+          entity_id: cover.living_room_curtain
+        action: cover.close_cover
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: cover.living_room_curtain
+        state: closed
+      sequence:
+      - target:
+          entity_id: cover.living_room_curtain
+        action: cover.open_cover
+        data: {}
+    default: []
+  mode: single
+- id: '1616938229077'
+  alias: Automation Good Morning
+  description: ''
+  trigger:
+  - platform: time
+    at: 07:00:00
+  condition: []
+  action: []
+  mode: single
+- id: '1617182255001'
+  alias: 알림 - Home Assistant 시작
+  description: ''
+  triggers:
+  - event: start
+    trigger: homeassistant
+  conditions: []
+  actions:
+  - action: telegram_bot.send_message
+    data:
+      entity_id:
+      - notify.crazyfunky_home_assistant_854393463
+      title: '"*Automation Event*"'
+      message: Home Assistant가 시작되었습니다.
+  mode: single
+- id: '1618209424133'
+  alias: 알림 - Daily 브리핑
+  description: ''
+  triggers:
+  - hours: '7'
+    minutes: '18'
+    seconds: '0'
+    platform: time_pattern
+  conditions: []
+  actions:
+  - action: telegram_bot.send_message
+    data:
+      entity_id:
+      - notify.crazyfunky_home_assistant_854393463
+      title: "----------------------------------\n\U0001F4C5 {{ now().strftime('%Y년
+        %m월 %d일') }} Daily 브리핑\n----------------------------------"
+      message: "\U0001F324️ 실시간 날씨 정보\n- 현재 기온: {{ state_attr('weather.yeongtongdong','temperature')
+        }}°C\n- 최고 기온: {{ states('sensor.coegoondo') }}°C\n- 강수 확률: {{ states('sensor.gangsuhwagryul')
+        }}%\n{%- if states('sensor.gangsuhwagryul') | float > 50 %}\n*우산을 챙기세요!* ☂️\n{%-
+        endif %}\n⚡ 월간 에너지 현황\n- 총 전기 사용량: {{ states('sensor.monthly_energy_meter_total')
+        }} kWh\n\U0001F50C 현재 소비전력 (Smart Meter)\n- 전등라인: {{ states('sensor.power_smart_meter_1')
+        }} W\n- 주방라인: {{ states('sensor.power_smart_meter_2') }} W\n- 거실라인: {{ states('sensor.power_smart_meter_3')
+        }} W\n- 에어콘라인: {{ states('sensor.power_smart_meter_4') }} W\n\U0001F4B0 암호화폐
+        시세\n- 비트코인(BTC): ${{ \"{:,.0f}\".format(states('sensor.cryptoinfo_bitcoin_price')
+        | float) }}\n⚠️ 시스템 상태 점검\n{%- set ns = namespace(problems=[], count=0) %}\n{%-
+        set filters = ['backup','home_pc_network','effect','power_on_behavior','stroke_limit','ble_','google_','broadlink','unknown_','decoded_power','music_assistant','notify.','device_tracker.','homecloud','siggiseceoggi','geonjogi']
+        %}\n{%- for state in states %}\n{%- if state.state in ['unavailable', 'unknown']
+        %}\n{%- set skip = false %}\n{%- for f in filters %}\n{%- if f in state.entity_id
+        %}{%- set skip = true %}{%- endif %}\n{%- endfor %}\n{%- if not skip %}\n{%-
+        set ns.count = ns.count + 1 %}\n{%- if ns.count <= 7 %}\n{%- set ns.problems
+        = ns.problems + [state.entity_id] %}\n{%- endif %}\n{%- endif %}\n{%- endif
+        %}\n{%- endfor %}\n{%- if ns.count > 0 %}\n\U0001F534 주의 필요: {{ ns.count }}개
+        장치 비정상\n{%- for device in ns.problems %}\n- {{ device }}\n{%- endfor %}\n{%-
+        if ns.count > 7 %}\n외 {{ ns.count - 7 }}개 더 있음\n{%- endif %}\n{%- else %}\n✅
+        모든 주요 장치 정상\n{%- endif %}\n-----------------------------------"
+  mode: single
+- id: '1618834853924'
+  alias: Automation Indoor Air Quality
+  description: 실내 공기질 자동화
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.living_room_co2_value
+    above: '2000'
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+  - platform: numeric_state
+    above: '155'
+    entity_id: sensor.living_room_10_0um_value
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+  - platform: numeric_state
+    entity_id: sensor.living_room_2_5um_value
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+    above: '76'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.living_room_co2_value
+        above: 1600
+      sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.bedroom_speaker
+        data:
+          media_content_id: media-source://tts/google_translate?message=%EC%9D%B4%EC%82%B0%ED%99%94%ED%83%84%EC%86%8C%EA%B0%80+1600+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+          media_content_type: provider
+        metadata:
+          title: '이산화탄소가 1600 이상 입니다.
+
+            창문을 열어 환기해 주세요.'
+          thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+          media_class: app
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=%EC%9D%B4%EC%82%B0%ED%99%94%ED%83%84%EC%86%8C%EA%B0%80+1600+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.kitchen_speaker
+        data:
+          media_content_id: media-source://tts/google_translate?message=%EC%9D%B4%EC%82%B0%ED%99%94%ED%83%84%EC%86%8C%EA%B0%80+1600+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+          media_content_type: provider
+        metadata:
+          title: '이산화탄소가 1600 이상 입니다.
+
+            창문을 열어 환기해 주세요.'
+          thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+          media_class: app
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=%EC%9D%B4%EC%82%B0%ED%99%94%ED%83%84%EC%86%8C%EA%B0%80+1600+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.living_room_10_0um_value
+        above: '155'
+      - condition: and
+        conditions:
+        - condition: numeric_state
+          entity_id: sensor.naver_weather_finedust_1
+          above: 155
+      sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.bedroom_speaker
+        data:
+          media_content_id: media-source://tts/google_translate?message=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+155+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EB%8B%AB%EA%B3%A0+%EA%B3%B5%EA%B8%B0%EC%B2%AD%EC%A0%95%EA%B8%B0%EB%A5%BC+%EC%82%AC%EC%9A%A9%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+          media_content_type: provider
+        metadata:
+          title: '미세먼지가 155 이상 입니다.
+
+            창문을 닫고 공기청정기를 사용해 주세요.'
+          thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+          media_class: app
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+155+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EB%8B%AB%EA%B3%A0+%EA%B3%B5%EA%B8%B0%EC%B2%AD%EC%A0%95%EA%B8%B0%EB%A5%BC+%EC%82%AC%EC%9A%A9%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.kitchen_speaker
+        data:
+          media_content_id: media-source://tts/google_translate?message=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+155+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EB%8B%AB%EA%B3%A0+%EA%B3%B5%EA%B8%B0%EC%B2%AD%EC%A0%95%EA%B8%B0%EB%A5%BC+%EC%82%AC%EC%9A%A9%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+          media_content_type: provider
+        metadata:
+          title: '미세먼지가 155 이상 입니다.
+
+            창문을 닫고 공기청정기를 사용해 주세요.'
+          thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+          media_class: app
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+155+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EB%8B%AB%EA%B3%A0+%EA%B3%B5%EA%B8%B0%EC%B2%AD%EC%A0%95%EA%B8%B0%EB%A5%BC+%EC%82%AC%EC%9A%A9%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.living_room_10_0um_value
+        above: 155
+      - condition: and
+        conditions:
+        - condition: numeric_state
+          entity_id: sensor.naver_weather_finedust_1
+          below: 154
+      sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.bedroom_speaker
+        data:
+          media_content_id: media-source://tts/google_translate?message=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+155+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EB%B0%96%EC%9D%98+%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+%EC%A2%8B%EC%9C%BC%EB%AF%80%EB%A1%9C+%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%98%EC%84%B8%EC%9A%94.
+          media_content_type: provider
+        metadata:
+          title: '미세먼지가 155 이상 입니다.
+
+            밖의 미세먼지가 좋으므로 창문을 열어 환기하세요.'
+          thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+          media_class: app
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+155+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EB%B0%96%EC%9D%98+%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+%EC%A2%8B%EC%9C%BC%EB%AF%80%EB%A1%9C+%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%98%EC%84%B8%EC%9A%94.
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.kitchen_speaker
+        data:
+          media_content_id: media-source://tts/google_translate?message=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+155+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EB%B0%96%EC%9D%98+%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+%EC%A2%8B%EC%9C%BC%EB%AF%80%EB%A1%9C+%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%98%EC%84%B8%EC%9A%94.
+          media_content_type: provider
+        metadata:
+          title: '미세먼지가 155 이상 입니다.
+
+            밖의 미세먼지가 좋으므로 창문을 열어 환기하세요.'
+          thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+          media_class: app
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+155+%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EB%B0%96%EC%9D%98+%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+%EC%A2%8B%EC%9C%BC%EB%AF%80%EB%A1%9C+%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%98%EC%84%B8%EC%9A%94.
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.living_room_2_5um_value
+        above: 76
+      - condition: and
+        conditions:
+        - condition: numeric_state
+          entity_id: sensor.naver_weather_ultrafinedust_1
+          above: 76
+      sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.bedroom_speaker
+        data:
+          media_content_id: media-source://tts/google_translate?message=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+76%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EB%8B%AB%EA%B3%A0+%EA%B3%B5%EA%B8%B0%EC%B2%AD%EC%A0%95%EA%B8%B0%EB%A5%BC+%EC%82%AC%EC%9A%A9%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+          media_content_type: provider
+        metadata:
+          title: '초미세먼지가 76이상 입니다.
+
+            창문을 닫고 공기청정기를 사용해 주세요.'
+          thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+          media_class: app
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+76%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EB%8B%AB%EA%B3%A0+%EA%B3%B5%EA%B8%B0%EC%B2%AD%EC%A0%95%EA%B8%B0%EB%A5%BC+%EC%82%AC%EC%9A%A9%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.kitchen_speaker
+        data:
+          media_content_id: media-source://tts/google_translate?message=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+76%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EB%8B%AB%EA%B3%A0+%EA%B3%B5%EA%B8%B0%EC%B2%AD%EC%A0%95%EA%B8%B0%EB%A5%BC+%EC%82%AC%EC%9A%A9%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+          media_content_type: provider
+        metadata:
+          title: '초미세먼지가 76이상 입니다.
+
+            창문을 닫고 공기청정기를 사용해 주세요.'
+          thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+          media_class: app
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+76%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%B0%BD%EB%AC%B8%EC%9D%84+%EB%8B%AB%EA%B3%A0+%EA%B3%B5%EA%B8%B0%EC%B2%AD%EC%A0%95%EA%B8%B0%EB%A5%BC+%EC%82%AC%EC%9A%A9%ED%95%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.living_room_2_5um_value
+        above: 76
+      - condition: and
+        conditions:
+        - condition: numeric_state
+          entity_id: sensor.naver_weather_ultrafinedust_1
+          below: 74.8
+      sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.bedroom_speaker
+        data:
+          media_content_id: media-source://tts/google_translate?message=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+76%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EB%B0%96%EC%9D%98+%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+%EC%A2%8B%EC%9C%BC%EB%AF%80%EB%A1%9C+%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%98%EC%84%B8%EC%9A%94.
+          media_content_type: provider
+        metadata:
+          title: '초미세먼지가 76이상 입니다.
+
+            밖의 미세먼지가 좋으므로 창문을 열어 환기하세요.'
+          thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+          media_class: app
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+76%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EB%B0%96%EC%9D%98+%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+%EC%A2%8B%EC%9C%BC%EB%AF%80%EB%A1%9C+%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%98%EC%84%B8%EC%9A%94.
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.kitchen_speaker
+        data:
+          media_content_id: media-source://tts/google_translate?message=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+76%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EB%B0%96%EC%9D%98+%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+%EC%A2%8B%EC%9C%BC%EB%AF%80%EB%A1%9C+%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%98%EC%84%B8%EC%9A%94.
+          media_content_type: provider
+        metadata:
+          title: '초미세먼지가 76이상 입니다.
+
+            밖의 미세먼지가 좋으므로 창문을 열어 환기하세요.'
+          thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+          media_class: app
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: app
+            media_content_id: media-source://tts
+          - media_content_type: provider
+            media_content_id: media-source://tts/google_translate?message=%EC%B4%88%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+76%EC%9D%B4%EC%83%81+%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EB%B0%96%EC%9D%98+%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80%EA%B0%80+%EC%A2%8B%EC%9C%BC%EB%AF%80%EB%A1%9C+%EC%B0%BD%EB%AC%B8%EC%9D%84+%EC%97%B4%EC%96%B4+%ED%99%98%EA%B8%B0%ED%95%98%EC%84%B8%EC%9A%94.
+    default: []
+  mode: single
+- id: '1621815834055'
+  alias: 집 청소 자동화
+  description: 자동 청소 시간
+  triggers:
+  - at: 09:30:00
+    trigger: time
+  - at: '11:00:00'
+    trigger: time
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: time
+        weekday:
+        - sat
+        - sun
+        after: '11:00:00'
+        before: '21:59:00'
+      sequence:
+      - target:
+          entity_id: vacuum.bbyolbbyoli
+        data: {}
+        action: vacuum.start
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: time
+          weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+          after: '11:00:00'
+          before: '21:59:00'
+        - condition: state
+          entity_id: calendar.holiday
+          state: 'on'
+      sequence:
+      - target:
+          entity_id: vacuum.bbyolbbyoli
+        data: {}
+        action: vacuum.start
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: time
+          weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+          after: 07:49:00
+          before: '10:59:00'
+        - condition: state
+          entity_id: calendar.holiday
+          state: 'off'
+      sequence:
+      - target:
+          entity_id: vacuum.bbyolbbyoli
+        data: {}
+        action: vacuum.start
+    default: []
+  mode: single
+- id: '1685511716059'
+  alias: 주방 전기사량량 경고
+  description: ''
+  triggers:
+  - entity_id:
+    - sensor.power_smart_meter_2
+    above: 6500
+    trigger: numeric_state
+  conditions: []
+  actions:
+  - target:
+      entity_id: media_player.hk_citation_100_256bf3
+    data:
+      media_content_id: media-source://tts/google_translate?message=%EC%A3%BC%EB%B0%A9+%EC%A0%84%EB%A0%A5%EC%82%AC%EC%9A%A9%EB%9F%89%EC%9D%B4+%EC%9C%A1%EC%B2%9C%EC%98%A4%EB%B0%B1%EC%99%80%ED%8A%B8%EB%A5%BC+%EB%84%98%EC%97%88%EC%8A%B5%EB%8B%88%EB%8B%A4.+%EC%A3%BC%EB%B0%A9+%EC%A0%84%EA%B8%B0%EC%82%AC%EC%9A%A9%EB%9F%89%EC%9D%84+%EC%A4%84%EC%96%B4%EC%95%BC+%ED%95%A9%EB%8B%88%EB%8B%A4.&language=ko
+      media_content_type: provider
+    metadata:
+      title: 주방 전력사용량이 육천오백와트를 넘었습니다. 주방 전기사용량을 줄어야 합니다.
+      thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+      media_class: app
+      children_media_class:
+      navigateIds:
+      - {}
+      - media_content_type: app
+        media_content_id: media-source://tts
+      - media_content_type: provider
+        media_content_id: media-source://tts/google_translate?message=%EC%A3%BC%EB%B0%A9+%EC%A0%84%EB%A0%A5%EC%82%AC%EC%9A%A9%EB%9F%89%EC%9D%B4+%EC%9C%A1%EC%B2%9C%EC%98%A4%EB%B0%B1%EC%99%80%ED%8A%B8%EB%A5%BC+%EB%84%98%EC%97%88%EC%8A%B5%EB%8B%88%EB%8B%A4.+%EC%A3%BC%EB%B0%A9+%EC%A0%84%EA%B8%B0%EC%82%AC%EC%9A%A9%EB%9F%89%EC%9D%84+%EC%A4%84%EC%96%B4%EC%95%BC+%ED%95%A9%EB%8B%88%EB%8B%A4.&language=ko
+    action: media_player.play_media
+  - target:
+      entity_id: media_player.bedroom_speaker
+    data:
+      media_content_id: media-source://tts/google_translate?message=%EC%A3%BC%EB%B0%A9+%EC%A0%84%EB%A0%A5%EC%82%AC%EC%9A%A9%EB%9F%89%EC%9D%B4+%EC%9C%A1%EC%B2%9C%EC%98%A4%EB%B0%B1%EC%99%80%ED%8A%B8%EB%A5%BC+%EB%84%98%EC%97%88%EC%8A%B5%EB%8B%88%EB%8B%A4.%0A%EC%A3%BC%EB%B0%A9+%EC%A0%84%EA%B8%B0%EC%82%AC%EC%9A%A9%EB%9F%89%EC%9D%84+%EC%A4%84%EC%96%B4%EC%95%BC+%ED%95%A9%EB%8B%88%EB%8B%A4.
+      media_content_type: provider
+    metadata:
+      title: '주방 전력사용량이 육천오백와트를 넘었습니다.
+
+        주방 전기사용량을 줄어야 합니다.'
+      thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+      media_class: app
+      children_media_class:
+      navigateIds:
+      - {}
+      - media_content_type: app
+        media_content_id: media-source://tts
+      - media_content_type: provider
+        media_content_id: media-source://tts/google_translate?message=%EC%A3%BC%EB%B0%A9+%EC%A0%84%EB%A0%A5%EC%82%AC%EC%9A%A9%EB%9F%89%EC%9D%B4+%EC%9C%A1%EC%B2%9C%EC%98%A4%EB%B0%B1%EC%99%80%ED%8A%B8%EB%A5%BC+%EB%84%98%EC%97%88%EC%8A%B5%EB%8B%88%EB%8B%A4.%0A%EC%A3%BC%EB%B0%A9+%EC%A0%84%EA%B8%B0%EC%82%AC%EC%9A%A9%EB%9F%89%EC%9D%84+%EC%A4%84%EC%96%B4%EC%95%BC+%ED%95%A9%EB%8B%88%EB%8B%A4.
+    action: media_player.play_media
+  mode: single
+- id: '1685663872629'
+  alias: 알림 - Home Assistant 정기 Backup
+  description: ''
+  triggers:
+  - at: 04:00:00
+    trigger: time
+  conditions:
+  - condition: template
+    value_template: '{{ now().day == 1 }}'
+  actions:
+  - action: telegram_bot.send_message
+    data:
+      entity_id:
+      - notify.crazyfunky_home_assistant_854393463
+      title: '"*Automation Event*"'
+      message: Home Assistant 정기 Backup을 시작합니다.
+  - action: hassio.backup_full
+    metadata: {}
+    data:
+      compressed: true
+      homeassistant_exclude_database: false
+  - action: telegram_bot.send_message
+    data:
+      entity_id:
+      - notify.crazyfunky_home_assistant_854393463
+      title: '"*Automation Event*"'
+      message: Home Assistant 정기 Backup 진행중
+  - action: telegram_bot.send_message
+    data:
+      entity_id:
+      - notify.crazyfunky_home_assistant_854393463
+      title: '"*Automation Event*"'
+      message: Home Assistant 정기 Backup 완료
+  mode: single
+- id: '1709042729274'
+  alias: 가현방 무선 스위치 제어
+  description: 가현방 조명 제어
+  triggers:
+  - topic: zigbee2mqtt/가현방 무선 스위치/action
+    trigger: mqtt
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload == ''single'' }}'
+      sequence:
+      - action: switch.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.0x28dba7fffea610fb_left
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload == ''double'' }}'
+      sequence:
+      - action: switch.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.0x28dba7fffea610fb_center
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload == ''long'' }}'
+      sequence:
+      - action: switch.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.0x28dba7fffea610fb_right
+  mode: restart
+- id: '1709962281301'
+  alias: 거실 화장실 스위치-2 동기화
+  description: 복도등과 등기화
+  triggers:
+  - type: changed_states
+    device_id: d4fee478eff67b361d8324e5819a6872
+    entity_id: 9841ceddb6485c25a964846ce2cf4ed6
+    domain: switch
+    trigger: device
+  conditions: []
+  actions:
+  - if:
+    - condition: device
+      type: is_off
+      device_id: d4fee478eff67b361d8324e5819a6872
+      entity_id: 9841ceddb6485c25a964846ce2cf4ed6
+      domain: switch
+    then:
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 1
+        milliseconds: 0
+    - action: switch.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - switch.0x28dba7fffea60da9_right
+  - if:
+    - condition: device
+      type: is_on
+      device_id: d4fee478eff67b361d8324e5819a6872
+      entity_id: 9841ceddb6485c25a964846ce2cf4ed6
+      domain: switch
+    then:
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 1
+        milliseconds: 0
+    - metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - switch.0x28dba7fffea60da9_right
+      action: switch.turn_on
+  mode: single
+- id: '1709962474617'
+  alias: 주방 조명-3 스위치 동기화
+  description: 복도등이 켜지거나 꺼질때 거실 화장실 2번 스위치와 등기화
+  triggers:
+  - type: changed_states
+    device_id: a536043fe6a57f258f1b2f57c92958c7
+    entity_id: d99b2d984b0685cff18cbe9e4d7fbd16
+    domain: switch
+    trigger: device
+  conditions: []
+  actions:
+  - if:
+    - condition: device
+      type: is_off
+      device_id: a536043fe6a57f258f1b2f57c92958c7
+      entity_id: d99b2d984b0685cff18cbe9e4d7fbd16
+      domain: switch
+    then:
+    - metadata: {}
+      data: {}
+      target:
+        entity_id: switch.0xf4b3b1fffe60182a_right
+      action: switch.turn_off
+  - if:
+    - condition: device
+      type: is_on
+      device_id: a536043fe6a57f258f1b2f57c92958c7
+      entity_id: d99b2d984b0685cff18cbe9e4d7fbd16
+      domain: switch
+    then:
+    - metadata: {}
+      data: {}
+      target:
+        entity_id: switch.0xf4b3b1fffe60182a_right
+      action: switch.turn_on
+  mode: single
+- id: '1726803005047'
+  alias: 지연방 스마트 스위치 제어
+  description: ''
+  triggers:
+  - entity_id:
+    - person.wejiyeon
+    from: not_home
+    to: home
+    trigger: state
+  - entity_id:
+    - person.wejiyeon
+    from: home
+    to: not_home
+    trigger: state
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: person.wejiyeon
+      state: home
+    then: []
+  - if:
+    - condition: state
+      entity_id: person.wejiyeon
+      state: not_home
+    then: []
+    enabled: true
+  mode: single
+- id: '1726803076088'
+  alias: 가현방 스마트 스위치 제어
+  description: ''
+  triggers:
+  - entity_id: person.wegahyeon
+    from: not_home
+    to: home
+    trigger: state
+  - entity_id:
+    - person.wegahyeon
+    from: home
+    to: not_home
+    trigger: state
+  conditions: []
+  actions:
+  - if:
+    - condition: state
+      entity_id: person.wegahyeon
+      state: home
+    then:
+    - type: turn_on
+      device_id: 4c491d96490d8a98672586ef35d7637b
+      entity_id: e7bddd831934861545d0297cd507cc1e
+      domain: switch
+  - if:
+    - condition: state
+      entity_id: person.wegahyeon
+      state: not_home
+    then:
+    - type: turn_off
+      device_id: 4c491d96490d8a98672586ef35d7637b
+      entity_id: e7bddd831934861545d0297cd507cc1e
+      domain: switch
+    enabled: false
+  mode: single
+- id: '1728625330155'
+  alias: 거실 조명1-3(배란다) 제어
+  description: 거실 조명1번의 3번 스위치와 배란다등 동기화
+  triggers:
+  - type: changed_states
+    device_id: 5f33f06d86a8ff831a112f5a1b32cf61
+    entity_id: 85e091b364cb0651d72bc8e290eec912
+    domain: switch
+    trigger: device
+  conditions: []
+  actions:
+  - if:
+    - condition: device
+      type: is_off
+      device_id: 5f33f06d86a8ff831a112f5a1b32cf61
+      entity_id: 85e091b364cb0651d72bc8e290eec912
+      domain: switch
+    then:
+    - type: turn_off
+      device_id: eca460ec86fb4cad3d985895b4734b10
+      entity_id: 0ed738f044bdd83a90e577b614e7cf4c
+      domain: switch
+  - if:
+    - condition: device
+      type: is_on
+      device_id: 5f33f06d86a8ff831a112f5a1b32cf61
+      entity_id: 85e091b364cb0651d72bc8e290eec912
+      domain: switch
+    then:
+    - type: turn_on
+      device_id: eca460ec86fb4cad3d985895b4734b10
+      entity_id: 0ed738f044bdd83a90e577b614e7cf4c
+      domain: switch
+  mode: single
+- id: '1728628339087'
+  alias: 거실 조명2-2(공부등) 제어
+  description: 거실 공부등 자동화
+  triggers:
+  - type: changed_states
+    device_id: ef57926c01967120b7a578bcaec0e22e
+    entity_id: d45f5149270c5d63eec7db5ab00a4f99
+    domain: switch
+    trigger: device
+  conditions: []
+  actions:
+  - if:
+    - condition: device
+      type: is_on
+      device_id: ef57926c01967120b7a578bcaec0e22e
+      entity_id: d45f5149270c5d63eec7db5ab00a4f99
+      domain: switch
+    then:
+    - type: turn_on
+      device_id: 5f33f06d86a8ff831a112f5a1b32cf61
+      entity_id: 5d1e24aecdccb993c0f330987ce94356
+      domain: switch
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 0
+        milliseconds: 700
+    - type: turn_off
+      device_id: 5f33f06d86a8ff831a112f5a1b32cf61
+      entity_id: 5d1e24aecdccb993c0f330987ce94356
+      domain: switch
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 0
+        milliseconds: 700
+    - type: turn_on
+      device_id: 5f33f06d86a8ff831a112f5a1b32cf61
+      entity_id: 5d1e24aecdccb993c0f330987ce94356
+      domain: switch
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 0
+        milliseconds: 700
+    - type: turn_off
+      device_id: 5f33f06d86a8ff831a112f5a1b32cf61
+      entity_id: 5d1e24aecdccb993c0f330987ce94356
+      domain: switch
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 0
+        milliseconds: 700
+    - type: turn_on
+      device_id: 5f33f06d86a8ff831a112f5a1b32cf61
+      entity_id: 5d1e24aecdccb993c0f330987ce94356
+      domain: switch
+  - if:
+    - condition: device
+      type: is_off
+      device_id: ef57926c01967120b7a578bcaec0e22e
+      entity_id: d45f5149270c5d63eec7db5ab00a4f99
+      domain: switch
+    then:
+    - type: turn_off
+      device_id: 5f33f06d86a8ff831a112f5a1b32cf61
+      entity_id: 5d1e24aecdccb993c0f330987ce94356
+      domain: switch
+  mode: single
+- id: '1729654596840'
+  alias: 세탁실 조명 자동화
+  description: ''
+  triggers:
+  - at: 02:00:00
+    platform: time
+    id: time_trigger
+  - event: sunset
+    offset: 0
+    platform: sun
+    id: sunset_trigger
+  conditions: []
+  actions:
+  - if:
+    - condition: trigger
+      id: time_trigger
+    then:
+    - type: turn_off
+      device_id: f8d2b1f56833d96697247e6986b17caf
+      entity_id: e1a1c3ae881f4c87ec388f77478d46d9
+      domain: switch
+  - if:
+    - condition: trigger
+      id: sunset_trigger
+    then:
+    - type: turn_on
+      device_id: f8d2b1f56833d96697247e6986b17caf
+      entity_id: e1a1c3ae881f4c87ec388f77478d46d9
+      domain: switch
+  mode: single
+- id: '1734080457071'
+  alias: 가현방 조명 스위치 제어
+  description: 가현방 자동화 스위치 제어
+  triggers:
+  - type: changed_states
+    device_id: 7cbd7ca63c8630ee3c60a23572ae1b2f
+    entity_id: c0eee07e65feafec0890f03494db1b5d
+    domain: switch
+    trigger: device
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: device
+        type: is_on
+        device_id: 7cbd7ca63c8630ee3c60a23572ae1b2f
+        entity_id: c0eee07e65feafec0890f03494db1b5d
+        domain: switch
+      sequence:
+      - data: {}
+        action: switch.turn_on
+        target:
+          entity_id:
+          - switch.0x28dba7fffea610fb_left
+          - switch.0x28dba7fffea610fb_center
+    - conditions:
+      - condition: device
+        type: is_off
+        device_id: 7cbd7ca63c8630ee3c60a23572ae1b2f
+        entity_id: c0eee07e65feafec0890f03494db1b5d
+        domain: switch
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id:
+          - switch.0x28dba7fffea610fb_left
+          - switch.0x28dba7fffea610fb_center
+        data: {}
+  mode: restart
+- id: '1734080964622'
+  alias: 지연방 무선 스위치 제어
+  description: 지연방 무선 스위치 제어
+  triggers:
+  - topic: zigbee2mqtt/지연방 무선 스위치/action
+    trigger: mqtt
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload == ''single'' }}'
+      sequence:
+      - action: switch.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - switch.0x187a3efffefadc31_left
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload == ''double'' }}'
+      sequence:
+      - action: switch.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - switch.0x187a3efffefadc31_center
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.payload == ''long'' }}'
+      sequence:
+      - action: switch.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - switch.0x187a3efffefadc31_right
+  mode: restart
+- id: '1734081160778'
+  alias: 지연방 조명 스위치 제어
+  description: 지연방 자동화 스위치 제어
+  triggers:
+  - type: changed_states
+    device_id: 190a566676ad9024c53cfe4e86ae45b8
+    entity_id: fbdd86679e4326c6940b25a824368c53
+    domain: switch
+    trigger: device
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: device
+        type: is_on
+        device_id: 190a566676ad9024c53cfe4e86ae45b8
+        entity_id: fbdd86679e4326c6940b25a824368c53
+        domain: switch
+      sequence:
+      - data: {}
+        action: switch.turn_on
+        target:
+          entity_id:
+          - switch.0x187a3efffefadc31_left
+          - switch.0x187a3efffefadc31_center
+    - conditions:
+      - condition: device
+        type: is_off
+        device_id: 190a566676ad9024c53cfe4e86ae45b8
+        entity_id: fbdd86679e4326c6940b25a824368c53
+        domain: switch
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id:
+          - switch.0x187a3efffefadc31_left
+          - switch.0x187a3efffefadc31_center
+        data: {}
+  mode: restart
+- id: '1780446435876'
+  alias: 서재방 컴퓨터 자동화
+  description: 서재 무선 스위치로 PC와 주변 장비 제어
+  triggers:
+  - id: wireless_switch
+    trigger: mqtt
+    options:
+      topic: zigbee2mqtt/서재 무선 스위치/action
+  - entity_id:
+    - sensor.0x60a423fffe620ee1_power
+    below: 5
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    id: pc_power_off
+    trigger: numeric_state
+  - event_type: computer_turn_on
+    id: computer_event_on
+    trigger: event
+  - event_type: computer_turn_off
+    id: computer_event_off
+    trigger: event
+  conditions: []
+  actions:
+  - choose:
+    - alias: '이벤트: Computer turn on - PC 켜기 (switch.computer)'
+      conditions:
+      - condition: trigger
+        id: computer_event_on
+      sequence:
+      - action: switch.turn_on
+        alias: 'Step 1: PC 본체 전원 켜기'
+        target:
+          entity_id: switch.0x60a423fffe620ee1
+        data: {}
+      - action: switch.turn_on
+        alias: 'Step 2: 오디오 전원 켜기 (L2)'
+        target:
+          entity_id: switch.0xa4c138be3ee9d6f5_l2
+      - action: switch.turn_on
+        alias: 'Step 3: 모니터 전원 켜기 (L1)'
+        target:
+          entity_id: switch.0xa4c138be3ee9d6f5_l1
+      - alias: 'Step 4: ESPHome Toggle 스위치 인식 대기'
+        repeat:
+          sequence:
+          - delay:
+              seconds: 1
+          until:
+          - condition: template
+            value_template: '{{ states(''switch.home_pc_power_switch_toggle'') !=
+              ''unavailable'' }}'
+      - action: switch.turn_on
+        alias: 'Step 5: PC 파워 버튼 누르기'
+        target:
+          entity_id: switch.home_pc_power_switch_toggle
+    - alias: '이벤트: Computer turn off - PC 끄기 (switch.computer)'
+      conditions:
+      - condition: trigger
+        id: computer_event_off
+      sequence:
+      - action: switch.turn_on
+        alias: 'Step 1: Hard Power Off 누르기 (Windows 종료 신호)'
+        target:
+          entity_id: switch.home_pc_power_switch_hard_power_off
+    - alias: Single - PC 켜기 (서재 무선스위치)
+      conditions:
+      - condition: trigger
+        id: wireless_switch
+      - condition: template
+        value_template: '{{ trigger.payload == ''single'' }}'
+      sequence:
+      - action: switch.turn_on
+        alias: 'Step 1: PC 본체 전원 켜기'
+        target:
+          entity_id: switch.0x60a423fffe620ee1
+        data: {}
+      - action: switch.turn_on
+        alias: 'Step 2: 오디오 전원 켜기 (L2)'
+        target:
+          entity_id: switch.0xa4c138be3ee9d6f5_l2
+        data: {}
+      - action: switch.turn_on
+        alias: 'Step 3: 모니터 전원 켜기 (L1)'
+        target:
+          entity_id: switch.0xa4c138be3ee9d6f5_l1
+        data: {}
+      - alias: 'Step 4: ESPHome Toggle 스위치 인식 대기'
+        repeat:
+          sequence:
+          - delay:
+              seconds: 1
+          until:
+          - condition: template
+            value_template: '{{ states(''switch.home_pc_power_switch_toggle'') !=
+              ''unavailable'' }}'
+      - action: switch.turn_on
+        alias: 'Step 5: PC 파워 버튼 누르기'
+        target:
+          entity_id: switch.home_pc_power_switch_toggle
+    - alias: Long - PC Windows 종료 (서재 무선스위치)
+      conditions:
+      - condition: trigger
+        id: wireless_switch
+      - condition: template
+        value_template: '{{ trigger.payload == ''long'' }}'
+      sequence:
+      - action: switch.turn_on
+        alias: 'Step 1: Hard Power Off 누르기'
+        target:
+          entity_id: switch.home_pc_power_switch_hard_power_off
+    - alias: Double - Home Cloud 토글 (서재 무선스위치)
+      conditions:
+      - condition: trigger
+        id: wireless_switch
+      - condition: template
+        value_template: '{{ trigger.payload == ''double'' }}'
+      sequence:
+      - action: switch.toggle
+        target:
+          entity_id: switch.home_cloud
+    - alias: PC 전력 < 5W - 자동 전원 차단
+      conditions:
+      - condition: trigger
+        id: pc_power_off
+      sequence:
+      - alias: 모든 전원 차단 (본체, L1, L2, L3)
+        action: switch.turn_off
+        target:
+          entity_id:
+          - switch.0xa4c138be3ee9d6f5_l1
+          - switch.0xa4c138be3ee9d6f5_l2
+          - switch.0xa4c138be3ee9d6f5_l3
+          - switch.0x60a423fffe620ee1
+        data: {}
+  mode: restart
+- id: '1781060212780'
+  alias: 주방 통합 자동화
+  description: '주방 조명(모션/쿡탑), 식탁등 연동, 환풍기 제어를 통합 관리
+
+    - 모션 감지 시 주방등 켜기 (07~22시)
+
+    - 쿡탑 ON 시 주방등 켜기 (시간 제한 없음)
+
+    - 쿡탑 ON 중에는 주방등 꺼짐 방지
+
+    - 모션 없음 + 쿡탑 OFF → 30초 후 주방등 끄기
+
+    - 주방등 켜질 때 → 300ms 후 식탁등 켜기
+
+    - 쿡탑 OFF → 5분 후 환풍기 OFF → 5초 → 환풍기 ON(ready)'
+  triggers:
+  - platform: state
+    entity_id: binary_sensor.0x00124b002267369a_occupancy
+    to: 'on'
+    id: motion_on
+  - platform: state
+    entity_id: binary_sensor.0x00124b002267369a_occupancy
+    to: 'off'
+    for:
+      seconds: 30
+    id: motion_off
+  - platform: state
+    entity_id: binary_sensor.cooktop_activate
+    from: 'off'
+    to: 'on'
+    id: cooktop_on
+  - platform: state
+    entity_id: binary_sensor.cooktop_activate
+    from: 'on'
+    to: 'off'
+    for:
+      seconds: 30
+    id: cooktop_off_light
+  - platform: state
+    entity_id: binary_sensor.cooktop_activate
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 5
+    id: cooktop_off_fan
+  - platform: state
+    entity_id: switch.0x28dba7fffea60da9_center
+    to: 'on'
+    id: kitchen_light_on
+  actions:
+  - choose:
+    - alias: 모션 감지 → 주방등 켜기 (07~22시)
+      conditions:
+      - condition: trigger
+        id: motion_on
+      - condition: time
+        after: 07:00:00
+        before: '22:00:00'
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.0x28dba7fffea60da9_left
+    - alias: 쿡탑 ON → 주방등 켜기 (시간 무관)
+      conditions:
+      - condition: trigger
+        id: cooktop_on
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.0x28dba7fffea60da9_left
+    - alias: 주방등 ON → 식탁등 켜기 (300ms 후)
+      conditions:
+      - condition: trigger
+        id: kitchen_light_on
+      sequence:
+      - delay:
+          milliseconds: 300
+      - action: light.turn_on
+        target:
+          device_id:
+          - 31ca1248ee7128084cf005864abf1bee
+          - 8be9b256412620842e700611fa3ad0f9
+          - fde293010137ca7f9081a009c9ef8921
+        data:
+          brightness: 255
+          color_temp_kelvin: 6535
+    - alias: 모션 없음 → 주방등 끄기 (쿡탑 OFF + 모션 없음 확인)
+      conditions:
+      - condition: trigger
+        id: motion_off
+      - condition: state
+        entity_id: binary_sensor.cooktop_activate
+        state: 'off'
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.0x28dba7fffea60da9_left
+    - alias: 쿡탑 OFF 30초 → 주방등 끄기 (모션 없음 확인)
+      conditions:
+      - condition: trigger
+        id: cooktop_off_light
+      - condition: state
+        entity_id: binary_sensor.0x00124b002267369a_occupancy
+        state: 'off'
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.0x28dba7fffea60da9_left
+    - alias: 쿡탑 OFF 5분 → 환풍기 OFF → 5초 → 환풍기 ON (ready)
+      conditions:
+      - condition: trigger
+        id: cooktop_off_fan
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.0x60a423fffe620f3a
+      - delay:
+          seconds: 5
+      - action: switch.turn_on
+        target:
+          entity_id: switch.0x60a423fffe620f3a
+  mode: restart
+- id: '1783059650858'
+  alias: Binance 09:00 Baseline Prices
+  description: Stores the daily 09:00 KST Binance baseline price for dashboard change
+    sensors.
+  triggers:
+  - trigger: time
+    at: 09:00:00
+  conditions: []
+  actions:
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.binance_btcusdt_0900_price
+    data:
+      value: '{{ states(''sensor.binance_btcusdt_price'') | float(0) }}'
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.binance_ethusdt_0900_price
+    data:
+      value: '{{ states(''sensor.binance_ethusdt_price'') | float(0) }}'
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.binance_ondousdt_0900_price
+    data:
+      value: '{{ states(''sensor.binance_ondousdt_price'') | float(0) }}'
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.binance_trumpusdt_0900_price
+    data:
+      value: '{{ states(''sensor.binance_trumpusdt_price'') | float(0) }}'
+  mode: single

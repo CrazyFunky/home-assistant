@@ -126,6 +126,16 @@ HA MCP Tools가 Home Assistant 통합으로 등록되어 있으므로 MCP 경로
 | `/config/include/` | `homeassistant.packages: !include_dir_named include`로 로드되는 package 파일, recorder 설정 포함 |
 | `/config/www/` | 로컬 대시보드 asset과 커스텀 frontend 파일 |
 | `/config/themes/` | 테마 YAML 파일 |
+| `/config/ui-lovelace.yaml` | Main YAML-mode dashboard body |
+| `/config/dashboards/button_card_templates.yaml` | Shared button-card design templates |
+| `/config/configuration.yaml` | Core YAML configuration; top-level edits should use `ha_config_set_yaml` so validation and backups run |
+| `/config/automations.yaml` | YAML automation file if used |
+| `/config/scripts.yaml` | YAML script file if used |
+| `/config/scenes.yaml` | YAML scene file if used |
+| `/config/include/` | Package files loaded through `homeassistant.packages: !include_dir_named include`, including recorder configuration |
+| `/config/dashboards/` | YAML dashboard files and dashboard-specific includes |
+| `/config/www/` | Local dashboard assets and custom frontend files |
+| `/config/themes/` | Theme YAML files |
 
 다음 영역은 여전히 신중하게 수동 검토해야 한다.
 
@@ -143,13 +153,12 @@ HA MCP Tools가 Home Assistant 통합으로 등록되어 있으므로 MCP 경로
 
 ```text
 /config/ui-lovelace.yaml
-/config/button_card_templates.yaml
+/config/dashboards/
 /config/configuration.yaml
 /config/automations.yaml
 /config/scripts.yaml
 /config/scenes.yaml
 /config/include/
-/config/lovelace/
 /config/www/lovelace/
 /config/themes/
 /config/esphome/
@@ -163,6 +172,8 @@ HA MCP Tools가 Home Assistant 통합으로 등록되어 있으므로 MCP 경로
 
 ```text
 secrets.yaml
+service_account.json
+secrets/
 .storage/
 home-assistant_v2.db*
 *.log

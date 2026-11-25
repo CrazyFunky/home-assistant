@@ -1,0 +1,121 @@
+rest_command:
+  start_kitchen_recording:
+    url: "http://192.168.0.16:8080/startvideo"
+  stop_kitchen_recording:
+    url: "http://192.168.0.16:8080/stopvideo"
+    
+#   set_ac_optional_mode:
+#     url: https://api.smartthings.com/v1/devices/{{ deviceId }}/commands
+#     method: POST
+#     headers:
+#       authorization: !secret st_authorization
+#     payload: '{"commands":[{"capability":"custom.airConditionerOptionalMode","command":"setAcOptionalMode","arguments":["{{ acOptionalMode }}"]}]}'
+#   set_fan_oscillation_mode:
+#     url: https://api.smartthings.com/v1/devices/{{ deviceId }}/commands
+#     method: POST
+#     headers:
+#       authorization: !secret st_authorization
+#     payload: '{"commands":[{"capability":"fanOscillationMode","command":"setFanOscillationMode","arguments":["{{ fanOscilationMode }}"]}]}'
+
+# input_select:
+#   bed_room_ac_fan_oscillation_mode:
+#     name: 바람 방향
+#     icon: mdi:weather-windy
+#     options:
+#       - 고정
+#       - 좌우
+#       - 상하
+#       - 상하좌우
+#   living_room_ac_fan_oscillation_mode:
+#     name: 바람 방향
+#     icon: mdi:weather-windy
+#     options:
+#       - 고정
+#       - 좌우
+#       - 상하
+#       - 상하좌우
+
+# automation 바람방향:
+#   - alias: 거실 에어컨 바람방향 자동화
+#     description: 거실 에어컨 바람방향 자동화
+#     trigger:
+#       platform: state
+#       entity_id: input_select.living_room_ac_fan_oscillation_mode
+#     condition:
+#       condition: not
+#       conditions:
+#         condition: state
+#         entity_id: climate.geosil_eeokeon
+#         state: 'off'
+#     action:
+#       service: rest_command.set_fan_oscillation_mode
+#       data_template:
+#         deviceId: !secret ac1_deviceId
+#         fanOscilationMode: >-
+#           {% set mode = {'고정':'fixed', '좌우':'horizontal', '상하':'vertical', '상하좌우':'all'} %}
+#           {% set state = states('input_select.living_room_ac_fan_oscillation_mode') %}
+#           {{ mode[state] if state in mode}}
+#     mode: single
+
+#   - alias: 거실 에어컨 바람방향 동기화
+#     description: 거실 에어컨 바람방향 동기화
+#     trigger:
+#       - platform: state
+#         entity_id: input_select.living_room_ac_fan_oscillation_mode
+#       - platform: state
+#         entity_id: climate.geosil_eeokeon
+#       - platform: state
+#         entity_id: climate.geosil_eeokeon
+#         attribute: fanOscillationMode
+#     action:
+#       service: input_select.select_option
+#       target:
+#         entity_id: input_select.living_room_ac_fan_oscillation_mode
+#       data_template:
+#         option: >-
+#           {% set mode = {'fixed':'고정', 'horizontal':'좌우', 'vertical':'상하', 'all':'상하좌우'} %}
+#           {% set state = state_attr('climate.geosil_eeokeon','fanOscillationMode') %}
+#           {{ mode[state] if state in mode }}
+#     mode: single
+
+#   - alias: 안방 에어컨 바람방향 자동화
+#     description: 안방 에어컨 바람방향 자동화
+#     trigger:
+#       platform: state
+#       entity_id: input_select.bed_room_ac_fan_oscillation_mode
+#     condition:
+#       condition: not
+#       conditions:
+#         condition: state
+#         entity_id: climate.anbang_eeokeon
+#         state: 'off'
+#     action:
+#       service: rest_command.set_fan_oscillation_mode
+#       data_template:
+#         deviceId: !secret ac2_deviceId
+#         fanOscilationMode: >-
+#           {% set mode = {'고정':'fixed', '좌우':'horizontal', '상하':'vertical', '상하좌우':'all'} %}
+#           {% set state = states('input_select.bed_room_ac_fan_oscillation_mode') %}
+#           {{ mode[state] if state in mode}}
+#     mode: single
+
+#   - alias: 안방 에어컨 바람방향 동기화
+#     description: 안방 에어컨 바람방향 자동화
+#     trigger:
+#       - platform: state
+#         entity_id: input_select.bed_room_ac_fan_oscillation_mode
+#       - platform: state
+#         entity_id: climate.anbang_eeokeon
+#       - platform: state
+#         entity_id: climate.anbang_eeokeon
+#         attribute: fanOscillationMode
+#     action:
+#       service: input_select.select_option
+#       target:
+#         entity_id: input_select.bed_room_ac_fan_oscillation_mode
+#       data_template:
+#         option: >-
+#           {% set mode = {'fixed':'고정', 'horizontal':'좌우', 'vertical':'상하', 'all':'상하좌우'} %}
+#           {% set state = state_attr('climate.anbang_eeokeon','fanOscillationMode') %}
+#           {{ mode[state] if state in mode }}
+#     mode: single

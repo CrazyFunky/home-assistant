@@ -1,0 +1,25 @@
+mqtt:
+#   sensor:
+#     - name: "power_smart_meter_1"
+#       state_topic: "homeassistant/sensor/power_smart_meter_1"
+#       unit_of_measurement: "W"
+#       device_class: power
+#       state_class: measurement
+
+#     - name: "power_smart_meter_2"
+#       state_topic: "homeassistant/sensor/power_smart_meter_2"
+#       unit_of_measurement: "W"
+#       device_class: power
+#       state_class: measurement
+      
+#     - name: "power_smart_meter_3"
+#       state_topic: "homeassistant/sensor/power_smart_meter_3"
+#       unit_of_measurement: "W"
+#       device_class: power
+#       state_class: measurement
+      
+#     - name: "power_smart_meter_4"
+#       state_topic: "homeassistant/sensor/power_smart_meter_4"
+#       unit_of_measurement: "W"
+#       device_class: power
+#       state_class: measurement

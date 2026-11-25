@@ -1,0 +1,50 @@
+utility_meter:
+  hourly_energy_meter_1:
+    source: sensor.energy_smart_meter_1
+    cycle: hourly
+  daily_energy_meter_1:
+    source: sensor.energy_smart_meter_1
+    cycle: daily
+  monthly_energy_meter_1:
+    source: sensor.energy_smart_meter_1
+    cycle: monthly
+
+  hourly_energy_meter_2:
+    source: sensor.energy_smart_meter_2
+    cycle: hourly
+  daily_energy_meter_2:
+    source: sensor.energy_smart_meter_2
+    cycle: daily
+  monthly_energy_meter_2:
+    source: sensor.energy_smart_meter_2
+    cycle: monthly
+
+  hourly_energy_meter_3:
+    source: sensor.energy_smart_meter_3
+    cycle: hourly
+  daily_energy_meter_3:
+    source: sensor.energy_smart_meter_3
+    cycle: daily
+  monthly_energy_meter_3:
+    source: sensor.energy_smart_meter_3
+    cycle: monthly
+
+  hourly_energy_meter_4:
+    source: sensor.energy_smart_meter_4
+    cycle: hourly
+  daily_energy_meter_4:
+    source: sensor.energy_smart_meter_4
+    cycle: daily
+  monthly_energy_meter_4:
+    source: sensor.energy_smart_meter_4
+    cycle: monthly
+
+  hourly_energy_meter_total:
+    source: sensor.energy_meter_total
+    cycle: hourly
+  daily_energy_meter_total:
+    source: sensor.energy_meter_total
+    cycle: daily
+  monthly_energy_meter_total:
+    source: sensor.energy_meter_total
+    cycle: monthly

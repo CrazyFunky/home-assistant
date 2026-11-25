@@ -34,6 +34,15 @@ Codex는 단순히 Home Assistant 설정을 돕는 도구가 아니라, 집 전�
 6. 최근 결정과 과거 맥락을 확인하기 위해 `HOUSE_LOG.md`를 읽는다.
 7. Home Assistant 대시보드를 확인하거나 변경하기 전에 `DASHBOARDS.md`를 읽는다.
 8. 파일 기반 Home Assistant 설정 동기화나 YAML 수정을 계획하기 전에 `GITOPS.md`를 읽는다.
+1. Read this file first.
+2. Read `HOUSE.md` to understand the home's operating philosophy.
+3. Read `MCP.md` to understand how live home systems are accessed.
+4. Read `DEVICES.md` before making device, room, or entity assumptions.
+5. Read `OPERATIONS.md` before designing household routines.
+6. Read `HOUSE_LOG.md` for recent decisions and historical context.
+7. Read `DASHBOARDS.md` before inspecting or changing Home Assistant dashboards.
+8. Read `GITOPS.md` before planning file-based Home Assistant configuration sync or YAML edits.
+9. Read `HOME_ASSISTANT_INSTALL_GUIDE.md` before planning a new Home Assistant host or reinstall.
 
 ## 편집 규칙
 

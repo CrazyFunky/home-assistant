@@ -1,0 +1,399 @@
+jiyeon_notebook_shutdown:
+  alias: 노트북 끄기기
+  icon: mdi:power-plug-off
+  sequence:
+  - service: mqtt.publish
+    data:
+      topic: iotlink/workgroup/ji-yeon/commands/shutdown
+      payload: ''
+  mode: single
+enter_cinema_mode:
+  alias: 영화관 모드 켜기
+  sequence:
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.0x286847fffe27072d_left
+    enabled: false
+  - type: turn_on
+    device_id: 4c9fbf16d3fe3ce6e3736b2891511232
+    entity_id: 641656d522f8fa09d08b6f425cb5f74b
+    domain: switch
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.hk_citation_100_256bf3
+    data:
+      media_content_id: media-source://tts/google_translate?message=%EC%98%81%ED%99%94%EA%B4%80+%EB%AA%A8%EB%93%9C%EA%B0%80+%EC%8B%A4%ED%96%89%EC%A4%91%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%9E%A0%EC%8B%9C%EB%A7%8C+%EA%B8%B0%EB%8B%A4%EB%A0%A4%EC%A3%BC%EC%84%B8%EC%9A%94.&language=ko
+      media_content_type: provider
+    metadata:
+      title: '영화관 모드가 실행중입니다.
+
+        잠시만 기다려주세요.'
+      thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+      media_class: app
+      children_media_class:
+      navigateIds:
+      - {}
+      - media_content_type: app
+        media_content_id: media-source://tts
+      - media_content_type: provider
+        media_content_id: media-source://tts/google_translate?message=%EC%98%81%ED%99%94%EA%B4%80+%EB%AA%A8%EB%93%9C%EA%B0%80+%EC%8B%A4%ED%96%89%EC%A4%91%EC%9E%85%EB%8B%88%EB%8B%A4.%0A%EC%9E%A0%EC%8B%9C%EB%A7%8C+%EA%B8%B0%EB%8B%A4%EB%A0%A4%EC%A3%BC%EC%84%B8%EC%9A%94.&language=ko
+    enabled: false
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - if:
+    - condition: state
+      entity_id: cover.livingroom_screen
+      state: closed
+    then:
+    - action: cover.open_cover
+      metadata: {}
+      data: {}
+      target:
+        entity_id: cover.livingroom_screen
+  - if:
+    - condition: state
+      entity_id: switch.projector
+      state: 'off'
+    then:
+    - action: switch.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: switch.projector
+  mode: restart
+  icon: mdi:theater
+  description: ''
+exit_cinema_mode:
+  alias: 영화관 모드 끄기
+  sequence:
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.hk_citation_100_256bf3
+    data:
+      media_content_id: media-source://tts/google_translate?message=%EC%98%81%ED%99%94%EA%B4%80+%EB%AA%A8%EB%93%9C%EA%B0%80+%EC%A2%85%EB%A3%8C+%EB%90%A9%EB%8B%88%EB%8B%A4.+%EC%9E%A0%EC%8B%9C%EB%A7%8C+%EA%B8%B0%EB%8B%A4%EB%A0%A4+%EC%A3%BC%EC%84%B8%EC%9A%94.&language=ko
+      media_content_type: provider
+    metadata:
+      title: 영화관 모드가 종료 됩니다. 잠시만 기다려 주세요.
+      thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+      media_class: app
+      children_media_class:
+      navigateIds:
+      - {}
+      - media_content_type: app
+        media_content_id: media-source://tts
+      - media_content_type: provider
+        media_content_id: media-source://tts/google_translate?message=%EC%98%81%ED%99%94%EA%B4%80+%EB%AA%A8%EB%93%9C%EA%B0%80+%EC%A2%85%EB%A3%8C+%EB%90%A9%EB%8B%88%EB%8B%A4.+%EC%9E%A0%EC%8B%9C%EB%A7%8C+%EA%B8%B0%EB%8B%A4%EB%A0%A4+%EC%A3%BC%EC%84%B8%EC%9A%94.&language=ko
+    enabled: false
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - if:
+    - condition: state
+      entity_id: switch.projector
+      state: 'on'
+    then:
+    - action: switch.turn_off
+      metadata: {}
+      data: {}
+      target:
+        entity_id: switch.projector
+  - if:
+    - condition: state
+      entity_id: cover.livingroom_screen
+      state: open
+    then:
+    - action: cover.close_cover
+      metadata: {}
+      data: {}
+      target:
+        entity_id: cover.livingroom_screen
+    enabled: true
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.0x286847fffe27072d_left
+    enabled: false
+  mode: single
+  icon: mdi:theater
+  description: ''
+kitchen_table_light_on:
+  alias: 식탁등 켜기
+  sequence:
+  - data: {}
+    action: switch.turn_on
+    target:
+      entity_id: switch.0x28dba7fffea60da9_center
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - metadata: {}
+    data: {}
+    target:
+      device_id:
+      - 31ca1248ee7128084cf005864abf1bee
+      - 8be9b256412620842e700611fa3ad0f9
+      - fde293010137ca7f9081a009c9ef8921
+    action: light.turn_on
+  mode: single
+  icon: mdi:lightbulb
+kitchen_table_light_off:
+  alias: 식탁등 끄기
+  sequence:
+  - data: {}
+    target:
+      device_id:
+      - 31ca1248ee7128084cf005864abf1bee
+      - 8be9b256412620842e700611fa3ad0f9
+      - fde293010137ca7f9081a009c9ef8921
+    action: light.turn_off
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - target:
+      entity_id:
+      - switch.0x28dba7fffea60da9_center
+    data: {}
+    action: switch.turn_off
+  mode: single
+  icon: mdi:lightbulb-off
+open_living_room_curtain:
+  alias: 거실 커튼 열기
+  sequence:
+  - service: remote.send_command
+    target:
+      entity_id: remote.living_room
+    data:
+      device: curtain
+      command: open
+  mode: single
+  icon: mdi:curtains
+close_living_room_curtain:
+  alias: 거실 커튼 닫기
+  sequence:
+  - target:
+      entity_id: remote.living_room
+    data:
+      device: curtain
+      command: close
+    action: remote.send_command
+  mode: single
+  icon: mdi:curtains-closed
+  description: ''
+stop_living_room_curtain:
+  alias: 거실 커튼 정지
+  sequence:
+  - target:
+      entity_id: remote.living_room
+    data:
+      device: curtain
+      command: stop
+    action: remote.send_command
+  mode: single
+  icon: mdi:curtains-closed
+  description: ''
+up_living_room_screen:
+  alias: 거실 스크린 올리기
+  sequence:
+  - target:
+      entity_id: remote.living_room
+    data:
+      device: screen
+      command: up
+    action: remote.send_command
+  mode: single
+  icon: mdi:blinds-open
+  description: ''
+down_living_room_screen:
+  alias: 거실 스크린 내리기
+  sequence:
+  - target:
+      entity_id: remote.living_room
+    data:
+      device: screen
+      command: down
+    action: remote.send_command
+  mode: single
+  icon: mdi:blinds
+  description: ''
+stop_living_room_screen:
+  alias: 거실 스크린 정지
+  sequence:
+  - service: remote.send_command
+    target:
+      entity_id: remote.living_room
+    data:
+      command: stop
+      device: screen
+  mode: single
+  icon: mdi:blinds
+projector_turn_on:
+  alias: 거실 프로젝트 켜기
+  sequence:
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: 48e653abc113931b23d72ba19c399203
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 20
+      milliseconds: 0
+  - action: remote.send_command
+    metadata: {}
+    data:
+      device: projector
+      command: power
+    target:
+      device_id: e3bfe7c21ed5696cdd7ca4c97fabaf88
+  description: ''
+  icon: mdi:projector
+projector_turn_off:
+  alias: 거실 프로젝트 끄기
+  sequence:
+  - action: remote.send_command
+    metadata: {}
+    data:
+      device: projector
+      command: power
+    target:
+      device_id: e3bfe7c21ed5696cdd7ca4c97fabaf88
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 20
+      milliseconds: 0
+  - type: turn_off
+    device_id: 48e653abc113931b23d72ba19c399203
+    entity_id: 3454f86e74a3a99ad234047d3aca45dc
+    domain: switch
+  description: ''
+  icon: mdi:projector-off
+ksgi_1_on:
+  alias: 기초교학켜기
+  sequence:
+  - metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.0x28dba7fffea60da9_right
+      - switch.0x28dba7fffea60da9_center
+    action: switch.turn_on
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: 6158045ad19d8d10e0c226d938f699a2
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.0x286847fffe272438_left
+      - switch.0x286847fffe272438_center
+  mode: single
+  icon: mdi:lightbulb-group
+  description: ''
+ksgi_1_off:
+  alias: 기초교학끄기
+  sequence:
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.0x286847fffe272438_center
+      - switch.0x286847fffe272438_left
+  mode: single
+  icon: mdi:lightbulb-group
+  description: ''
+ksgi_2_on:
+  alias: 영상물시청켜기
+  sequence:
+  - metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.kitchen_light_2
+    action: switch.turn_on
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: 6158045ad19d8d10e0c226d938f699a2
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.0x286847fffe272438_center
+      - switch.0x286847fffe272438_left
+      - switch.0x28dba7fffea60da9_right
+  mode: single
+  icon: mdi:lightbulb-group
+  description: ''
+ksgi_2_off:
+  alias: 영상물시청끄기
+  sequence:
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.0x286847fffe272438_center
+      - switch.0x286847fffe272438_left
+      - switch.0x28dba7fffea60da9_right
+  mode: single
+  icon: mdi:lightbulb-group
+  description: ''
+ksgi_3_on:
+  alias: 좌담회모드켜기
+  sequence:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: 6158045ad19d8d10e0c226d938f699a2
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.0x286847fffe272438_center
+      - switch.0x286847fffe272438_left
+      - switch.0x28dba7fffea60da9_center
+      - switch.0x28dba7fffea60da9_right
+  mode: single
+  icon: mdi:lightbulb-group
+  description: ''
+ksgi_3_off:
+  alias: 좌담회모드끄기
+  sequence:
+  - action: light.turn_off
+    target:
+      device_id:
+      - 6158045ad19d8d10e0c226d938f699a2
+    data: {}
+  - action: switch.turn_off
+    target:
+      entity_id:
+      - switch.0x286847fffe272438_center
+      - switch.0x286847fffe272438_left
+      - switch.0x28dba7fffea60da9_center
+      - switch.0x28dba7fffea60da9_right
+    data: {}
+  mode: single
+  icon: mdi:lightbulb-group
+  description: ''

@@ -33,6 +33,21 @@
 대시보드는 `custom:button-card`를 기반으로 한다.
 
 중요한 템플릿 그룹은 다음과 같다.
+Shared button-card templates are kept under the dashboard folder:
+
+```yaml
+# /config/ui-lovelace.yaml
+button_card_templates: !include dashboards/button_card_templates.yaml
+```
+
+For YAML dashboard files stored inside `/config/dashboards/`, use the dashboard file's own directory as the include base:
+
+```yaml
+# /config/dashboards/sweethome.yaml
+button_card_templates: !include button_card_templates.yaml
+```
+
+Important template groups:
 
 - `custom_base_card`: 기본 레이아웃, 카드 높이, grid 영역, 공통 애니메이션 훅
 - `custom_light_card`: 조명 상태, 색상, 배경, 아이콘 애니메이션
@@ -46,6 +61,33 @@
 - `custom_action`: 탭, 더블탭, 길게 누르기, 햅틱, 버튼 애니메이션 동작
 
 `SweetHome`은 storage-mode이므로 `button_card_templates.yaml` 같은 YAML `!include` 파일을 편하게 공유하기 어렵다. 지금은 대시보드 모드를 유지하고, 즉시 변환하기보다 차이점을 이 문서에 기록한다.
+Because `SweetHome` is storage-mode, it cannot conveniently share YAML `!include` files such as `dashboards/button_card_templates.yaml`. For now, keep the current dashboard modes and document differences here instead of converting dashboards immediately.
+
+## File Organization Principle
+
+Keep Home Assistant's default root-level files at `/config`, and place user-created supporting files in purpose-specific folders.
+
+Root-level files that should normally stay in `/config`:
+
+```text
+configuration.yaml
+automations.yaml
+scripts.yaml
+scenes.yaml
+secrets.yaml
+ui-lovelace.yaml
+```
+
+User-created supporting files should be grouped by purpose:
+
+```text
+dashboards/   # YAML dashboard files and dashboard-specific includes
+include/      # package files loaded through homeassistant.packages
+www/          # local frontend assets
+themes/       # theme YAML files
+```
+
+This keeps a fresh Home Assistant install's expected files recognizable while making custom household configuration easier to review, sync, and restore.
 
 ## 유지보수 규칙
 
@@ -67,7 +109,7 @@
 
 ```yaml
 button_card_templates: !include button_card_templates.yaml
-views: !include lovelace/sweethome/views.yaml
+views: !include sweethome/views.yaml
 ```
 
 그 다음 작은 화면 차이는 아래처럼 명시적인 override 템플릿으로 처리할 수 있다.
